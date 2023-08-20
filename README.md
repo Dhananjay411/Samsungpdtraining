@@ -1,6 +1,6 @@
 # Samsungpdtraining
 - [Day-0-Installation](Day-0-Installation)
-- [Day-1-Introduction to Verilog RTL Design and Synthesis](Day-1-Introduction to Verilog RTL Design and Synthesis)
+- [Day-1-Introduction to Verilog RTL Design and Synthesis](Day-1-Introduction-to-Verilog-RTL-Design-and-Synthesis)
   
 ## Day-0-Installation
 
