@@ -1,5 +1,7 @@
 # Samsungpdtraining
-
+- [Day-0-Installation](Day-0-Installation)
+- [Day-1-Introduction to Verilog RTL Design and Synthesis](Day-1-Introduction to Verilog RTL Design and Synthesis)
+  
 ## Day-0-Installation
 
  <details>
@@ -39,7 +41,7 @@ Below is the screenshot showing the successful launch:
 
 <img width="1085" alt="pt_shell" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd_%23day0/pt_shell1.png">
 </details>
-
+ 
 <details>
  <summary>gtkwave</summary>
 GTKWave is the best free wave viewer and is the recommended viewer by the Icarus Verilog simulation tool. The GTKWave software is used as a simulation tool to verify the Verilog design code through a test bench. It is invoked using the command gtkwave.   
@@ -65,8 +67,7 @@ I invoked all the shells using the given commands and attached corresponding scr
 
 </details>	
 
-
-##Day-1-Introduction to Verilog RTL Design and Synthesis
+## Day-1-Introduction to Verilog RTL Design and Synthesis
 
  <details>
  <summary>Introduction to RTL-Design, Test-bench, Simulators</summary>
