@@ -1,7 +1,7 @@
 # Samsungpdtraining
 - [Day-0-Installation](#Day-0-Installation)
 - [Day-1-Introduction to Verilog RTL Design and Synthesis](#Day-1-Introduction-to-Verilog-RTL-Design-and-Synthesis)
-- [Day-2-Timing libs, hierarchical vs flat synthesis and efficient flop coding style](day-2-Timing-libs,-hierarchical-vs-flat-synthesis-and efficient-flop-coding-style)
+- [Day-2-Timing libs, hierarchical vs flat synthesis and efficient flop coding style](#Day-2 Timing libs, hierarchical vs flat synthesis and efficient flop coding style)
   
 ## Day-0-Installation
 
@@ -386,6 +386,7 @@ Simulation
 Synthesized circuit
 
 <img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/dff_asyncres_sche.png">
+
 
 **Asynchronous set D Flop**
 
