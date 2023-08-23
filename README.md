@@ -1,7 +1,7 @@
 # Samsungpdtraining
-- [Day-0-Installation](Day-0-Installation)
-- [Day-1-Introduction to Verilog RTL Design and Synthesis](Day-1-Introduction-to-Verilog-RTL-Design-and-Synthesis)
-- [day-2-Timing libs, hierarchical vs flat synthesis and efficient flop coding style](day-2-Timing libs, hierarchical vs flat synthesis and efficient flop coding style)
+- [Day-0-Installation](#Day-0-Installation)
+- [Day-1-Introduction to Verilog RTL Design and Synthesis](#Day-1-Introduction-to-Verilog-RTL-Design-and-Synthesis)
+- [Day-2-Timing libs, hierarchical vs flat synthesis and efficient flop coding style](day-2-Timing-libs,-hierarchical-vs-flat-synthesis-and efficient-flop-coding-style)
   
 ## Day-0-Installation
 
@@ -146,193 +146,340 @@ Selection of the Cells: We'll need to guide the Synthesizer to choose the flavou
  
 This Netlist can be viewed in the synthesized circuit form using the **show** command    
 
-
-
 <img width="1085" alt="ckt" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/yosys_good_mux.JPG">
-
-
 The Nestlist code 
 <img width="1085" alt="netlist" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/yosys_netlist.JPG">
 
 Simplified Netlist code 
 
+</details>
 
+## Day-2-Timing-libs-hierarchical-vs-flat-synthesis-and-efficient-flop-coding-styles
 
+<details>
+ <summary> Timing Library </summary>
 
-## Day-2-Timing libs, hierarchical vs flat synthesis and efficient flop coding style
+ **Timing libs**:Timing libraries refer to a set of data files and models that provide essential information about the timing characteristics of the electronic components (gates, flip-flops, etc.) used in a digital circuit. These libraries are crucial for accurately predicting the behavior and performance of the designed integrated circuits. Here's a brief overview of timing libraries in VLSI:
 
- <details>
- <summary>Introduction to Timing libs, hierachical synthesis, flat synthesis, Flop coding style </summary>
-	 
-**Timing libs**:Timing libraries refer to a set of data files and models that provide essential information about the timing characteristics of the electronic components (gates, flip-flops, etc.) used in a digital circuit. These libraries are crucial for accurately predicting the behavior and performance of the designed integrated circuits. Here's a brief overview of timing libraries in VLSI:
-
-Standard Delay Format (SDF): SDF is a widely used file format for representing timing libraries in VLSI design. It contains information about the delays associated with various logic gates, interconnects, and flip-flops. SDF files are essential for static timing analysis (STA) tools to calculate the critical paths, setup times, hold times, and other timing parameters of a digital design.
+ Standard Delay Format (SDF): SDF is a widely used file format for representing timing libraries in VLSI design. It contains information about the delays associated with various logic gates, interconnects, and flip-flops. SDF files are essential for static timing analysis (STA) tools to calculate the critical paths, setup times, hold times, and other timing parameters of a digital design.
 
  Liberty Format: Liberty is another commonly used format for representing timing libraries in VLSI. Liberty files (with a .lib extension) contain detailed timing, power, and other electrical characteristics of cells in a library. Liberty files are used by tools like synthesis tools to optimize and map a design to target technology libraries.
 
-Timing Models: Timing libraries typically include various timing models, such as ideal, typical, and worst-case models, for different operating conditions (e.g., corner cases like slow and fast corners). These models help designers understand how the circuit behaves under different conditions.
+ Timing Models: Timing libraries typically include various timing models, such as ideal, typical, and worst-case models, for different operating conditions (e.g., corner cases like slow and fast corners). These models help designers understand how the circuit behaves under different conditions.
 
  Process Corners: VLSI libraries often provide information for different process corners, representing variations in manufacturing processes. These corners include typical, best-case (fast), and worst-case (slow) scenarios. Designers use this information to ensure that the circuit will work reliably across manufacturing variations.
 
-Clock Definitions: Libraries contain information about clock definitions, including clock-to-q delays, clock gating, and clock setup and hold times. This information is crucial for designing and verifying synchronous digital circuits.
+ Clock Definitions: Libraries contain information about clock definitions, including clock-to-q delays, clock gating, and clock setup and hold times. This information is crucial for designing and verifying synchronous digital circuits.
 
-Cell Delay: Timing libraries provide data on cell delay, which is the time it takes for a signal to propagate through a specific logic gate. Cell delays are essential for estimating the overall delay through a logic path.
+ Cell Delay: Timing libraries provide data on cell delay, which is the time it takes for a signal to propagate through a specific logic gate. Cell delays are essential for estimating the overall delay through a logic path.
 
-Interconnect Models: Libraries may also include models for interconnect delays, which are critical for accurately modeling the timing behavior of wires and buses in a design.
+ Interconnect Models: Libraries may also include models for interconnect delays, which are critical for accurately modeling the timing behavior of wires and buses in a design.
 
-Power Consumption Data: Some timing libraries also include power consumption information for different cells, helping designers estimate the power consumption of their designs.
+ Power Consumption Data: Some timing libraries also include power consumption information for different cells, helping designers estimate the power consumption of their designs.
 
-Timing libraries play a fundamental role in the VLSI design process, enabling designers to perform static timing analysis, optimize designs for performance and power, and ensure that integrated circuits meet timing and functional specifications. These libraries are typically provided by semiconductor manufacturers or third-party vendors and are tailored to specific technology nodes and process technologies. Designers select the appropriate timing library based on the target semiconductor process and design goals.
+ Timing libraries play a fundamental role in the VLSI design process, enabling designers to perform static timing analysis, optimize designs for performance and power, and ensure that integrated circuits meet timing and functional specifications. These libraries are typically provided by semiconductor manufacturers or third-party vendors and are tailored to specific technology nodes and process technologies. Designers select the appropriate timing library based on the target semiconductor process and design goals.
 
-Timing libraries
+
+ Timing libraries
 <img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/lib_1.png">
 Timing libraries
 <img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/lib_2.png">
- cell compare
-<img width="1085" alt=" cell compare" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/cell_compare_1.png">
+ nand_cell compare
+<img width="1085" alt=" nand_cell compare" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/cell_compare_1.png">
 
- 
-**hierarchical vs flat synthesis**: In the context of digital design and electronic design automation (EDA), hierarchical and flat synthesis are two different approaches to organizing and synthesizing a digital design. These approaches have distinct advantages and trade-offs, and the choice between them depends on the complexity of the design and the design goals. Let's explore both hierarchical and flat synthesis:
+  As we can see in above image, a nand gate of three different flavours are selected for discussion. Since nand is "!A&B", four different combinations of input is given along with specific leakage power. As the area is increase the delay of the cells is decrease but the power will increase. Therefore while selecting cell, synthesis tool will look for optimal cell so that it will satisfy both power, area and timing requirement.  
 
-**Hierarchical Synthesis**:Hierarchical synthesis involves breaking down a complex digital design into smaller, more manageable modules or blocks, often organized in a hierarchical fashion. Each module can be designed, verified, and synthesized independently. These modules can be instantiated multiple times in the design or used in other projects, promoting reusability. Hierarchical synthesis has several advantages:
+</details>
 
-Modularity: Hierarchical synthesis encourages modular design practices, making it easier to understand, verify, and maintain a design.
-Reuse: Modules designed in one project can be reused in other projects, reducing design time.
-Parallel Development: Different teams or designers can work on different modules simultaneously, speeding up the overall design process.
-Improved Debugging: Debugging and troubleshooting are more straightforward because issues can often be isolated to specific modules.
-
-However, hierarchical synthesis also has some challenges:
-
-Interface Design: Properly defining and managing interfaces between modules is critical for successful hierarchical synthesis.
-Hierarchical Constraints: Managing timing constraints across hierarchy levels can be complex.
-Resource Utilization: Overuse of hierarchy can lead to inefficient use of resources in the synthesized design.
-
-**Flat Synthesis**:Flat synthesis, on the other hand, synthesizes the entire design as a single, monolithic entity without breaking it down into hierarchical modules. The advantages of flat synthesis include:
-
-Simplicity: Flat synthesis simplifies the design process as there is no need to manage and interface multiple hierarchical levels.
-Timing Analysis: Timing analysis can be more straightforward because all elements of the design are considered in a single context.
-
-However, flat synthesis has its own set of challenges:
-
-Scalability: Flat synthesis can become unwieldy and impractical for large, complex designs, making it difficult to manage and debug.
-Reusability: Reusing parts of the design in other projects can be more challenging when the entire design is synthesized as a single unit.
-Longer Compilation Times: Flat synthesis tends to have longer compilation times due to the complexity of analyzing and optimizing a large design.
-
-Choosing Between Hierarchical and Flat Synthesis:
-
-The choice between hierarchical and flat synthesis depends on factors such as the complexity of the design, the need for modularity and reusability, the available EDA tools, and the design team's expertise. In practice, many designs use a combination of both approaches, with critical or reusable blocks designed hierarchically, while simpler parts of the design may be synthesized flat. This hybrid approach aims to balance the benefits of both methods while mitigating their respective drawbacks. 
-
-
-
-**various flop coding style and optimisation**: 
-
-There are several coding styles and optimization techniques for designing flip-flops (flops) in hardware description languages (HDLs) like VHDL and Verilog. The choice of coding style and optimization technique depends on factors such as the design's requirements, target technology, and personal or organizational preferences. Here are various flop coding styles and optimization techniques:
-
-1. Edge-Triggered vs. Level-Sensitive: Flip-flops can be edge-triggered or level-sensitive. Edge-triggered flops are more common in synchronous digital design, as they provide clear and predictable behavior. Level-sensitive flops (latches) are used sparingly and typically for specialized purposes, as they can lead to complex timing issues.
-
-2. Synchronous Reset and Asynchronous Reset: Flip-flops can have either synchronous or asynchronous reset signals. Synchronous resets are recommended for most designs because they simplify timing analysis. Asynchronous resets can introduce glitches and timing challenges, but they are sometimes necessary for specific functionalities.
-
-3. Clock Polarity: Depending on the hardware platform and design requirements, flip-flops can be sensitive to either the rising edge (positive-edge-triggered) or falling edge (negative-edge-triggered) of the clock signal. Choose the appropriate clock polarity for your design.
-
-4. Clear and Preset Inputs: Some flip-flops include clear (CLR) and preset (PR) inputs to asynchronously force the output to certain states. These inputs should be used sparingly and with caution, as they can complicate design and introduce race conditions.
-
-5. Register Initialization: Initialize flip-flop registers to known values at power-up or reset. This ensures predictable behavior during initialization.
-
-6. Register Packing: When dealing with large designs, packing multiple flip-flops into a single register can reduce resource usage. This is especially useful when your FPGA or ASIC technology supports this optimization.
-
-7. Use of "always" Blocks (Verilog) or "process" Statements (VHDL): These constructs define the behavior of flip-flops. Ensure that your sensitivity list is appropriately defined and does not lead to unintentional latches or complex logic.
-
-8. Reset Synchronizers: When using asynchronous resets, employ reset synchronizers to synchronize the asynchronous reset signal with the clock domain to avoid metastability issues.
-
-9. Clock Gating: Clock gating involves using logic gates to selectively enable or disable the clock signal to certain flip-flops. This can reduce power consumption when not all flip-flops need to toggle on every clock cycle. However, use it judiciously, as it can add complexity.
-
-10. Group Related Signals: Organize flip-flops and their associated signals into logical groups or modules to improve code readability and maintainability.
-
-11. Use of State Machines: For complex sequential logic, consider using state machines to control the behavior of flip-flops and other logic elements. State machines can help simplify complex control flow.
-
-12. Clock Domain Crossing (CDC) Considerations: When signals cross between different clock domains, use synchronization techniques such as two-flop synchronizers to avoid metastability issues.
-
-13. Timing Constraints: Define proper setup and hold time constraints for your flip-flops to ensure correct operation and meet timing requirements.
-
-14. Simulation and Verification: Thoroughly simulate and verify your flip-flops and their interactions within the design to catch any functional or timing issues.
-
-15. Documentation: Document your flip-flop code, including the purpose of each flip-flop, constraints, and any non-standard coding practices. Good documentation aids in understanding and maintaining the design.
-
-Effective flop coding and optimization require a deep understanding of the design's requirements, the target hardware, and the specific constraints and goals of the project. Regularly reviewing and optimizing your code as you progress through the design process is essential for achieving an efficient and reliable design
-
-</details>	
  <details>
- <summary>Labs on examples of iverilog and gtkwave</summary>
+  <summary>Hierarchical vs flat synthesis</summary>
 
- We performed all the lab examples on the Linux operating system.
+   
+ **hierarchical vs flat synthesis**: In the context of digital design and electronic design automation (EDA), hierarchical and flat synthesis are two different approaches to organizing and synthesizing a digital design. These approaches have distinct advantages and trade-offs, and the choice between them depends on the complexity of the design and the design goals. Let's explore both hierarchical and flat synthesis:
 
- **Iverilog**: Icarus Verilog is an implementation of the Verilog hardware description language compiler that generates netlists in the desired format (EDIF). It supports the 1995, 2001 and 2005 versions of the standard, portions of SystemVerilog, and some extensions.
+ **Hierarchical Synthesis**:Hierarchical synthesis involves breaking down a complex digital design into smaller, more manageable modules or blocks, often organized in a hierarchical fashion. Each module can be designed, verified, and synthesized independently. These modules can be instantiated multiple times in the design or used in other projects, promoting reusability. Hierarchical synthesis has several advantages:
 
- **Gtkwave**: GTKWave is a fully featured GTK+ based wave viewer for Unix, Win32, and Mac OSX which reads LXT, LXT2, VZT, FST, and GHW files as well as standard Verilog VCD/EVCD files and allows their viewing.
+ Modularity: Hierarchical synthesis encourages modular design practices, making it easier to understand, verify, and maintain a design.
+ Reuse: Modules designed in one project can be reused in other projects, reducing design time.
+ Parallel Development: Different teams or designers can work on different modules simultaneously, speeding up the overall design process.
+ Improved Debugging: Debugging and troubleshooting are more straightforward because issues can often be isolated to specific modules.
 
- We made a directory namely VLSI and inside that directory we cloned vsdflow repository. This repository consists of the required .lib files and verilog codes for practice. 
+ However, hierarchical synthesis also has some challenges:
 
- Below is the output wave form in gtkwave generated by performing a simulation of good_mux using iverilog. 
+ Interface Design: Properly defining and managing interfaces between modules is critical for successful hierarchical synthesis.
+ Hierarchical Constraints: Managing timing constraints across hierarchy levels can be complex.
+ Resource Utilization: Overuse of hierarchy can lead to inefficient use of resources in the synthesized design.
+
+ **Flat Synthesis**:Flat synthesis, on the other hand, synthesizes the entire design as a single, monolithic entity without breaking it down into hierarchical modules. The advantages of flat synthesis include:
+
+ Simplicity: Flat synthesis simplifies the design process as there is no need to manage and interface multiple hierarchical levels.
+ Timing Analysis: Timing analysis can be more straightforward because all elements of the design are considered in a single context.
+
+ However, flat synthesis has its own set of challenges:
+
+ Scalability: Flat synthesis can become unwieldy and impractical for large, complex designs, making it difficult to manage and debug.
+ Reusability: Reusing parts of the design in other projects can be more challenging when the entire design is synthesized as a single unit.
+ Longer Compilation Times: Flat synthesis tends to have longer compilation times due to the complexity of analyzing and optimizing a large design.
+
+ Choosing Between Hierarchical and Flat Synthesis:
+
+ The choice between hierarchical and flat synthesis depends on factors such as the complexity of the design, the need for modularity and reusability, the available EDA tools, and the design team's expertise. In practice, many designs use a combination of both approaches, with critical or reusable blocks designed hierarchically, while simpler parts of the design may be synthesized flat. This hybrid approach aims to balance the benefits of both methods while mitigating their respective drawbacks. 
  
- The syntax of the code is: iverilog RTL_design_code Testbench
+ Multiple_module verilog RTL file: 
+  
+ <img width="1080" alt="multiple_module_1.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/multiple_module_1.png">
+  
+ Hierarchical Synthesis: Hierarchical synthesis divides the design into smaller modules or blocks. These blocks can be synthesized independently and reused across multiple projects. It allows us to handle the complexity by breaking it down into manageable pieces and focusing on optimizing individual blocks. Below is the sample of hierarchical synthesis:
+
+ When we perform synthesis in yosys it generates the following schematic instead of the  above  schematic
+ <img  width="1085" alt="hier" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/multiple_module_schematic.png">
+
+ The yosys considers the module hierarchy and does mapping according to the instantiation.The netlist code for hierarchical implementation of the multiple_modules
+
+ ```ruby
+ module multiple_modules(a, b, c, y);
+	  input a;
+	 input b;
+	 input c;
+	  wire net1;
+	 output y;
+  sub_module1 u1 (.a(a),.b(b),.y(net1) );
+  sub_module2 u2 (.a(net1),.b(c),.y(y));
+endmodule
+
+module sub_module1(a, b, y);
+ wire _0_;
+ wire _1_;
+ wire _2_;
+ input a;
+ input b;
+ output y;
+ sky130_fd_sc_hd__and2_0 _3_ (.A(_1_),.B(_0_),.X(_2_));
+ assign _1_ = b;
+ assign _0_ = a;
+ assign y = _2_;
+endmodule
+
+module sub_module2(a, b, y);
+wire _0_;
+ wire _1_;
+ wire _2_;
+input a;
+input b;
+ output y;
+ sky130_fd_sc_hd__lpflow_inputiso1p_1 _3_ (.A(_1_),.SLEEP(_0_),.X(_2_) );
+ assign _1_ = b;
+ assign _0_ = a;
+ assign y = _2_;
+endmodule
+```
+
+In the netlist we can observe that separate modules namely sub_module1 sub_module2 are getting created i.e submodules are getting instanstiated not the gate cells
+
+
+**Flat synthesis** : In Flat synthesis the hierarchies the flattened  out and there is a single module in the netlist i.e the gates are instantiated directly instead of submodules. We apply flat synthesis on the same  design mentioned above. The command used to perform Flat synthesis from yosys are as follows
+
+**read_liberty -lib <path of the .lib>**
  
-
-
-<img width="1085" alt="gtkwaveform" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/gtkwave_waveform.JPG">
-RTL design code of the 2:1 MUX
-<img width="1085" alt="good_mux_design_code" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/good_mux_design_code.JPG">
-Testbench for 2:1 MUX
-<img width="1085" alt="testbench" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/testbench.JPG">
-
-</details>
-<details>
- <summary>Introduction to Yosys</summary>
-
- **Synthesis**: Synthesis in VLSI is the process of converting your code (program) into a circuit. In terms of logic gates, synthesis is the process of translating an abstract design into a properly implemented chip. It is a process of converting a RTL code into a gate level netlist. The tool used for this purpose is called synthesizer.
-
- **Yosys** : Yosys is a framework for RTL synthesis and more. It currently has extensive Verilog-2005 support and provides a basic set of synthesis algorithms for various application domains. Yosys is the core component of most our implementation and verification flows.
-
-**Verification of synthesized design** : In order to make sure that there are no errors in netlist we need to verify the netlist generated by synthesizer. This can be done by giving netlist and testbench to a simulator which in turn produces a .vcd file , then verifying the vcd file gtkwave. The output produced by this vcd file should be same as the one generated by the RTL design code.
-
-**Faster Cells Vs Slower Cells** :Load in digital circuit is of Capacitence. Faster the charging or dicharging of capacitance, lesser is the celll delay. However, for a quick charge/ discharge of capacitor, we need transistors capable of sourcing more current i.e, we need WIDE TRANSISTORS.
-
-Wider transistors have lesser delay but consume more area and power. Narrow transistors are other way around. Faster cells come with a cost of area and power.
-
-Selection of the Cells: We'll need to guide the Synthesizer to choose the flavour of cells that is optimum for implementation of logic circuit. Keeping in view of previous observations of faster vs slower cells,to avoid hold time violations, larger circuits, sluggish circuits, we offer guidance to synthesizer in the form of Constraints.
-</details>
-
-<details>
-<summary>Labs on Yosys </summary>
- We were given the overview of this tool and the basic files required to perform the experiment on 2:1 MUX. 
- 
- **Procedure** : First we need to read the liberty file using the code
- 
- **read_liberty -lib <path of the .lib>**
- 
- Then we need read the RTL Design code
-
  **read_verilog <RTL_Design_file>**
 
- After this we need to perform synthesis 
-
  **synth -top <instance_name>**
- 
- generating netlist
 
  **abc -liberty <.lib path>**
  
-This Netlist can be viewed in the synthesized circuit form using the **show** command    
+ **flatten**
+
+**write_verilog -noattr <File_name>**
+
+The synthesized circuit for a flattened netlist is shown in the below image , Here submodules u1 and u2 are flattened 
+<img  width="1085" alt="hier" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/multiple_module_2.2.png">
+
+The netlist code of the flattened synthesis is as follows
+```ruby
+
+module multiple_modules(a, b, c, y);
+	 wire _0_;
+	 wire _1_;
+	 wire _2_;
+	 wire _3_;
+	 wire _4_;
+	 wire _5_;
+	 input a;
+	 input b;
+	 input c;
+	 wire net1;
+	 wire \u1.a ;
+	 wire \u1.b ;
+	 wire \u1.y ;
+	 wire \u2.a ;
+	 wire \u2.b ;
+	 wire \u2.y ;
+	output y;
+	 sky130_fd_sc_hd__and2_0 _6_ (
+	  .A(_1_),
+	 .B(_0_),
+	 .X(_2_)
+	);
+	 sky130_fd_sc_hd__lpflow_inputiso1p_1 _7_ (
+	  .A(_4_),
+	  .SLEEP(_3_),
+	  .X(_5_)
+	 );
+	 assign _4_ = \u2.b ;
+	 assign _3_ = \u2.a ;
+	 assign \u2.y  = _5_;
+	 assign \u2.a  = net1;
+	 assign \u2.b  = c;
+	 assign y = \u2.y ;
+	 assign _1_ = \u1.b ;
+	 assign _0_ = \u1.a ;
+	 assign \u1.y  = _2_;
+	 assign \u1.a  = a;
+	 assign \u1.b  = b;
+	 assign net1 = \u1.y ;
+	endmodule
+```
+We can see that there is a single module which consist of the gate level instantion of the two submodules .
 
 
+Performing Synthesis at sub_module level is one of the good practises for the massive designs as it simplifies the debugging process . It is also helpful in cases where there many instances of the same module , Instead of synthesizing all the instances we can synthesize one and duplicate it for others and stitch them together. Here is the synthesized circuit and netlist image of the sub_module1 
 
-<img width="1085" alt="ckt" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/yosys_good_mux.JPG">
 
-
-The Nestlist code 
-<img width="1085" alt="netlist" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/yosys_netlist.JPG">
-
-Simplified Netlist code 
-<img width="1085" alt="netlist" 
-
-<img width="1085" alt="netlist" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/simplifield_yosys.JPG">
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/sub_module_1.png">
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/sub_module1_net.png">
 </details>
+
+<details>
+ <summary>Flop coding</summary>
+
+ **Flop**: They are digital electronic circuits that are used to store information in bits as they have two stable states.Even though the input is not stable it gives stable output.
+ 
+ **Why Flop**
+ 
+ In a combinational circuit, the output changes after the propagation delay of the circuit once inputs are changed. During the propagation of data, if there are different paths with different propagation delays, there might be a chance of getting a *glitch* at the output. *glitch* is a signal value pulse that occurs when a logic level changes two or more times over a short period.
+
+If there are multiple combinational circuits in the design, the occurances of glitches are more thereby making the output unstable.
+To curb this drawback, we are going for flops to store the data from the cominational circuits. When a flop is used, the output of combinational circuit is stored in it and it is propagated only at the posedge or negedge of the clock so that the next combinational circuit gets a glitch free input thereby stabilising the output.
+
+We use initialize signals or control pins called set and reset on a flop to initialize the flop, other wise a garbage value to sent out to the next combinational circuit.
+
+**Asynchronous Reset D Flop**
+
+Here the output signal goes low when the reset signal is high , it does not wait for the clock's edge(positive or negative edge ).i.e irrespective of the clock output changes
+
+RTL Design code of positive edge trigerred asynchronous reset D Flop
+```ruby
+ module dff_asyncres ( input clk ,  input async_reset , input d , output reg q );
+	always @ (posedge clk , posedge async_reset)
+	begin
+		if(async_reset)
+			q <= 1'b0;
+		else	
+			q <= d;
+	end
+endmodule
+```
+Simulation
+
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/tb_dff_asyncres_1.png">
+
+Synthesized circuit
+
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/dff_asyncres_sche.png">
+
+**Asynchronous set D Flop**
+
+Here the output signal goes high when the reset signal is high , it does not wait for the clock's edge(positive or negative edge ).i.e irrespective of the clock, output changes
+
+RTL Design code of positive edge trigerred asynchronous set D Flop
+```ruby
+module dff_async_set ( input clk ,  input async_set , input d , output reg q );
+	always @ (posedge clk , posedge async_set)
+	begin
+		if(async_set)
+			q <= 1'b1;
+		else
+			q <= d;
+	end
+endmodule
+```
+Simulation 
+
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/tb_async_set_2.png">
+
+Synthesized circuit
+
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/commit/e8f86fd9002c05a5cc8080bee181074614aa3320">
+
+**synchronous reset D Flop**
+
+Here the output signal goes low whenever the reset signal is high and at the clock edge(positive or negative)
+
+RTL Design code of positive edge trigerred synchronous reset D Flop
+```ruby
+module dff_syncres ( input clk , input async_reset , input sync_reset , input d , output reg q );
+	always @ (posedge clk )
+	begin
+		if (sync_reset)
+			q <= 1'b0;
+		else	
+			q <= d;
+	end
+endmodule
+
+```
+Simulation
+
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/syncres_3.png">
+
+Synthesized circuit
+
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/syn_res_sch.png">
+
+ </details>
+
+ <details>
+<summary>Optimisation Techniques</summary>
+
+
+
+
+There many special cases where we don't need any additional hardwares to implement the circuit. For Example consider a case where 3 bit number is multiplied by 2 in this case we dont need any additional hardware and only needs connecting bits to the output and grounding the LSB bit,same is realized by yosys.
+```ruby
+module mul2 (input [2:0] a, output [3:0] y);
+	assign y = a * 2;
+endmodule
+```
+When it comes to multiplying with the powers of 2 it justs need shifting as shown in the below image
+
+<img  width="1085" alt="hand_writ" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/mul_by_2.jpg">
+
+Synthesized circuit
+
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/opt_mul2_sch.png">
+
+Netlist 
+
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/net_for_mul2.png">
+
+The next special was multiplying a 3 bit number by 9 , the result is as shown in the below image
+
+<img  width="1085" alt="hand_writ" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/opt_mul_9.jpg">
+
+The  RTL  Design code
+
+```ruby
+module mul8 (input [2:0] a, output [5:0] y);
+	assign y = a * 9;
+endmodule
+```
+
+The synthesized circuit
+
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/mul8_sch.png">
+
+Netlist 
+
+<img  width="1085" alt="sub_module1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day2/mul8_net.png">
+  
+ </details>
