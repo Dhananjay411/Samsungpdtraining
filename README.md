@@ -1145,21 +1145,125 @@ Synthesis diagram
 <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_/%23Day3/gtkwave_dff_const_3.png">
  </details>
 
+
+
+
  <details>
 
  <summary>Labs on GLS (Simulation synthesis mismatch)</summary>
-
+ 
  **Example 1** 
+ 
  In this example there is no mismatch between the RTL Design simulated wave and Netlist simulated wave.
  ```ruby
- module ternary_operator_mux (input i0 , input i1 , input sel , output y);
+module ternary_operator_mux (input i0 , input i1 , input sel , output y);
 	assign y = sel?i1:i0;
- endmodule
- ```
- simulation
+endmodule
+```
+simulation
 
- </details>
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day4/waveform%20of%20%20ternary%20operator%20mux.png">
 
+Schematic 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day4/sch_ternary_mux.png">
+
+Netlist Simulation 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day4/gls_for%20ternary_wave.png">
+
+In this we see that when select line is 0 , Output follows i0 and when select line is 1 output follows i1. This is same for both the simulations so there is no mismatch.
+
+**Example 2**
+Consider a example of mux.In this always block is triggered only when the select line is changed.
+```ruby
+module bad_mux (input i0 , input i1 , input sel , output reg y);
+	always @ (sel)
+	begin
+		if(sel)
+			y <= i1;
+		else 
+			y <= i0;
+	end
+endmodule
+```
+Simulation 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day4/waveform%20of%20bad%20mux.png">
+
+Schematic 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/AbhishekChinchani/Samsung_pd/blob/487d88bd65ce2da9dd49d224ea4c740c05be586e/day4/bad_sch.png">
+
+Netlist Simulation
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/AbhishekChinchani/Samsung_pd/blob/487d88bd65ce2da9dd49d224ea4c740c05be586e/day4/bad_gls.png">
+
+In this we can see that there is simulation synthesis mismatch , in the RTL design simulation we see that output is changing only when select line is changing but thats not the correct functionality of a mux , the output should change when either the input or select line is changed , this is reflected in the netlist simulation.
+
+**Example 3**
+Consider a example of mux.In this the always block is triggered when there is a change in either input or select line. 
+```ruby
+module good_mux (input i0 , input i1 , input sel , output reg y);
+	always @ (*)
+	begin
+		if(sel)
+			y <= i1;
+		else 
+			y <= i0;
+	end
+endmodule
+```
+Simulation 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/AbhishekChinchani/Samsung_pd/blob/487d88bd65ce2da9dd49d224ea4c740c05be586e/day4/good_rtl.png">
+
+Schematic 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/AbhishekChinchani/Samsung_pd/blob/487d88bd65ce2da9dd49d224ea4c740c05be586e/day4/good_sch.png">
+
+Netlist 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/AbhishekChinchani/Samsung_pd/blob/487d88bd65ce2da9dd49d224ea4c740c05be586e/day4/good_gls.png">
+
+Here simulation output are same , i.e output changes when input or select line changes.
+
+</details>
+
+<details>
+
+ <summary>Labs on synthesis simulation mismatch (Blocking statement)</summary>
+ 
+ **Example 4** 
+ Here the output depends on the past value of x which is dependent on a and b  and it appears like a imaginary flop.
+ 
+ ```ruby
+ module blocking_caveat (input a , input b , input  c, output reg d); 
+reg x;
+always @ (*)
+	begin
+	d = x & c;
+	x = a | b;
+end
+endmodule
+```
+
+ Simulation
+ 
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/AbhishekChinchani/Samsung_pd/blob/487d88bd65ce2da9dd49d224ea4c740c05be586e/day4/blk_rtl.png">
+
+ Schematic 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/AbhishekChinchani/Samsung_pd/blob/487d88bd65ce2da9dd49d224ea4c740c05be586e/day4/blk_sch.png"> 
+
+Netlist simulation 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/AbhishekChinchani/Samsung_pd/blob/487d88bd65ce2da9dd49d224ea4c740c05be586e/day4/blk_gls.png"> 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/AbhishekChinchani/Samsung_pd/blob/2ea9ca60553c829f9162484cb1e4049c3064443c/day4/20230829_085956.jpg"> 
+
+This a combinational circuit of or and and gate , in which the output of or gate is given as input to the and gate as shown in the figure , but in the RTL Design code blocking statements are used to define these operations in reverse direction(These statements are executed sequentially) so the and gate is getting input from the  previous output of or gate which acts as imaginary flop. As a result we are getting a different waveform in RTL design simulation , the correct waveform is  obtained  while doing netlist simulation. This causes Synthesis Simulation mismatch. This can be overcome by using non blocking assignment statements in the always block.  
+</details>
 
 
 
