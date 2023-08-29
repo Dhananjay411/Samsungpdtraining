@@ -1049,28 +1049,100 @@ synthesis
 
  **Blocking Vs Non Blocking Assignments**
 
- *Blocking statements* are the type of assignment statements in Hardware Description Language. These assignments are executed sequentially in the order they appear in the code. The next statement will wait for the current one to finish.
+ *Blocking statements*A blocking statement must be executed before the execution of the statements that follow it in a sequential block. In the example below the first time statement to get executed is a = b followed by
+
 
  Example of blocking assignment 
  ```ruby
- always @posedge(clk) begin
+ 
 	a = b;
-	d = c;
- end
+	out_d = 0;
+     {carry,sum} = in+sum_in
+ 
  ```
  Improper use of blocking assignments in the always block can lead to synthesis simulation mismatch 
 
- *Non Blocking statements* are also a type of assgnment statements in HDL. These assignments are executed parallely, and the updates to the values  take effect at the end of the time step.
+ *Non Blocking statements* Nonblocking statements allow you to schedule assignments without blocking the procedural flow. You can use the nonblocking procedural statement whenever you want to make several register assignments within the same time step without regard to order or dependence upon each other. It means that nonblocking statements resemble actual hardware more than blocking assignments.
 
  Example of non blocking assignment 
 
  ```ruby
- always @posedge(clk) begin
+
+always @posedge(clk) begin
 	a <= b;
 	d <= c;
  end
  ```
- Inside always block it is always a good practise to use non blocking assignment statements
+Inside always block it is always a good practise to use non blocking assignment statements
+
+Example of blocking and non blocking in delay format
+
+```ruby
+     module block_nonblock();
+     reg a, b, c, d , e, f ;
+  
+   // Blocking assignments
+   initial begin
+   a = #10 1'b1;// The simulator assigns 1 to a at time 10
+    b = #20 1'b0;// The simulator assigns 0 to b at time 30
+     c = #40 1'b1;// The simulator assigns 1 to c at time 70
+   end
+  
+  // Nonblocking assignments
+  initial begin
+    d <=  #10  1'b1;// The simulator assigns 1 to d at time 10
+    e <=  #20  1'b0;// The simulator assigns 0 to e at time 20
+    f  <=  #40  1'b1;// The simulator assigns 1 to f at time 40
+  end
+    
+  endmodule
+
+ ```
+Blocking Assignment with synthesis output
+```ruby
+module blocking (clk,a,c);
+input clk;
+input a;
+output c;
+ 
+wire clk;
+wire a;
+reg c;
+reg b;
+  
+always @ (posedge clk )
+begin
+ b = a;
+ c = b;
+end
+   
+endmodule
+```
+synthesis diagram
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_/%23Day3/gtkwave_dff_const_3.png">
+
+Non Blocking Assignment with synthesis output
+```ruby
+module nonblocking (clk,a,c);
+input clk;
+input a;
+output c;
+ 
+wire clk;
+wire a;
+reg c;
+reg b;
+  
+always @ (posedge clk )
+begin
+  b <= a;
+  c <= b;
+end
+   
+endmodule
+ ```
+Synthesis diagram
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_/%23Day3/gtkwave_dff_const_3.png">
  </details>
 
  <details>
