@@ -1267,6 +1267,358 @@ Netlist simulation
 This a combinational circuit of or and and gate , in which the output of or gate is given as input to the and gate as shown in the figure , but in the RTL Design code blocking statements are used to define these operations in reverse direction(These statements are executed sequentially) so the and gate is getting input from the  previous output of or gate which acts as imaginary flop. As a result we are getting a different waveform in RTL design simulation , the correct waveform is  obtained  while doing netlist simulation. This causes Synthesis Simulation mismatch. This can be overcome by using non blocking assignment statements in the always block.  
 </details>
 
+# Day 6 Introduction to logic synthesis
+
+ <details>
+ <summary>Introduction</summary>
+	 
+ <ins> **Digital Circuit** </ins>
+ 
+ Logic operations on binary data, which is represented as 0s and 1s, are carried out by a digital circuit, which is made up of electronic components. The basic building blocks of contemporary electronic gadgets like computers, smartphones, and digital appliances are these circuits. Because they are made to handle digital signals, digital circuits are particularly well suited for operations like data processing, storage, and transmission.
+
+ Key components and concepts in digital circuits include:
+
+ **Logic Gates** : Logic gates are the basic building blocks of digital circuits. They perform logical operations such as AND, OR, NOT, XOR, and others on binary inputs to produce binary outputs. Common logic gates include AND gates, OR gates, NAND gates, NOR gates, XOR gates, and NOT gates.
+
+ **Flip-Flops** : Flip-flops are bistable multivibrators used to store a single binary bit of data. They are essential for creating memory elements in digital circuits, such as registers and memory cells.
+
+ **Integrated Circuits (ICs)** : Integrated circuits are small semiconductor chips that contain multiple transistors and logic gates. They come in various forms, including microcontrollers, microprocessors, and application-specific ICs (ASICs). ICs are the heart of most digital devices and systems.
+
+ **Combinational Logic** : Combinational logic circuits produce output based solely on the current inputs, without any memory of past inputs. Examples include adders, multiplexers, and decoders.
+
+ **Sequential Logic** : Sequential logic circuits, unlike combinational circuits, have memory elements (usually flip-flops) that store information about past inputs. This allows them to perform tasks that involve sequencing or state-based operations, such as counters and shift registers.
+
+ **Registers and Memory Units** : Registers are small, fast storage elements used to store temporary data within a digital circuit. Memory units, like RAM (Random Access Memory), provide larger storage capacity for data and program storage in computing systems.
+
+ **Clock Signals** : Most digital circuits use clock signals to synchronize the timing of operations. Clock signals ensure that various parts of the circuit work together harmoniously, especially in sequential circuits.
+
+ **Binary Representation** : Digital circuits operate on binary data, which is a system of representing information using two symbols: 0 and 1. Binary representation is the foundation of digital computation and information storage.
+
+ Digital circuits are used in a wide range of applications, from basic logic gates used in simple consumer electronics to highly complex digital processors found in computers and other advanced technology. These circuits are known for their reliability, speed, and scalability, which makes them essential in modern technology.
+
+
+
+
+
+
+
+ <ins> **Synthesis** </ins>
+
+ As there is a rapid advancements in level of integration in VLSI design over few decades, EDA tools plays a vital role in the design, verification and debugging of larger digital circuits.EDA tools offer lot of opportunities to design variety of electronic chips containing the integrated circuits. To meet the functional and performance goals within a design time schedule and cost associated with it presents the scope for EDA tools.Synopsys Design Compiler (DC) is one such EDA tool used to perform the logic synthesis of complex digital circuits to produce fast and area efficient ASIC designs by incorporating the standard cell libraries and user defined gate arrays. Design compiler tool supports wide range of hierarchical and flat design styles and optimizes both combinational and sequential designs. It also explore design trade-offs involving design constraints such as timing, area, and power under various loading, temperature, and voltage
+ conditions.
+  Also, EDA tools are minimizing time in designing complex ICs, eliminating manufacturing errors, reducing
+ manufacturing costs, optimizing the IC design and simplicity of usage. The better performance with good
+ quality of results can be achieved by meeting the desired timing and area goals poses a challenge in the logic
+ synthesis of hierarchical modular design using DC tool. Logic Synthesis is a process of converting a high-level description of the design into an optimized gate-level representation given a standard-cell library and design constraints. It is a highly automated procedure that bridges the gap between high-level synthesis and physical design automation. FEV method used for checking the logical
+ equivalence between the RTL and netlist. It has become essential part of the design flow and has leveraged for later hand edit such Engineering Change Order (ECO). It is an exhaustive verification method that verifies design functionality completely without the use of test vectors.
+
+ **LOGIC SYNTHESIS** : Logic Synthesis is a process of converting a high-level description of the design into an optimized gate-level representation given a standard-cell library and design constraints. The mathematical foundation of logic synthesis is the intersection of logic and algebra often known as Boolean algebra. It is a highly automated procedure that bridges the gap between high-level synthesis and physical design automation. 
+  Logic Synthesis has wide scope in the design of digital systems whose synchronous behavior and implementation is
+ focused most by the synthesis methodologies. The amount of design automation and logic synthesis efforts depends
+ heavily on the market oriented decisions that influence the design styles chosen in implementing a product. Logic
+ synthesis first translates the RTL description in verilog to components extracted from technology independent Generic
+ TECHnology (GTECH) and DesignWare libraries. 
+ Then, it optimized with suitable optimization rules and algorithms and mapped to technology dependent library
+ cells. There are three levels of optimization can be performed in the synthesis process and are Architectural
+ optimization, Logic level optimization and Gate level optimizations 
+ 
+ **Architectural Optimization** : Optimization at the architectural level works on the HDL description and includes high level synthesis tasks
+ such as sharing common sub expressions, resources, selecting DesignWare implementations, reordering
+ operators and identifying arithmetic expressions for data path synthesis. High level synthesis tasks occurs only during
+ the optimization of an unmapped design and are based on user defined constraints and coding style.
+
+ **Logic Level Optimization** : Logic level optimization works on the GTECH netlist and has two processes: Structuring and Flattening. Structuring process is constraint based and is best applied to
+ non critical timing paths. It basically adds intermediate variables and logic structures to a design which results in
+ smaller area. Flattening process aim is to convert combinational logic paths of the design to a to level, Sum of
+ Product representation. It is independent of constraints and
+ suitable for speed optimization.
+
+ **Gate level Optimization** : Optimization at gate level works on the generic netlist created by the logic synthesis to produce technology specific netlist. It involves mapping, delay optimization and
+ design rule fixing processes. The mapping process uses gates from target technology libraries to generate a gate
+ level implementation of the design to meet timing and area requirements. Delay optimization goal is to fix violations
+ introduces in the mapping phase due to delay. Design rule fixing used to correct design rule violations by inserting
+ buffers or resizing existing cells. 
+
+ **Compilation Techniques** : The RTL design can be compiled in two ways in the synthesis process and are Top Down compile and Bottom
+ Up compile. In the top down approach, top level model and all its sub modules are compiled together. The advantage of
+ using this method is that it provides push button approach and takes care of interblock dependencies. Top down
+ approach can be used for a design that does not include memories.
+ Top level design having memory blocks can be replaced by interface models and then it can be compiled using this
+ method. The memory requirements for the instantiation of sub-designs can be greatly reduced by replacing memories
+ with interface modules. In the Bottom Up approach, the large designs are compiled using divide and conquer method
+ and require less memory as compared to Top - Down compile. 
+ The constraints are applied to sub-designs individually, and then they are compiled separately and included in top
+ level design. The sub designs are characterized based worst violations, characterize captures timing and environment
+ information of each cell referenced in the design
+
+ <ins> **.lib file** </ins>
+ Lib file is a short form of Liberty Timing file. Liberty syntax is followed to write a .lib file. LIB file is an ASCII representation of timing and power parameter associated with cells inside the standard cell library of a particular technology node. Lib file is basically a timing model file which contains cell delay, cell transition time, setup and hold time requirement of the cell. So Lib file basically contains the timing and electrical characteristics of a cell or macros. Lib file is generated and provided to ASIC designer by a standard cell library vendor or Foundry if the foundry provides a standard cell library. 
+ The information inside the Lib file can be divided into two main parts, in the first part, it contains some information which is common for all the standard cells. To understand it better have a look in the following snapshot of the Lib file.
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/lib_file_comman1.png">
+ 
+ The common part of Lib file contains
+ 1. Library name and technology name
+ 2. Units (of time, power, voltage, current, resistance and capacitance)
+ 3. Value of operating condition ( process, voltage and temperature) Max, Min and Typical
+
+ Based on operating conditions there are three different lib files for Max, Min and Typical corners. In the second part of Lib file, it contains cell-specific information for each cell. The part of Lib file which contains cell-specific information is shown below.
+ 
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/Lib_cell_part2.png">
+
+ 
+ Cell-specific information in Lib file is mainly
+
+ 1. Cell name
+ 2. PG Pin name
+ 3. Area of cell
+ 4. Leakage power in respect of input pins logic state
+ 5. Pins details
+    5.1 Pin name
+    5.2 Pin direction
+    5.3 Internal power
+    5.4 Capacitance
+    5.5 Raise capacitance
+    5.6 Fall Capacitance
+    5.7 Fanout load
+
+ A snapshot of Lib file for the pin part is given below
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/Lib_pin%20part3.png">
+
+ Timing and power parameter of a cell is obtained by simulating the cell in a variety of operating conditions and data are represented in the Lib file. There are two main techniques to characterize a cell and generated the Lib file.
+ CCS (Composite Current Source)
+ NLDM (Non-Linear Delay Model)
+ In CCS technique current source is used whereas in NLDM technique voltage source is used to model and derive the Lib parameters. Based on CCS and NLDM technique used for characterizing the cell, we call the corresponding Lib file is CCS Lib file and NLDM Lib file. Since CCS technique is having more controlling parameters as compare to NLDM technique, So CCS Lib file is more accurate. NLDM Lib file has lesser run time mean fast run compare to CCS Lib and also the size of the NLDM file is lesser than that of CCS Lib file.
+
+ <ins> **Constraints** </ins>
+
+ In VLSI design, constraints are essential parameters and limitations that guide the development process to ensure that the resulting integrated circuits (ICs) meet specific performance, timing, and functionality requirements. These constraints play a crucial role in achieving a successful VLSI design.
+
+
+ </details>
+
+ <details>
+
+ <summary>DC Compiler</summary>
+
+ **Design Compiler** , often abbreviated as DC, is a high-level synthesis tool developed by Synopsys, a leading provider of EDA solutions. It plays a pivotal role in the process of designing complex integrated circuits (ICs) and is an integral part of modern VLSI design flows.
+
+ Important terms used 
+ - **Synopsys Design Constraints(SDC)** : These are the design constraints which are supplied to DC to enable appropriate optimization suitable for achieving the best implementation.
+ - **.lib** : Design Library which contains the Standard cells.
+ - **.db** : Same as .lib but in a different format. DC understands libraries in .db format
+ - **.ddc** : Synopsys propreitary format for storing the design information. DC can write out and read in DDC.
+ - **Design** : RTL files which has the behavioral model of the design.
+
+ <ins> **DC synthesis flow** </ins>
+
+ ```ruby
+		Read STD Cell/tech.lib
+			 ↓
+		Read Design (Verilog and Design.lib)
+			 ↓
+		Read SDC
+			 ↓
+		Link the Design
+			 ↓
+		Synthesize
+			 ↓
+		Generate Report and analyse QoR
+			 ↓
+		Write out the Netlist
+  ```
+ The DC compiler does not understand .lib , so the .lib is converted to .db format. lib format is for user reference.
+
+ <ins>**Labs on DC Compiler**</ins>
+
+ **Invoking DC compiler**
+ First we need to enable C shell and then invoke dC shell with the commands shown below
+
+ ```ruby
+ >> csh
+  >> dc_shell
+ ```
+ Then we echo target library and link_library which returns an imaginary pointer library namely your library, which needs to be set.
+ ```ruby
+ >>>echo $target_library
+ >>>echo $link_library
+ ```
+ Consider a example of a Mux connected to D Flip flop as ahown in the figure as follows
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/first.png">
+
+ The RTL design code is 
+ ```ruby
+ module lab1_flop_with_en ( input res , input clk , input d , input en , output reg q);
+ always @ (posedge clk , posedge res)
+ begin
+	if(res)
+		q <= 1'b0;
+	else if(en)
+		q <= d;	
+ end
+ endmodule
+ ```
+ Synthesis of this design code can be done using the following commands
+ ```ruby
+ read_verilog <path of design file>
+ read_db <path of .db>
+ write -f verilog -out <net_filename>
+ ```
+ 
+ This generates the netlist file but it consists of some seqgen library as shown in the figure and not the .db file even though we have read the .db file, This is beacuse we didn't set link and target library,
+
+ 
+
+ To set the link_library and target_library we use the following commands
+ ```ruby
+ set target_library <path of .db>
+ set link_library { * path of the .db }
+ link
+ compile
+ write -f verilog -out <net_filename>
+ ```
+ After compiling the we get the output as shown in the figure
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/day6/lab1_flop.png">
+
+ The generated netlist
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/day6/lab1_with_sky130.png">
+
+
+ **Labs on Design Vision**
+
+ Design Vision is a widely used Electronic Design Automation (EDA) tool in the field of VLSI. It is developed by Synopsys and is primarily used for logic synthesis, formal verification, and other essential tasks in the VLSI design flow.
+
+ To launch Design Vision we need to enable c shell and then give design Vision
+ ```ruby
+ csh
+ design_vision
+ ```
+ After launching the design_vison first we need to the net to .ddc which is read by Design_vision tool which can be done by using the below command
+ ```ruby
+  write -f ddc -out <filename_name>
+ ```
+ Then we can start GUI and then read the .ddc file generated above. This ddc file contains all the information of the tool memory of that particular session. ddc is synopys proprietary format i.e it can be read only br synopsys tools.When the .db is read it automatically reads the linked .db file as shown in the below figure. 
+
+ If we want to see the gate level implementation then we need to double click the module.
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/day6/sch_lab1_ddc.png">
+
+ **Lab on .synopsys_dc.setup**
+
+ Consider a case where there are multiple .db files used and we cannot skip any of them , then it is nearly impossible to indvidually set all the .db files. In order to resolve this we can create a file namely *.synopsys_dc.setup* file in home diresctory of workspace.
+
+ When dc_shell is invoked, the shell looks the .synopsys_dc.setup file in user_home_directory. The order of priority is, if file exists in user_home_directory then that will be picked and the installed (default) is ignored. If not found, then installed one is picked. All repetitive tasks which are needed for tool setup can be pointed in this file. So when the dc_shell is invoked all the .dbs are set automatically
+ 
+ The .synopys_dc.setup file for the above example of mux and d flip flop is as follows
+
+ ```ruby
+ set target_library /home/pavday.s/DC_WORKSHOP/lib/sky130_fd_sc_hd_tt_025c_1v80.db
+ set link_library {* $target_library }
+ ```
+
+ </details>
+
+ <details>
+
+ <summary>Tcl scripting</summary>
+ Tcl, short for "Tool Command Language," is a dynamic and interpreted scripting language that was created to serve as a simple and efficient scripting tool. Tcl is known for its ease of use, flexibility, and extensibility, making it widely adopted in various domains.
+ 
+ This is widely used language in VLSI
+
+ Basic Tcl Commands
+
+ Assigning a variable
+  ```ruby
+ set a 10
+ ser b 10
+ set a [expr $a + $b]
+ ```
+
+ if else condition
+
+ ```ruby
+ if { condition } {
+ <statements>
+ } else {
+ <statements>
+ }
+ ```
+ while loop
+
+ ```ruby
+ while {<condition>} {
+ /statements
+ }
+ ```
+ For loop
+
+ ```ruby
+ for {<looping variable>} {condition} {incr/decr} {
+ /statements
+ }
+
+ ```
+ For each 
+
+ ```ruby
+ foreach var list{
+ statement
+ }
+ ```
+
+ For each in the case of collection
+
+ ```ruby
+ foreach_in_collection var collection {
+ statement
+ }
+ ```
+
+ Labs on TCL
+
+ Example 1 on assigning the variable and for loop
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/day6/tcl1_while.png">
+
+ Example 2 on while loop
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/day6/while_expr_1.png">
+
+ Example 3 is tool specific it returns the collection of all the standard cells containing and in the .lib file, it is done using
+
+ ```ruby
+ get_lib_cells */*and*
+ ```
+ when we try to print this collection we get _sel3 which is basically a pointer address. Collection is basically the collection of pointers
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/day6/sel_line.png">
+
+ To get the cell name we need to use the command as used in the below screenshot
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/int1">
+
+ These codes can be written in tickle file
+
+ Consider a example 
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/day6/script.png">
+
+
+ output
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/day6/cell_script.png">
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day6/day6/printing_mul1.png">
+
+
+
+ </details>
+
+
+
 
 
 
