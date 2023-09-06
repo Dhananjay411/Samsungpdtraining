@@ -1618,7 +1618,319 @@ This a combinational circuit of or and and gate , in which the output of or gate
  </details>
 
 
+# Day 7 Basics of STA
 
+ <details>
+	 
+ <summary>Introduction to STA(Static Timing Analysis)</summary>
+
+ **Static Timing Analysis** 
+ Static timing analysis (STA) is a method of validating the timing performance of a design by checking all possible paths for timing violations. STA breaks a design down into timing paths, calculates the signal propagation delay along each path, and checks for violations of timing constraints inside the design and at the input/output interface.
+  Another way to perform timing analysis is to use dynamic simulation, which determines the full behavior of the circuit for a given set of input stimulus vectors. Compared to dynamic simulation, static timing analysis is much faster because it is not necessary to simulate the logical operation of the circuit. STA is also more thorough because it checks all timing paths, not just the logical conditions that are sensitized by a set of test vectors. However, STA can only check the timing, not the functionality, of a circuit design.
+
+  **How does STA work?**
+
+  When performing timing analysis, STA first breaks down the design into timing paths. Each timing path consists of the following elements:
+
+ *Startpoint* . The start of a timing path where data is launched by a clock edge or where the data must be available at a specific time. Every startpoint must be either an input port or a register clock pin.
+ *Combinational logic network*. Elements that have no memory or internal state. Combinational logic can contain  AND, OR, XOR, and inverter elements, but cannot contain flip-flops, latches, registers, or RAM.
+ *Endpoint* . The end of a timing path where data is captured by a clock edge or where the data must be available at a specific time. Every endpoint must be either a register data input pin or an output port.
+ The following figure shows the timing paths in a simple design example:
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/sta_path.JPG">
+
+ in this example, each logic cloud represents a combinational logic network each path start at a data launch point,passes through some combinational logic, and ends at  a data capture point.
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/sta%20path%201.JPG">
+
+ A combinational logic cloud might contain multiple paths, as shown in the following figure. STA uses the longest path to calculate a maximum delay and the shortest path to calculate a minimum delay.
+
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/sta_3.JPG">
+ 
+
+ STA also considers the following types of paths for timing analysis:
+
+ *Clock path*. A path from a clock input port or cell pin, through one or more buffers or inverters, to the clock pin of a sequential element; for data setup and hold checks.
+ *Clock-gating path*. A path from an input port to a clock-gating element; for clock-gating setup and hold checks.
+ *Asynchronous path*. A path from an input port to an asynchronous set or clear pin of a sequential element; for recovery and removal checks.
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/sta_4.JPG">
+ 
+
+ After breaking down a design into a set of timing paths, an STA tool calculates the delay along each path. The total delay of a path is the sum of all cell and net delays in the path.
+
+ Cell delay is the amount of delay from input to output of a logic gate in a path. In the absence of back-annotated delay information from an SDF file, the tool calculates the cell delay from delay tables provided in the logic library for the cell.
+
+ Typically, a delay table lists the amount of delay as a function of one or more variables, such as input transition time and output load capacitance. From these table entries, the tool calculates each cell delay.
+
+ Net delay is the amount of delay from the output of a cell to the input of the next cell in a timing path. This delay is caused by the parasitic capacitance of the interconnection between the two cells, combined with net resistance and the limited drive strength of the cell driving the net.
+
+ STA then checks for violations of timing constraints, such as setup and hold constraints:
+
+ A setup constraint specifies how much time is necessary for data to be available at the input of a sequential device before the clock edge that captures the data in the device. This constraint enforces a maximum delay on the data path relative to the clock edge.
+ A hold constraint specifies how much time is necessary for data to be stable at the input of a sequential device after the clock edge that captures the data in the device. This constraint enforces a minimum delay on the data path relative to the clock edge.
+
+ The following example shows how STA checks setup and hold constraints for a flip-flop:
+
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/sta_5.JPG">
+
+
+ For this example, assume that the flip-flops are defined in the logic library to have a minimum setup time of 1.0 time units and a minimum hold time of 0.0 time units. The clock period is defined in the tool to be 10 time units. The time unit size, such as ns or ps, is specified in the logic library.
+
+ By default, the tool assumes that signals are propagated through each data path in one clock cycle. Therefore, when the tool performs a setup check, it verifies that the data launched from FF1 reaches FF2 within one clock cycle, and arrives at least 1.0 time unit before the data gets captured by the next clock edge at FF2. If the data path delay is too long, it is reported as a timing violation. For this setup check, the tool considers the longest possible delay along the data path and the shortest possible delay along the clock path between FF1 and FF2.
+
+ When the tool performs a hold check, it verifies that the data launched from FF1 reaches FF2 no sooner than the capture clock edge for the previous clock cycle. This check ensures that the data already existing at the input of FF2 remains stable long enough after the clock edge that captures data for the previous cycle. For this hold check, the tool considers the shortest possible delay along the data path and the longest possible delay along the clock path between FF1 and FF2. A hold violation can occur if the clock path has a long delay.
+
+ If certain paths are not intended to operate according to the default setup and hold behavior assumed by the STA tool, you need to specify those paths as timing exceptions. Otherwise, the tool might incorrectly report those paths as having timing violations.
+
+ An STA tool may let you specify the following types of exceptions:
+
+ *False path*. A path that is never sensitized due to the logic configuration, expected data sequence, or operating mode.
+ *Multicycle path*. A path designed to take more than one clock cycle from launch to capture.
+ *Minimum or maximum delay path*. A path that must meet a delay constraint that you explicitly specify as a time value.
+
+ **Delay** 
+
+ Delay refers to the time it takes for a signal to propagate from one point in a digital circuit to another. Delay is a critical parameter in design because it affects the performance, power consumption, and reliability of the integrated circuit.
+
+ A *Max Delay Constraint* refers to a design specification or requirement that imposes an upper limit on the delay a signal can experience while propagating through a specific path or circuit within an integrated circuit. Consider a example of 2 D flip flop connected with a combinational logic in between them.
+ 
+ Tck >= Tcq + Tcomb + Tst
+
+ "Min Delay constraint" refers to a design specification or requirement that sets a minimum allowable delay for a signal to propagate through a specific path or circuit within an integrated circuit. This constraint is used to ensure that certain signals within the circuit do not propagate too quickly, which can lead to timing violations and potential operational issues.
+ 
+ Thold < Tcq + Tcomb
+
+ Delay can well understood with the water bucket analogy , consider a case in which 2 buckets of 5 gallon each are being filled using the inflow of water from 2 separate pipes whose inflows are 1 gallon per minute and 5 gallon per minute respectively. The time taken by the bucket 1 to fill from 20 % to 80% is 3 min and for the other one it is 0.6 min. This case can be corelatted in VLSI as follows.
+
+ Inflow water => Inflow of current
+ 
+ Pipe 1 with higher inflow => less trasnsition delay
+ 
+ Pipe 2 with lower inflow  => high transition delay
+
+ The size of the bucket also matters , which can be correlated with the load capacitance.
+
+ Delay of the cell is a function of **input transition** and **load capacitance**
+
+ **Timing Arc**
+
+  A timing arc defines the propagation of signals through logic gates/nets and defines a timing relationship between two related pins. Timing arc is one of the components of a timing path. Static timing analysis works on the concept of timing paths. Each path starts from either primary input or a register and ends at a primary output or a register. In-between, the path traverses through what are known as timing arcs. We can define a timing arc as an indivisible path/constraint from one pin to another that tells EDA tool to consider the path/relationship between the pins. For instance, AND, NAND, NOT, full adder cell etc. gates have arcs from each input pin to each output pin. Also, sequential cells such as flops and latches have arcs from clock pin to output pins and data pins
+
+
+ <img  width="1085" alt="" src=" https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/timing%20arc.JPG">
+
+ **Terminology** : The common terminology related to timing arcs is as follows:
+ *Source pin*: The pin from which timing arc originates (pin IN1 and IN2 for cell arcs, pin OUT for net arc in figure1). This also means constraining pin in case of setup/hold timing checks (for example clock is source pin for setup check)
+ *Sink pin*: The pin at which timing arc ends (pin OUT for cell arc, pin AND2/IN2 for net arc in figure2). This also means constrained pin in case of setup/hold timing arcs (for example data pin is sink pin for setup check)
+
+
+ **Cell arcs and net arcs**: Timing arcs can be categorized into two categories based upon the type of element they are associated with – cell arcs and net arcs.
+ *Cell arcs*: These are between an input pin and output pin of a cell. In other words, source pin is an input pin of a cell and sink pin a pin of the same cell (output pin in case of delay arcs and input pin in case of timing check arcs). In the figure shown above, arcs (IN1 -> OUT) and (IN2 -> OUT) are cell arcs. Cell arcs are further divided into sequential and combinational arcs as discussed below.
+ *Net arcs*: These arcs are between driver pin of a net and load pin of a net. In other words, source pin is an output pin of one cell and sink pin is an input pin of another cell. In the figure shown above, arc (OUT -> IN2) is a net arc. Net arcs are always delay timing arcs.
+ 
+ **Timing sense of an arc**: Timing sense of an arc is defined as the sense of traversal from source pin of the timing arc to the sink pin of the timing arc. Timing sense is also called as "unateness" of timing arc. Timing sense can be ‘positive unate’, ‘negative unate’ and ‘non-unate’.
+ *Positive unate timing arc*: The unateness of an arc is said to be positive unate if rise transition at the source pin causes rise transition (if at all) at sink pin and vice-versa.  Cells of type AND, OR gate etc. have positive unate arcs. All net arcs are positive unate arcs.
+ *Negative unate timing arc*: The unateness of an arc is said to be negative unate if rise transition at the source pin causes fall transition at the sink pin and vice-versa. NAND, NOR and Inverter have negative unate arcs.
+ *Non unate timing arcs*: If there is no such relationship between the source and sink pins of a timing arc, the arc is said to be non-unate. XOR and XNOR gates have non-unate timing arcs.
+
+
+ **From what source timing arcs are picked**: For cell arcs, the existence of a timing arc is picked from liberty files. The cell has a function defined that identifies if the arc is there from its input (say ‘x’) to output (say ‘y’). In most of the cases, the value (delay, unateness, sd condition etc) of the arc is also picked from liberty; but in case you have read SDF, the delay is picked from SDF (Standard Delay Format) file (other properties picked from liberty in this case also). On the other hand, for net arcs, the existence of arc is picked from connectivity information (netlist). The net arcs are calculated based on the parasitic values given in SPEF (Standard Parasitics Exchange Format) file, or SDF (like in case above).
+
+ **Importance of timing arcs**: Timing arcs have a very important role in VLSI design industry. Whole of the optimization process right from gate level netlist till final signoff revolves around timing arcs. The presence of correct timing arcs in liberty file is very essential for high quality signoff or there may not be correlation between simulation and silicon).
+
+
+ *Combinational Sequential Cells Timing arcs* 
+ cell arcs can be sequential or combinational. Sequential arcs are between the clock pin of a sequential cell and either input or output pin. Setup and hold arcs are between input data pin and clock pin and are termed as timing check arcs as they constrain a form of timing relationship between a set of signals. Sequential delay arc is between clock pin and output pin of sequential elements. An example of sequential delay arc is clk to q delay arc in a flip-flop.  On the other hand, combinational arcs are between an input data and output data pin of a combinational cell or block. 
+
+
+  **Constraints** 
+
+ In VLSI (Very Large Scale Integration) design, **constraints** are specifications and limitations applied to various aspects of the design process to ensure that the resulting integrated circuit meets its intended requirements and performs as expected. These constraints play a crucial role in guiding the design and verification of VLSI circuits.
+
+ Why constraints ?
+
+ Consider a circuit as shown in the figure
+
+ ![image](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/pqrst.png)
+
+
+ Here if the setup time for all the components is 0.5 ns and and propagation delay of the selected gates are 0.5 ns and 0.7 ns for not and and gate respectively.
+
+ Tck for path from 1st flop is 2.2 ns 
+
+ Tck for path from 2nd clk is 1.7 ns
+
+ The max delay is 2.2 ns which is called the critical path as it detemines the clock frequeny
+
+ In practical cases we set the working frequency and then calculate the required propogation delay. In this example if the Tck path from the 1st flop setup time and clock to q delay is almost fixed 0.5 ns if we need to make this work at clock frequency of 200 MHz i.e 2 ns which implies the and gate propogation delay should be 1 ns . so who will tell the tool to pick the and gate with proper propagtion delay of 1 ns instead of 1.2 ns . So for this we need constraints
+
+ **Timing paths** in VLSI  design are specific routes or signal paths within a digital circuit where the timing characteristics, including signal propagation delays, setup times, hold times, and clock-to-q delays, are analyzed to ensure the circuit's correct and reliable operation. These paths are crucial for timing analysis and play a central role in achieving the desired performance and functionality of the integrated circuit. Timing paths typically include a starting point (often a flip-flop or input pin), a set of logic gates and interconnections, and an ending point (another flip-flop or output pin). 
+
+ Start points of timing path
+
+ - Input ports
+ - Clock pins of regs
+
+ End point of timing path
+
+ - Output ports
+ - D pin of D flip flop / D Latch
+
+
+ Always the timing path start at one of the start point and ends at one of the end point
+
+ Clock -> D (Reg 2 Reg)
+
+ Clock  -> Output port (I/O timing path)
+
+ input port -> D (I/O timing path)
+
+ input port -> Output port (These should not be present)
+
+
+ Consider the circuit 
+
+ ![image](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/asdfg.png)
+
+
+ - In this Reg 2 Reg is constrained by clock
+  
+ - Reg to out is constrained by Output external delay , load and clock . 
+
+ - In 2 Reg is constrained by input external delay ,clock, input transition.
+ 
+ In addition to this Input transition delays are also constrained as signal transition are not ideal . As we know that delays are function of input transition and load capacitance they both need to be constrained.
+
+
+ </details>
+
+ <details>
+
+ <summary> Labs </summary>
+
+ Timing File (.lib) consists of ASCII representations of Timing, Area, and Power associated with the Standard cell. The Naming convention in the timing file follows PVT format (Process, Voltage, Temperature). For example, the standard library used in our case was sky130_fd_sc_hd_tt_025C_1v8, this name suggests that we are using 130 nm technology and the process is typical, temperature is 25C, and 1.8 V represents the voltage.
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/lib_with%20pvt">
+
+ The timing File also consists of the technology used for standard cells as in the above example it is CMOS, it also specifies the delay model, unit of time, unit of voltage, unit of resistance, and many other units.
+
+  This also includes different different flavours of the same logic gates.
+
+ .lib also contains leakage power , area , timing sense of each different flavours of gate cells.
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/delay_model_lookup_table">
+
+ A Look-Up Table (LUT) in a Liberty file is a component that defines the logical behavior and timing characteristics of a combinational logic cell within a digital library. Liberty files are used in the electronic design automation (EDA) industry to represent libraries of standard cells that can be used in VLSI (Very Large Scale Integration) design.
+
+ index1 represents input transition , index2 represeents output load capacitance
+
+ example of and2_1 gate index table
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/AbhishekChinchani/Samsung_pd/blob/e731f71ac7b93042821dee66ad994eae01ef8d6f/day7/and2_index.png">
+
+ A Boolean function is considered "unate" if it satisfies the unateness property, which relates to the behavior of the function with respect to the input variables. Unate functions are important in logic optimization and simplification processes, such as those used in logic synthesis and minimization.
+
+ There are two main types of unateness:
+
+ Positive Unate Function: A Boolean function is considered positive unate with respect to a particular input variable if, for any assignment of values to the other input variables, the function either remains constant or increases as the specified input variable transitions from 0 to 1. In other words, the function depends only on the positive (1) values of that input variable.
+
+ Negative Unate Function: A Boolean function is considered negative unate with respect to a particular input variable if, for any assignment of values to the other input variables, the function either remains constant or decreases as the specified input variable transitions from 0 to 1. In this case, the function depends only on the negative (0) values of that input variable.
+
+ And gate is an example of positive Unateness
+
+ <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/commit/e410ab3cfe36125c72503c2676bb9feba040148b">
+
+ Comparing 2 differnt flavour of and gates namely and2_1 and and2_2 , we see that area of and2_2 > and2_1
+
+ <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/connection_p_n_well">
+
+ Sequential flops have clock pin as true
+
+ <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/delay_model_area">
+
+ Unnateness of D flip flop negative edge triggered
+
+ <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/sdf_unnate_clk.png">
+
+ Unateness of D latch positive edge triggered 
+
+ <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/latch_ri_fl">
+
+ **lab on .lib in dc_compiler** 
+
+ example 1 : to print all the sequential gates 
+
+ <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/dlrt_cell">
+
+ example 2 : prints the library linked
+
+ <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/colletionof%20pin">
+
+ example 3: Prints the list of cells from the collection
+
+ <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/azx.png">
+
+ example 4: prints the pins associated with the gate cell and functionality of a particular gate
+
+ <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/ing4.png">
+
+ example 5: prints the pins along with the direction of and2_0 gate 
+
+ <img  width="1085" alt="lib_dir_and" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/ing3.png">
+
+ example 6: prints the pins along with the direction of nand4b_1 gate 
+
+ <img  width="1085" alt="nand4b_1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/ing2.png">
+
+ it also prints the boolean expression i.e function of that cell
+
+ example 7: prints the pins along with the direction of and4bb_2 gate 
+
+ <img  width="1085" alt="and4bb_1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/ing1.png">
+
+ it also prints the boolean expression i.e function of that cell
+
+  example 8: A tcl program which takes the list of cells as input and prints the output pins along with its functionality
+
+ ```ruby
+  set mylist [list sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand2_1 \
+ sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand2_2 \
+ sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand2_4 \
+ sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand2_8 \
+ sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand2b_1 \
+ sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand2b_2 \
+ sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand2b_4 \
+ sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand3_1 \
+ sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand3_2 \
+ sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand3_4 ];
+
+ foreach var $mylist {
+  foreach_in_collection var_pins [get_lib_pins ${var}/* ] {
+      set pin_name [get_object_name $var_pins];
+      set pin_dir [get_lib_attribute $pin_name direction];
+      if { $pin_dir == 2 } {
+
+
+          set pin_func [get_lib_attribute $pin_name function];
+
+          echo $pin_name $pin_dir $pin_func ;
+       }
+    }
+ } 
+```
+ <img  width="1085" alt="tclpgm1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/dc_tcl_pgm1.png">
+
+ example 9: Prints the attributes of the cell/pin
+
+ <img  width="1085" alt="pinattri" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/dc_attri2.png">
+
+ <img  width="1085" alt="pinattri1" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day_7/attribute">
+
+
+ </details>
 
 
 
