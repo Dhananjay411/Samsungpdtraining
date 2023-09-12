@@ -1934,5 +1934,546 @@ This a combinational circuit of or and and gate , in which the output of or gate
 
 
 
+# Day 8 Advanced Constraints
+
+ <details>
+ <summary> Clock Terminology </summary>
+
+ **clock** : Clock is a signal used for synchronization when the data passes through the storage elements like flip-flops and latches. It is to ensure that the correct data is captured in each sequential element. The waveform of a basic clock is as shown below.
+ 
+ <img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/CLOCK1.jpg">
+  
+ **Clock sources** :
+ In an ASIC design, clock can be generated from sources like PLLS or Crystal Oscillators. PLL or Phase Locked Loop is a circuit which generates the clock signal with reference to an input signal. It has a circultry to compare between the reference and the feedback signal to keep the output phase locked to the input. Crystal Oscillator uses the mechanical resonance of a vibrating crystal to generate an output clock signal. The output from a crystal oscillator is precise
+
+  **Clock Tree** :
+  Clocks are distributed to the sink points. They are sequential elements through clock trees or clock distribution networks. Clock tree is a collection of buffers or inverters. An ideal clock tree has the same number of levels of buffers/inverters from the source to the sinks. This promises equal delay of the clock from a single source to all sinks, which means zero clock skew. A clock tree gives balanced fanout too. 
+  
+ **Clock Types**: 
+ 
+ *Master clocks*: These are clocks which get defined at the main clock source like oscillator/PLL. In a chip master clock can be defined at some clock input ports too. When we define these master clocks, proper frequency and source information should be given. Uncertainty also should be specified. 
+ Generated clocks
+ *Generated clocks* : These are divider/multiplier clocks which get generated from a master clock. Mostly these are defined at the output of a clock divider like flip flop or mux. When we define a generated clock, its source clock, the generation point, division ratio and uncertainty value should be provided. Generated clocks can be also defined at any point, if we need to define some exception wrt this clock. 
+
+ *Virtual clock* : These are clocks used to time the input/output port. These are imaginary clocks defined only with the clock waveform and not having any source/generation point. 
+ Virtual clocks are needed to constrain the input ports to register timing paths and reg to output port timing paths.
+
+ <img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/VIRTUAL-CLOCKS.jpg">
+
+ Since this timing path in the actual scenario cannot be checked as such when we are in our chip, we imagine the external device and proceed. So we define a 'virtual' clock which represent's FF2's clock. Also we constrain the output port OUT with this clock. We should specify the external delay outside the chip as output delay. To define the virtual clock just give create clock without any generation point.
+ 
+ create_clock-name CLK_10-waveform {0 2.5} -period 5 
+ 
+ The waveform of CLK 10 should be the same as CLK real. Also the latency of CLK_10 should be defined as same as the insertion delay of CLK_real. 
+ Why can't we define the output delay wrt the real clock itself? 
+ TECHNOLO 
+
+ If we define so, tool cannot calculate any propagated clock latency to the output port, since it does not have any physical path. Propagated clock latency will be there for the Lor anyways. So the analysis will be for setup and optimistic for hold since capture clock delay is not there at all. Same explanations hold good for input 
+ too We know that when the when the clock is constrained , Actually clock period gets constrained , which in turn limits the combinational delay i.e
+
+ Tclk >= Tcq + Tcomb + Tst
+ 
+ Tcomb <= Tclk - (Tcq + Tst)
+ 
+ Clock Generator are a critical component of VLSI (Very Large Scale Integration) circuits, playing a fundamental role in synchronizing various components of an integrated circuit (IC). They provide clock signals that control the timing of digital operations within the IC. Clock generators are designed to produce clock signals with specific characteristics, such as frequency, duty cycle, and phase, to meet the requirements of the overall system.
+ 
+ Types of clock generators
+ 
+*Oscillators* : These are widely used as clock generators. They generate continuous periodic signals without an external input. Common types include RC oscillators, LC oscillators, and crystal oscillators.
+ 
+*Phase-Locked Loops (PLLs)* : PLLs are versatile clock generators that can generate clock signals with adjustable frequency and phase. They are often used for clock synchronization and multiplication.
+ 
+*Delay-Locked Loops (DLLs)* : DLLs are used to align the phase of a clock signal with respect to another reference clock signal.
+ 
+*Ring Oscillators* : These are simple but effective oscillators often used for generating clock signals with relatively low frequencies.
+ 
+*Crystal Oscillators* : They are highly stable and accurate oscillators that use piezoelectric crystals to generate clock signals.
+  
+ **skew** :
+ 
+ In simplest words, Clock Skew is the time difference between arrival of the same edge of a clock signal at the Clock pin of the capture flop and launch flop. Any signal     takes some time to travel from one point to another. The time taken by Clock signal to reach from clock source to the clock pin of a particular flip flop is called as       Clock latency. Clock skew can also be termed as the difference between the capture clock latency and the launch clock latency for a set of flops
+ 
+ <img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/skew1.JPG">
+ 
+ The launch clock latency is 0ns and the capture clock latency is 2.5ns. The difference between the two is 2.5ns-0ns = 2.5ns which is the value of clock skew.
+
+*Reason for Skew in a design*  
+Just imagine a flip flop placed just close to the clock source and an another flip flop which placed at the far end of the core area. Due to the difference between the lengths of the interconnects, the skew cannot be zero in practical cases. To accommodate this, a user specified value is given to have accurate pre-CTS timing results.
+After the clock tree is built, the actual skew values are available and the uncertainty only consists of Jitter value alone. 
+
+<img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/skew2.JPG">
+
+In the above diagram, Consider a flip-flop (FF1) which has the minimum latency and FFn which has the highest latency. Two terms can be defined from the above figure.
+
+*Local Skew*: The latency difference between two related flops in a design is called as local skew. Suppose, FF1 (Launch flop) and FF2 (Capture flop) are two related flops.
 
 
+*Global Skew*: The clock latency difference between two non related flops or the difference between the longest clock path and the shortest clock path in the design is called global skew. Suppose, FF1 has the minimum and FFn has the maximum value of clock latency in the design.
+
+*Positive and Negative Skew* :
+
+<img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/skew3.JPG">
+
+In this scenario, the capture clock latency is more than the launch clock latency, and hence clock skew is positive. Positive skew is good for the setup timing. Since the capture clock is delayed by 2.5ns due to the addition of skew, the timing path has (1 clock period + Skew margin) to meet the setup requirement.
+ 
+ On the other hand, positive skew is bad for hold timing. Due to positive skew, the capture edge has shifted to the right. If the data path delay is less, in that case the data launched from the launch flop will reach the D pin of capture flop before the capture clock edge reaches the clock pin of capture flop which will result in the overwriting of the previous data stored at capture flop.
+
+
+<img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/skew4.JPG">
+
+Negative Skew is good for hold timing because the new launch is delayed by skew value. Due to the delay of the new data launch, the previous data will be effectively captured and won't be overwritten. But at the same time, negative skew is bad for setup timing.
+
+*Useful Skew*:
+
+The skew which is purposely added in the design to meet the timing, especially in the clock paths where timing is failing so that timing is passed in that path. But useful skew cannot be added blindly. This needs to be done carefully by making sure the margin is available in previous and the next timing path. Uncontrolled addition of skew can lead to more timing violations instead of fixing them. It can be used to fix both setup and hold violations. Let's explain with the help of a simple example:
+
+<img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/skew5.JPG">
+
+In the above circuit, for the simplification let's take the skew value to be zero. Due to the large value of Tcombo1, there is a setup violation of 2ps. Due to a small value of Tcombo2, the setup slack is +4ps but the hold is violating by 1ps. Now assume that the data path is fully optimized in both the stages. Since there is a positive hold slack of 3ps in the first stage and a positive setup slack of 4ps in the second stage, by using the slack margins both timing paths can be fixed. Here comes the concept of useful skew to meet timing.
+
+<img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/skew6.JPG">
+
+Let's add a buffer of delay 2ps in the Clock path of FF2 which will help in meeting the setup timing in the first path by pushing the capture clock. Since we have a good margin for setup slack in the second stage, it will not violate the setup time there.
+
+The hold time was violating in the second path by 1ps which also got resolved because the buffer addition delayed the data launch in the second path by 2ps. Since we had a good margin for hold slack in the first stage, it will not violate the hold timing there. In this way, useful skew helps meeting timing.
+
+Harmful Skew:
+
+Where adding some skew to the failing paths can help in fixing timing violations, too much skew can cause violations.
+
+If a large positive skew is added in the design, in that case, the capture clock will arrive after a long time and if the data path delay is small between the two flops, the data may reach the D pin of capture flop even before the capture edge reaches the clock pin of capture flop and may overwrite the previously latched data, resulting in Hold violation.
+
+If a large negative is added in the design, in that case, the clock edge will reach the capture flop long before the launch flop. In this case, the new launch will be delayed. If the data path between the two flops is more, the launched data will get less to propagate to the D pin of capture flop and may reach very late resulting in Setup violation.
+
+A hold violation is more dangerous than a setup violation as it cannot be fixed by decreasing the clock frequency.
+
+What if there is actually zero skew in the design?
+
+<img width="1085" alt="Timing libraries" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/skew7.JPG">
+
+1. In the given figure, due to some Clock Jitter if the clock at FF3 gets delayed by a small interval of time, the new data launched by FF2 might reach D pin of FF3 very soon because of short path, resulting in the corruption of previous data at D pin of FF3, leading in Hold violation.
+2. If the design has zero skew, which means all the flipflops in the design are getting clock at the same time. As we know, clock is the highest switching element in the design and a major contributor to the overall dynamic power consumption of the design. A chip consists of millions of flops. If all the flip flops switch at the same time, there will be a huge dynamic power dissipation in the design.
+3. If one flip flop is placed closer to the clock source pin and another flip flop which is placed little far from the clock source pin, both are related, then to make the skew as zero, the tool would have added a large number of clock buffers and inverters in the clock path which will result in more area consumption and high utilization.
+
+**clock Modelling**
+
+ We should model the clock for
+1. period
+2. Source latency
+3. Clock skew
+4. Clock Network
+5. Clock Network latency
+   
+</details>
+	
+ <details>
+ <summary>Labs on Advanced Constrains </summary>
+
+
+
+**Exploring Cells, Pins and Ports:**
+
+- First synthesis is done in dc_shell using following commands:
+
+```
+> csh
+> dc_shell                                        // invoking DC Shell
+>> read_verilog lab8_circuit.v                            // reading the design
+>> link
+>> compile_ultra
+>> write -f verilog -out netlist.v
+>> write -f verilog -out lab1.ddc       
+```
+
+- Below is the schematic of the synthesized design:
+<p align="center">
+ <img width="1080" alt="l1_schem.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/sch_2_15.png">
+</p>
+  
+- Now different cells, pins and ports of design and how to get their attributes are given below:
+
+**Cells:**
+
+- `get_cells` is the command used to list all the standard cells present in the design.
+- Following snippet will list all the cells and their corresponding library name.
+
+```
+foreach_in_collection my_cells [get_cells * -hier] {
+	set my_cell_name [get_object_name $my_cells];
+	set rname [get_attribute [get_cells $my_cell_name] ref_name];
+	echo $my_cell_name $rname;
+}
+```
+
+- Output:
+<p align="center">
+ <img width="540" alt="l1_get_cells1.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/referance_name_cell_7.png"> 
+ </p>
+
+**Ports:**
+
+- `get_ports` is the command used to list all the input and output ports present in the design.
+- Following snippet will list all the ports and also print if they are input and output pin.
+
+```
+foreach_in_collection my_port [get_ports *] {                      
+       set my_port_name [get_object_name $my_port];                
+       set dir [get_attribute [get_ports $my_port_name] direction];
+       echo $my_port_name $dir;                                    
+}
+```
+
+- Output:
+<p align="center">
+   <img width="540" alt="l1_getports2.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/get_port_collection_4.png"> 
+</p>
+
+**Pins:**
+
+- `get_pins` is the command used to list all the input and output pins of standard cells present in the design.
+- Following snippet will list all the pins and also print if they are input and output pin.
+
+```
+foreach_in_collection my_pin [get_pins *] {  
+	set pin_name [get_object_name $my_pin]; 
+	set dir [get_attribute $pin_name direction];
+	echo $pin_name $dir;
+}
+```
+
+- Output:
+<p align="center">
+  <img width="540" alt="l2_getpins1.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/get_pins.png">
+</p>
+
+- Another example using `get_pins` is given below where the snippet will check whether the input pin is connected to clock and print those which are clock pins.
+
+```
+foreach_in_collection my_pin [get_pins *] { 
+	set pin_name [get_object_name $my_pin];               
+	set dir [get_attribute $pin_name direction];          
+	if { [regexp $dir in ] } {                            
+		if { [get_attribute [get_pins $pin_name] clock] } {   
+			echo $pin_name;                                       
+} } }
+``` 
+
+- Output: 
+<p align="center">
+  <img width="540" alt="l2_getpins2.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/clock_pins1.png"> 
+</p>
+
+**Creating Clock:** 
+
+- `create_clock` is the command used to create a clock.
+- Following command will create a clock with different attributes.
+
+```
+// 50% duty cylce starting with rising edge 
+create_clock -name MYClk -per 10 [get_ports clk] -wave {0,5}
+// 50% duty cycle starting with falling edge
+create_clock -name MYClk -per 10 [get_ports clk] -wave {5,10}
+// 25% duty cycle
+create_clock -name MYClk -per 10 [get_ports clk] -wave {0,2.5}
+```
+
+- Following snippet will print all th clock pins and clock source they are connected to:
+
+```
+foreach_in_collection my_pin [get_pins *] {  
+  set pin_name [get_object_name $my_pin];                
+  set dir [get_attribute $pin_name direction];           
+  if { [regexp $dir in ] } {                             
+    if { [get_attribute [get_pins $pin_name] clock] } {  
+      set clk [get_attribute [get_pins $pin_name] clocks];
+      set clk_name [get_object_name $clk];  
+      echo $pin_name $dir $clk_name;                                        
+  }                                                      
+ }                                                      
+}    
+```
+
+- Output: 
+<p align="center">
+  <img width="300" alt="l3_getclk3_tcllo.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/tcl_query_clk_pin_script_output11.png"> 
+</p>
+
+**Report Timing:** 
+
+- Syntax:
+
+```
+report_timing -from startpoint -to endpoint -delay_type maxormin -cap -nets -trans
+```
+
+- Above command will generate the timing report from specified startpoint to endpoint. And we can see set-up and hold specific reports using -delay_type attribute and other constraints like capacitance, transition and fanout information will also be provided.
+
+**Setting latency and uncertainity:**
+
+- Before setting up the latency and uncertainity, below timing report for set-up(max) and hold(min) is generated to ease the comparison.
+- For example REGB to REGC path is considered:
+<p align="center">
+  <img alt="l4_timingrep_before1.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/set_clk_latency_uncertanity.png" >
+
+</p>
+
+- As expected clock network delay is given 0ns. Now add latency and uncertainity to the design using following commands:
+
+```
+set_clock_latency -source 2 [get_clocks MYClk]
+set_clock_latency 1 [get_clocks MYClk]
+set_clock_uncertainty -hold 0.1 [get_clocks MYClk]
+set_clock_uncertainty -setup 0.5 [get_clocks MYClk]
+```
+
+- Now generate the timing report again using `report_timing -from REGB_reg/CLK -to REGC_reg/D -delay_type max` and `report_timing -from REGB_reg/CLK -to REGC_reg/D -delay_type min` .
+ <p align="center">
+  <img alt="l4_timrep1_max.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_with_slack.png" >
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img alt="l4_timrep2_min.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_with_slack_met_latency%20_uncertanity.png">
+</p> 
+
+- From above report we can observe the following:
+   - Set-up: Slack decreased from 9.55 to 9.05.
+   - Hold  : Slack decreased from 0.38 to 0.29.
+
+**Constraining the IO:**
+
+*Setting Up Input Delay:*
+- Below commands are used to set input delay:
+
+```
+set_input_delay -max 5 -clock [get_clock MYCLK] [get_ports IN_A]
+set_input_delay -max 5 -clock [get_clock MYCLK] [get_ports IN_B]
+set_input_delay -min 1 -clock [get_clock MYClk] [get_ports IN_A]
+set_input_delay -min 1 -clock [get_clock MYClk] [get_ports IN_B]
+```
+
+- Since there are two inputs constrain both of these input 'IN_A' and 'IN_B' separately for max and min.
+- Now generate the timing report using `report_timing -from IN_A -transition_time -capacitance -nets -delay_type max`  and `report_timing -from IN_A -transition_time -capacitance -nets -delay_type min`. 
+ <p align="center">
+  <img alt="l5_timrep2_max.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing%20with%20apply%20load%20slack%20met.png" >
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img alt="l5_timrep2_min.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png">
+</p> 
+
+- If we were to generate the timing report without constraining the input delay tool will tell us that the path is 'un-constrained' but now we can see the timing report and we can see the effect of that constraint is added under `input external delay` 
+
+*Setting Up Input Transition:*
+- Below are the commands used to set up input transition:
+
+```
+set_input_transition -max 0.3 [get_ports IN_A]
+set_input_transition -max 0.3 [get_ports IN_B]
+set_input_transition -min 0.1 [get_ports IN_B]
+set_input_transition -min 0.1 [get_ports IN_A]
+```
+
+- Now generate the timing report using same commands previously used i.e `report_timing -from IN_A -transition_time -capacitance -nets -delay_type max`  and `report_timing -from IN_A -transition_time -capacitance -nets -delay_type min`.
+ <p align="center">
+  <img alt="l5_timrep3_max.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png"45%" >
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img alt="l5_timrep3_min.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png">
+</p> 
+
+- From above timing report we can see the effect of this under `IN_A (in)` and  we can observe the following:
+   - Set-up: Slack decreased from 4.1 to 4.08.
+   - Hold  : Slack improved  from 0.99 to 1.02.
+
+*Setting Up Output Delay:*
+- Below are the commands used to set up output delay:
+
+```
+set_output_delay -max 5 -clock [get_clock MYClk] [get_ports OUT_Y]
+set_output_delay -min 1 -clock [get_clock MYClk] [get_ports OUT_Y]
+
+```
+
+- Now generate the timing report using  commands  `report_timing -to OUT_Y -transition_time -capacitance -nets -delay_type max`  and `report_timing -to OUT_Y -transition_time -capacitance -nets -delay_type min`.
+
+  <img alt="l5_timrep4_max.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png" >
+
+
+-  If we were to generate the timing report without constraining the output delay tool will tell us that the path is 'un-constrained' but now we can see the timing report and we can see the effect of that constraint(`output external delay`) is subtracted from required time.
+
+*Setting Up Output Load:*
+
+```
+set_load -max 0.4 [get_ports OUT_Y]
+set_load -min 0.1 [get_ports OUT_Y]
+```
+
+- We can now generate timing report and observe the effect of output load on the design.
+<p align="center">
+  <img alt="l5_timrep5_max.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png >
+
+- We can see the changes in `OUT_Y (net)` and there's a increase in slack for hold and decrease in slack for set-up.
+
+*Generated Clock:*
+
+- Generated clocks are additional clock signals created by the designer to meet the specific timing needs of different parts of the design.
+- They are generated by dividing, multiplying, or modifying the primary clock signal using various clock generation circuits or modules.
+- Generated clock can identified with `G` annotation under attributes.
+- Follwoing is the command used to generate generated clock:
+
+```
+create_generated_clock -name MYGEN_Clk -master MYClk -source [get_ports clk] -div 1 [get_ports out_clk]
+report_clocks
+get_attribute [get_clocks MYGEN_Clk] is_generated```
+
+
+- But to inform the tool to use this generated clock as the reference clock for out_clk and constraining w.r.t generated clock use following commands to specify
+
+```
+set_clock_latency -max 1 [get_clocks MYGEN_Clk]
+set_output_delay -max 5  -clock [get_clocks MYGEN_Clk] [get_ports OUT_Y]
+set_output_delay -min 1  -clock [get_clocks MYGEN_Clk] [get_ports OUT_Y]
+```
+
+-Now generate the timing report using command  `report_timing -to OUT_Y -delay_type max` and `report_timing -to OUT_Y -delay_type min > gen_timrep1_min`.
+
+- Now consider an other example with following code:
+
+```
+module lab8 circuit (input rst, input clk , input IN_A , input IN_B , output OUT_Y , output out_clk output reg out_div_clk)
+reg REGA, REGB , REGC ;
+always @ (posedge clk , posedge rst )
+begin
+	if(rst)
+	begin
+		REGA <= 1'b0 ;
+		REGB <= 1'b0 ;
+		REGC <= 1'b0 ;
+		out_div_clk <= 1'b0 ;
+	end
+	else
+	begin
+		REGA= IN_A | IN_B;
+		REGB<- IN_A ^ IN_B;
+		REGC <= !(REGA & REGB) ;
+		out_div_clk <= ~out_div_clk
+	end
+end
+
+assign OUT_Y = ~REGC ;
+
+assign out_clk = clk;
+
+endmodule
+```
+
+- Now reset the design using `reset_design` and read the above verilog file
+- Link and compile the the design.
+- To add the constraints we can source the following TCL script in DC shell instead of individually defining each constraints:
+
+```
+create clock -name MYCLK -per 10 [get _ports_clk];
+set _clock_latency -source 2 [get clocks MYCLK];
+set_clock_latency 1 [get_clocks MYCLK]:
+set_clock_uncertainty -setup 0.5 [get clocks MYCLK];
+set_clock_uncertainty -hold 0.1 [get clocks MYCLK];
+set_input_delay -max 5 -clock [get clocks MYCLK] [get_ports IN_ Al;
+set _input_delay -max 5 -clock [get clocks MYCLK] [get_ports IN_B];
+set_input-delay -min 1 -clock [get clocks MYCLK] [get_ports IN A];
+set _input_delay -min 1 -clock [get clocks MYCLK] [get ports IN_B];
+set_input_transition -max 0.4 [get_ports IN_A];
+set_input_transition -max 0.4 [get_ports IN_B];
+set_input_transition -min 0.1 [get_ports IN_A];
+set_input_transition -min 0.1 [get_ports IN_B];
+create_generated_clock -name MYGEN_CLK - master MYCLK -source [get_ports clk] -div 1 [<get_ports out_clk]
+create_generated_clock -name MYGEN_DIV_CLK - master MYCLK -source [get_ports clk] -div 2 [<get_ports out_div_clk];
+set_output_delay -max 5 -clock [get_clocks MYGEN_CLK] [get_ports OUT_Y];
+set_output_delay -min 1 -clock [get_clocks MYGEN_CLK] [get_ports OUT_Y];
+set_load -max 0.4 [get_ports OUT_Y];
+set_load -min 0.1 [get_ports OUT_Y];
+```
+
+- Now using  `report_clocks` command we can observe the two generated clock MYGEN_CLK  which is same as source clk and MYGEN_DIV_CLK which has its frequency divided by 2.
+<p></p>
+<p align="center">
+  <img width="300" alt="l2_gen_getports.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png"  >
+</p>
+
+- This design is completely constrained.
+
+
+
+*Virtual Clock and set_driving_cell:*
+<p align="center">
+  <img width="300" alt="circuit.jpg" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png"  >
+</p>
+
+- For above design we can model the constraint using follwoing methods :
+    1) Using command `set_max_latency 1.0 -from [get_ports IN_C] -to [get_ports OUT_Z]` we can model the max delay of the combinational circuit.
+    2) Another way is to create a virtual clock setting input and output delay w.r.t virtual clock. Following are the commands used
+
+1) set_driving_cell:
+   
+- `set_max_latency 1.0 -from [get_ports IN_C] -to [get_ports OUT_Z]` is the command used to contsrain the input and output ports.
+- Before setting the latency timing report will give path is unconstrained So the after running the above command we will get following output:
+- Outputs:
+<p align="center">
+  <img alt="l14_setmax_timrep.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png" >
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img alt="l14_setmax_timrep1.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png">
+</p> 
+
+- Since design is not compiled after setting the constraints it is not optimized and it shows negative slack which means presence of violations. Now compile the design using command `compile_ultra` and below timing report(right) is generated using command `report_timing -to OUT_Z`.
+
+  
+2) Virtual clock:
+   
+- Vitual clock is a clock created without a clock defination point.
+- To contrain the IO using this method following commands are used:
+
+```
+// for virtual clock there's no clock defination and latency
+create_clock -name MY_VClk -period -5
+set_output_delay -max 2.5 -clock MY_VClk [get_ports OUT_Z]
+set_input_delay -max 1.5 -clock MY_VClk [get_ports IN_C]
+set_input_delay -max 1.5 -clock MY_VClk [get_ports IN_B]
+```
+
+- Outputs:
+<p align="center">
+  <img alt="l14_vclk_timrep.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png" >
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img alt="l14_vclk_timrep1.png" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd%23day8/report_timing_1.png">
+</p> 
+
+- In generate the timing report(left one) using `report_timing -from IN_d -to OUT_Z ` as expected without optimization it has resulted in violation.
+- To get rid of violtion compile the design again using command `compile_ultra` and generate the timing report again. From timinng report one the right side we can observe that tool has optimized the design to '0' slack.
+
+
+
+*Special case:*
+
+- Lets consider case where there are two flops on input/output of top level and one of the flop has active low clock i.e it's sensitive clock edge is falling edge.
+- To constrain this design we have specify the tool that delay is w.r.t to falling edge of the clock and it can be done using following command:
+
+```
+set_input_delay -max 3 -clock clk -clock_fall -add [get_ports IN_A]
+set_output_delay -max 3 -clock clk -clock_fall -add [get_ports OUT_Y]
+// -clock will specify the falling edge
+// -add will make sure previously set input delay is not overwritten
+```
+
+*set_driving_cell:*
+
+- While set_input_transition is used for top level primary design when the interface specifications are provided(IO ports of the chip).
+- But when we are working inside the design if we know the cell driving the input pin then `set_driving_cell` will make more sense and provide better accuracy.
+- Following is the syntax to use the command:
+- `set_driving_cell -lib_cell nameoflibcell [all_inputs]` 
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+ 
