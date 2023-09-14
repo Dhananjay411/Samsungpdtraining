@@ -2476,7 +2476,7 @@ set_output_delay -max 3 -clock clk -clock_fall -add [get_ports OUT_Y]
  <summary>Introduction to Combinational and Sequential Optimization</summary>
 
 
-Optimization in VLSI design is a crucial aspect of creating efficient and high-performance integrated circuits (ICs). VLSI optimization involves improving various aspects of IC design, such as power consumption, area utilization, timing, and manufacturability.
+ Optimization in VLSI design is a crucial aspect of creating efficient and high-performance integrated circuits (ICs). VLSI optimization involves improving various aspects of IC design, such as power consumption, area utilization, timing, and manufacturability.
 
 
  The goals of optimization :
