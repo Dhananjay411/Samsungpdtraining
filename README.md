@@ -2468,7 +2468,6 @@ set_output_delay -max 3 -clock clk -clock_fall -add [get_ports OUT_Y]
 
 </details>
 
- </details>
  
 # Day 9 Optimizations
 
