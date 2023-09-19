@@ -2503,6 +2503,325 @@ After insertion of buffers, the design is as follows:
 
 </details>
 
+# Day 10 QOR
+
+
+<details>
+<summary>Summary</summary>
+<br>
+	
+The following constraints are defined for a synthesis.tcl to constrain a design
+- clock : Master clock, generated clock and virtual clock (if any)
+    create_clock, create_generated_clock
+- Practicalities of clock :Latency and  Uncertainty (Skew + jitter for pre-cts and jitter for post-cts)
+   set_clock_uncertainty, set_clock_uncertainty
+- Input delay and output delay
+set_input_delay, set_output_delay
+- Input transition/Driving cell
+   set_input_transition, set_driving_cell
+- Output load
+   set_load
+- max capacitance, max transition and area
+   set_max_capacitance, set_max_transition, set_max_area
+
+The DC flow for synthesizing netlist is
+- read_verilog
+- read_db
+- check_design
+- source constraints
+- check_timing
+- compile_ultra
+- report_constraints -all_violators
+- report_area
+- report_timing
+- write
+
+The various synthesis knobs for optimization are
+- Boundary Optimization
+- Retiming
+- Constant Propagation
+- Unused flop removal
+- Isolate ports
+
+ When all these constraints are met with good margin, the QOR is good. The DC flow can be illustrated as follows:
+ ![flow](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/day10_1.png)
+
+
+
+
+</details>
+<details>
+<summary>Report Timing</summary>
+<br>	
+
+Quality checks in Very Large Scale Integration (VLSI) design and manufacturing are crucial to ensure the reliability and functionality of integrated circuits (ICs). VLSI quality checks involve various stages of the design and manufacturing process to identify and rectify potential issues.Quality checks in VLSI are iterative and continuous throughout the design and manufacturing process to guarantee the reliability, performance, and manufacturability of integrated circuits. Advanced simulation and verification tools are often used to automate and streamline these checks.
+
+Propagation delay, in the context of digital electronics and integrated circuits, refers to the time it takes for an electrical signal to travel from the input of a digital logic gate or circuit to its output. It is a critical parameter in digital design because it affects the speed and performance of the circuit. Propagation delay is typically measured in time units, such as nanoseconds (ns) or picoseconds (ps), and it depends on various factors, including the specific technology used, the length of interconnecting wires, and the complexity of the circuit.
+
+Rising Edge Propagation Delay (tpdr): This is the time it takes for the output signal to transition from a low (0) to a high (1) level after the input signal has made a similar transition.
+
+Falling Edge Propagation Delay (tpdf): This is the time it takes for the output signal to transition from a high (1) to a low (0) level after the input signal has made a similar transition.
+
+We know that Rise to fall delay is not same as fall to rise delay as mobility of electrons and holes are not same.
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/111111.jpg">
+
+In this we can see that in the first case when both A and B are 0 the output Y is 1 , which implies That both a and b help helps in charging the capacitor, but in the next case when either A/B is 1 only the other one charges the capacitor so , it is clear that A to Y delay is not same as B to Y delay
+
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/13333.jpg">
+
+Inverter gate :
+
+A rise -> Y fall (0.5 ns)
+
+A fall -> Y rise (0.4 ns)
+
+AND gate :
+
+A rise -> Y rise (0.7 ns)
+
+A fall -> Y fall (0.65 ns)
+
+B rise -> Y rise (0.65 ns)
+
+B fall -> Y fall (0.6 ns)
+
+Now the different timing paths along with delays are as follows
+
+DFFA(Clk -> Q r) -> INV(A r) -> INV(Y f) -> AND(A f) -> AND(Y f) -> DFFC(f)
+
+0.5 + 0.5 + 0.65 = 1.65ns
+
+DFFA(Clk -> Q f) -> INV(A f) -> INV(Y r) -> AND(A r) -> AND(Y r) -> DFFC(f)
+
+0.4 + 0.4 + 0.7 = 1.5ns
+
+DFFA(Clk -> Q r) -> AND(B r) -> AND(Y r) -> DFFC(r)
+
+0.5 + 0.65 = 1.15 ns
+
+DFFA(Clk -> Q f) -> AND(B f) -> AND(Y f) -> DFFC(f)
+
+0.4 + 0.6 = 1.0 ns
+
+The path with the highest delay is 1st path so that path is called the critical path. Critical path is the one which decides the operating frequency of that circuit
+
+report_timing -from DFFA/CLK -to DFFC/D -delay max
+
+we get the first path
+
+report_timing -from DFFA/CLK -to DFFC/D -delay min
+
+we get the second path
+
+report_timing -delay min -to DFFC/D
+
+we get fourth path
+
+report_timing -delay max -to DFFC/D
+
+we get the **first path*8
+
+report_timing -delay max -rise_to DFFC/D
+
+we get the second path
+
+report_timing -delay max -fall_to DFFC/D
+
+we get the first path
+
+Now consider the clock period as 5 ns, setup time is 0.5 ns and hold time is 0.4 ns.
+
+DFFA(Clk -> Q r) -> INV(A r) -> INV(Y f) -> AND(A f) -> AND(Y f) -> DFFC(f)
+
+0.5 + 0.5 + 0.65 = 1.65ns
+
+This time is called as arrival time
+
+The required time is Clock period - setup time
+
+5 - 0.5 = 4.5ns
+
+setup slack = Required - Arrival (4.5 - 1.65 = 2.85 ns)
+
+For Hold setup
+
+The hold time is 0.1 ns
+
+Required time = hold time + uncertainity = 0.1 + 0 = 0.1 ns
+
+DFFA(Clk -> Q f) -> AND(B f) -> AND(Y f) -> DFFC(f)
+
+0.4 + 0.6 = 1.0 ns
+
+This is the arrival time
+
+Hold slack = Arrival - required (1 - 0.1 = 0.9 ns)
+
+Now consider another example
+
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/122222.jpg">
+
+report_timing -max_paths 2
+
+This returns the worst slack from each pin end . In this case the path with slacks -1.2 ns and -1.0 ns
+
+report_timing -max_paths 2 -nworst 2
+
+This returns the worst slack , In this case it is -1.2 ns and 1.1 ns
+
+
+</details>
+<details>
+<summary>Labs</summary>
+<br>	
+
+
+
+
+The example used in this lab has the following design code
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_1_verilog_code_2.png">
+
+When we report_timing along with capacitance trans nets input, This is for setup check as we can see path type is max , launch edge is 0 ns and capture edge is 10 ns. Also we can see that slack is required time - arrival time
+
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_1_report_timing_1.1___4.png">
+
+When we give report_timing -from IN_A
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_1_min_report_timing_9.png">
+
+When we give report_timing -rise_from IN_A -sig 4 -trans -inp -cap -nets
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_1_report_timing_1.2___5.png">
+
+When we give report_timing -rise_from IN_A -to REGA_reg/D -sig 4 -trans -inp -cap -nets , we can see that there is mismatch in rise to fall delay and fall to rise delay as compared with second report.
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_1_report_timing_compare_rpt1_rpt2_6.png">
+
+When we give report_timing -delay min -from IN_A we can see that this is for hold check as we can see path type is min , launch edge is 0 ns and capture edge is 0 ns. Also we can see that slack is arrival time - required time
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_1_min_report_timing_10.png">
+
+When we give report_timing -thr U15/Y
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_1_min_report_timing_9.png">
+
+When we give report_timing -thr U15/Y -delay min
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_1_min_report_timing_10.png">
+
+
+Checking whether the deign is loaded correctly or is there any Human error
+
+Reading the design , after linking
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_check_design_1.png">
+
+check_timing this showed all the paths were unconstrained
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_check_timing_2.png">
+
+report_constraints ,This gives the default value of the constraints
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_constraint_3.png">
+
+After adding constraints to the design when we give check_timing
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_check_design_4.png">
+
+when we give report_timing
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_check_timing_5.png">
+
+report_constraints
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+Consider a case of 128 : 1 Mux
+
+Design Code
+
+```ruby
+
+module mux_generate ( input [127:0] in, input [6:0] sel, output reg y);
+integer k;
+always @ (*)
+begin
+for(k = 0; k < 128; k=k+1) begin
+	if(k == sel)
+		y = in[k];
+end
+end
+endmodule
+```
+
+write -f verilog -out
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+We constraint the max delay using command
+
+set_max_delay -from [all_inputs] -to [all_outputs] 3.5
+
+We set the max capacitance
+
+set_max_capacitance 0.025 [current_design]
+
+report_timing we see its violated
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+
+report_constraints -all_violators
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+when we do compile_ultra
+
+report_constraints
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+report_timing
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+Consider another example of 128 bit enable
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+after reading this code and compiling this code
+
+report_timing -from en -inp -nets -caps we see that there are 128 fanouts
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+after setting the max cap as 0.03
+
+report_constraints
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+after compile_ultra
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+Now viewing this in Design_vison by writing out ddc
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+Now set the trans constraints
+
+Before compile ultra report_constraints
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+After compile ultra
+
+report_constraints
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+check_timing
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+report_timing -nosplit -sig 4 -inp -trans -cap
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
+
+
 
 
 
