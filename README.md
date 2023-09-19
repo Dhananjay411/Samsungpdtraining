@@ -2425,10 +2425,10 @@ The above commands for a clock period of 5ns check setup from 0ns to 10ns at cap
 This can be done after careful understanding of design else single cycle paths shiuld not be defined that may corrupts the whole design.
 #### Lab
 The following image shows the behavioral code of mcp_check.v
-![lab4_1](https://github.com/Usha-Mounika/Samsung_PD/assets/142480150/adb8e888-d622-4cb3-b762-8af12b49a616)
+![lab4_1](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day9/mcp_code_ssssssss1.png)
 
 The following image shows that the design constains a 16-bit register for multiplier output and a flop for enable.
-![lab4_2](https://github.com/Usha-Mounika/Samsung_PD/assets/142480150/feb5bf34-4599-46b7-a2b6-e26659bae51c)
+![lab4_2](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day9/mcp_code_lllllllllkl2.png)
 
 The following image shows the constraints defined in a tcl file for mcp_check
   
