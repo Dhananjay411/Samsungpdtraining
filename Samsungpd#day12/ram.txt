@@ -20,6 +20,9 @@ endmodule
 
 
 
+
+
+
 module ram_tb;
 
 reg clk;
@@ -47,11 +50,14 @@ write_enable = 1;
 write_enable = 0;
 #20
 address = 55;
-#20
-$finish();
 
 end
 
 always #10 clk = ~clk;  //clock generation
+initial begin
 
+$dumpfile ("ram_tb.vcd");
+$dumpvars;
+#120 $finish ;
+end
 endmodule
