@@ -2822,12 +2822,103 @@ report_timing -nosplit -sig 4 -inp -trans -cap
 <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day10/lab_2_report_const_6.png">
 
 
+</details>
+
+# Day 11 Introduction to SOC
+
+
+<details>
+<summary>Introduction to SOC</summary>
+<br>
+	
+-System-on-Chip (SoC) is a term commonly used in the field of VLSI (Very Large-Scale Integration) design. It refers to an integrated circuit (IC) that integrates all the components of a computer or other electronic system onto a single chip. In this article, we will delve into the basics of SoC and discuss its importance in the VLSI industry.
+
+-SoC is the result of the advancement in VLSI technology, where designers can integrate millions of transistors, logic gates, and other components onto a single chip. This integration of components on a single chip has revolutionized the electronics industry by enabling the creation of smaller, more efficient, and more powerful electronic devices.
+
+-SoC integrates all the components of a computer or electronic system onto a single chip. The components of SoC typically include microprocessors, memory, I/O interfaces, digital signal processors, and other custom-designed components. The design of SoC is complex, and it requires the designer to have a deep understanding of all the components and how they interact with each other.
+
+-SoC has many benefits. First, it reduces the number of components and connections required to build an electronic system, thereby reducing the overall cost of the system. Second, it improves the performance of the system by reducing the communication latency between the components. Third, it reduces the power consumption of the system, as the components can be optimized to work together and consume less power. For example, consider the case of a smartphone. In a traditional design, the smartphone would require separate chips for the processor, memory, and other components. However, with an SoC, all of these components can be integrated onto a single chip, reducing the overall size of the smartphone and making it more power-efficient.
+
+-Another advantage of SoCs is that they offer greater flexibility and scalability compared to traditional designs. With an SoC, designers can add or remove components as needed, making it easier to customize the design to suit specific requirements. This is particularly useful in applications such as IoT devices, where different devices may require different combinations of components. In addition to smartphones and IoT devices, SoCs are also used in a range of other applications, including automotive, aerospace, and defense. For example, an automotive SoC may include components for navigation, entertainment, and safety features, all on a single chip.
+
+-Another great example of SoC is the Raspberry Pi. The Raspberry Pi is a small single-board computer that was designed with the aim of promoting the teaching of basic computer science in schools. It has an ARM-based processor, memory, I/O interfaces, and other components all integrated onto a single chip. The Raspberry Pi has become very popular among hobbyists and educators, as it is a low-cost, low-power, and versatile computing platform.
+
+-In conclusion, SoC is a critical component in the field of VLSI design. It enables the creation of smaller, more efficient, and more powerful electronic devices by integrating all the components of a computer or electronic system onto a single chip. With the continued growth of the semiconductor industry, it is likely that SoCs will become even more prevalent in the coming years.
 
 
 
+ </details>
+ <details>
+<summary>Snapdragon 730 octa core</summary>
+
+
+-The Snapdragon 730 is a mobile system-on-chip (SoC) developed by Qualcomm. It was announced in April 2019 and is part of the Snapdragon 7 series, which is known for offering a good balance of performance and power efficiency for mid-range smartphones. Here are some key features of the Snapdragon 730:
+
+1. CPU: The Snapdragon 730 features an octa-core CPU (Central Processing Unit) based on Qualcomm's Kryo architecture. It consists of two clusters of cores:
+
+Two high-performance cores (Kryo 470 Gold) clocked at up to 2.2 GHz.
+Six power-efficient cores (Kryo 470 Silver) clocked at up to 1.8 GHz.
+GPU: It comes with the Adreno 618 GPU, which provides good gaming and graphics performance for mid-range devices.
+
+2. AI Capabilities: The Snapdragon 730 includes Qualcomm's Hexagon 688 DSP (Digital Signal Processor) for AI (Artificial Intelligence) and machine learning tasks, which can enhance camera capabilities and other AI-driven features.
+
+3. Modem: It features the Qualcomm Snapdragon X15 LTE modem, which supports fast 4G LTE connectivity.
+
+4. Camera Support: The Snapdragon 730 supports up to 48 MP single-camera or 22 MP dual-camera setups. It also has various camera enhancements and features, including support for computer vision and AI-based image processing.
+
+5. Process Technology: It is manufactured using an 8nm process technology, which helps in achieving a balance between performance and power efficiency.
+
+6. Connectivity: The SoC includes support for Wi-Fi 6 (802.11ax) and Bluetooth 5.0 for wireless connectivity.
+
+7. Display Support: It supports Full HD+ displays with HDR10 and HDR10+ support for improved display quality.
+
+Overall, the Snapdragon 730 is designed for mid-range smartphones and offers a good mix of performance, power efficiency, and AI capabilities, making it suitable for a wide range of applications, including gaming and photography. Please note that since my knowledge is based on information available up to September 2021, there may have been newer SoCs released by Qualcomm with improved features and capabilities since then.
+
+
+
+
+
+</details>
+<details>
+<summary>Video Summary</summary>
+
+Chips are made using extremely pure mono crystalline Silicon ingot called bull with only one impurity for every 10 million silicon atoms.
+
+These silicon bulls are fabricated in different diameters, common ones are 100mm,150mm,200mm,300mm
+
+Transitors are built on p and n conductive layers that exist in a doped wafer. These are smallest control units in microchips.
+
+Semiconductor Manufacturing Process Summary:
+
+Design and Layout: The process begins with the design of the integrated circuit (IC) or microchip. Engineers use specialized software to create a detailed layout of the chips specifying the location and arrangement of transistors, interconnects, and other components.
+
+Mask Creation: The chip's design is used to create a series of photomasks, which are high-precision templates that define the patterns to be etched onto the silicon wafer during fabrication.
+
+Wafer Preparation: Silicon wafers, typically made from highly purified single-crystal silicon, are cleaned and polished to create a flat, defect-free surface. The wafers are also coated with a thin layer of material, such as silicon dioxide (oxide), to act as an insulator.
+
+Photolithography: Photomasks are used in a photolithography process to project the chip's design onto the silicon wafer. Ultraviolet (UV) light or deep ultraviolet (DUV) light is passed through the masks to define the circuit patterns on the wafer's surface.
+
+Etching: After photolithography, a chemical or plasma etching process is used to remove excess material from the wafer's surface, leaving behind the desired patterns. This step defines the locations of transistors, interconnects, and other features. There can be etched using wet or plasma etching.
+
+Ion Implantation: Dopant ions (such as boron or phosphorus) are implanted into the silicon wafer to modify its electrical properties, creating N-type and P-type regions necessary for transistor operation.
+
+Deposition: Thin layers of materials (such as metal or dielectrics) are deposited onto the wafer's surface using techniques like chemical vapor deposition (CVD) or physical vapor deposition (PVD). These layers form the conductive pathways and insulating barriers on the chip.
+
+Chemical Mechanical Polishing (CMP) : CMP is used to planarize the wafer's surface, ensuring a uniform thickness of deposited material across the chip.
+
+Lithography and Etching (Repeated): Multiple iterations of lithography and etching are performed to create the various layers of the chip, including the metal interconnect layers that link transistors and components.
+
+Annealing: Heat treatments, called annealing, are applied to activate dopants, relieve stress, and improve the performance and reliability of the semiconductor materials.
+
+Testing and Inspection : At various stages of manufacturing, the wafers undergo extensive testing and inspection to identify defects, verify functionality, and ensure quality.
+
+Dicing: The processed wafer contains multiple chips separated a tiny space between them called as scribe line . This processed wafer is cut into individual chips using a process called dicing. Each chip will become a separate microchip.
+
+Packaging : The individual microchips are placed into packages that protect them from environmental factors and facilitate connection to external circuits. Packaging also includes adding pins or balls for electrical connections.
+
+These microchips should be made in clean room . A clean room is a controlled environment designed to minimize contamination and maintain specific environmental conditions critical to the fabrication of integrated circuits and other microelectronics devices. Clean rooms are essential for ensuring the reliability and performance of semiconductor components.
  
-
-
+</details>
 
 
  
