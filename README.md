@@ -2921,5 +2921,222 @@ These microchips should be made in clean room . A clean room is a controlled env
 </details>
 
 
- 
- 
+ </details>
+
+# Day 12 Baby SOC Modelling
+
+
+<details>
+<summary>Task</summary>
+	
+ **RAM**: Random Access Memory is the temporary memory used in a processor or the digital system which requires larger memory for storing temporary data. When designing any system on FPGA, sometimes we require a RAM block which is also called BRAM or block RAM. In this post, we'll how to describe a RAM in Verilog HDL. Most of the latest FPGAs have BRAM and if we synthesize this, it will be synthesized into a BRAM.
+
+ **Verilog Code**:A RAM has a data bus (sometimes called width of RAM) form which we can access content from the RAM or we can put a content on this, and if we give write command to the RAM, it'll write RAM with the content on the data bus. RAM has lots of addresses (sometimes called depth of RAM) and these addresses can be accessed by the address bus.
+
+Other than data and address bus, RAM has one more input read/write. If it's state is changed, let's say if it is high, the content at data bus is written to the address provided to the RAM from address bus else the content of the address provided by address bus is reflected to the data bus.
+
+Below is the code of 1 kilo byte RAM describe using Verilog HDL. The width of the RAM is 8-bit and depth is 1024 (which is 1 kilo). For making the code simple, there are two similar data bus, one will be used to read the content from the RAM and another is used to provide content to the data bus and, when read write input is high, this content is written to the address of the RAM.
+
+```ruby
+
+//1 kilo byte Random Access Memory
+module ram(
+    input clk,
+    input write_enable,
+    input [9:0]address,
+    input [7:0]data_in,
+    output reg [7:0]data_out
+);
+
+reg [7:0]ram_block[0:1023];
+
+always @(posedge clk) begin
+        if(write_enable)
+            ram_block[address] <= data_in;
+        else
+            data_out <= ram_block[address];
+end
+
+endmodule
+```
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd%23day%2012/rammmmm1111.JPG">
+
+**RAM TestBench** :
+In the testbench given below, we are writing some content to the few location of the RAM and then we are reading back the written data form the same location. If we are able to write and read, everything is fine and this will be synthesized to BRAM of the FPGA (if FPGA have BRAM).
+
+```ruby
+module ram_tb;
+
+reg clk;
+reg write_enable;
+reg [9:0]address;
+reg [7:0]data_in;
+wire [7:0]data_out;
+
+ram uut(clk,write_enable,address,data_in,data_out);
+
+initial begin
+clk = 0;
+data_in = 8'h56;
+write_enable = 0;
+address = 55;
+#20
+write_enable = 1;
+#20;
+write_enable = 0;
+address = 66;
+data_in = 8'h36;
+#20
+write_enable = 1;
+#20 
+write_enable = 0;
+#20
+address = 55;
+
+end
+
+always #10 clk = ~clk;  //clock generation
+initial begin
+
+$dumpfile ("ram_tb.vcd");
+$dumpvars;
+#120 $finish ;
+end
+endmodule
+
+```
+
+Below is the block diagram of a RAM. Note that data bus data_in and data_out are of same size because it needs to be similar. The RAM may have more inputs like RAM enable
+
+
+**Waveform**:
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd%23day%2012/output%20wave_ram.png">
+
+
+</details>
+<details>
+<summary>VSD BabySOC</summary>
+
+
+**RISC Vs CISC**:
+
+ -RISC and CISC are two different types of computer architectures that are used to design the microprocessors that are found in computers. The fundamental difference between RISC and CISC is that RISC (Reduced Instruction Set Computer) includes simple instructions and takes one cycle, while the CISC (Complex Instruction Set Computer) includes complex instructions and takes multiple cycles.
+
+**RISC** :
+-In the RISC architecture, the instruction set of the computer system is simplified to reduce the execution time. RISC architecture has a small set of instructions that generally includes register-to-register operations.
+
+-The RISC architecture uses comparatively a simple instruction format that is easy to decode. The instruction length can be fixed and aligned to word boundaries. RISC processors can execute only one instruction per clock cycle.
+
+The following are some important characteristics of a RISC Processor −
+     
+     -A RISC processor has a few instructions.
+
+     -RISC processor has a few addressing modes.
+
+     -In the RISC processor, all operations are performed within the registers of the CPU.
+
+     -RISC processor can be of fixed-length.
+
+     -RISC can be hardwired rather than micro-programmed control.
+
+     -RISC is used for single-cycle instruction execution.
+
+     -RISC processor has easily decodable instruction format.
+
+-RISC architectures are characterized by a small, simple instruction set and a highly efficient execution pipeline. This allows RISC processors to execute instructions quickly, but it also means that they can only perform a limited number of tasks.
+
+**CISC**:
+
+-The CISC architecture comprises a complex instruction set. A CISC processor has a variable-length instruction format. In this processor architecture, the instructions that require register operands can take only two bytes.
+
+-In a CISC processor architecture, the instructions which require two memory addresses can take five bytes to comprise the complete instruction code. Therefore, in a CISC processor, the execution of instructions may take a varying number of clock cycles. The CISC processor also provides direct manipulation of operands that are stored in the memory.
+
+-The primary objective of the CISC processor architecture is to support a single machine instruction for each statement that is written in a high-level programming language.
+
+-The following are the important characteristics of a CISC processor architecture −
+
+       -CISC can have variable-length instruction formats.
+
+       -It supports a set of a large number of instructions, typically from 100 to 250 instructions.
+
+       -It has a large variety of addressing modes, typically from 5 to 20 different modes.
+
+      -CISC has some instructions which perform specialized tasks and are used infrequently.
+
+-CISC architectures have a large, complex instruction set and a less efficient execution pipeline. This allows CISC processors to perform a wider range of tasks, but they are not as fast as RISC processors when executing instructions.
+
+**Why RISC is preferred**:
+
+-Simpler instructions: RISC processors use a smaller set of simple instructions, which makes them easier to decode and execute quickly. This results in faster processing times.
+-Faster execution: Because RISC processors have a simpler instruction set, they can execute instructions faster than CISC processors.
+-Lower power consumption: RISC processors consume less power than CISC processors, making them ideal for portable devices
+
+**Conclusion**:
+
+The most significant difference between RISC and CISC architectures is the size and complexity of the instruction set. RISC is a microprocessor architecture that uses a small instruction set of uniform length that allows fast execution, while the CISC architecture is one that offers hundreds of instructions of different sizes that allows the users to perform a wider range of tasks.
+
+
+**Modelling the RVMYTH**:
+
+RVMYTH core is a simple RISCV-based CPU, introduced in a workshop by RedwoodEDA and VSD.
+Verilog code and test bench are attached here: verilog code & Test Bench
+
+*waveform*:
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd%23day%2012/outputwave_myth_code.png">
+
+**Modelling the DAC**:
+
+A Digital to Analog Converter commonly referred as DAC, D/A or D2A is a device that converts binary values (0s and 1s) to a set of continuous analog voltages.
+Verilog code and test bench are attached here: verilog code & Test Bench
+The whole digital to analog conversion process is a scaling operation – the binary count is mapped to a certain voltage range, with 0V being the minimum( and the maximum voltage being the maximum input binary voltage i.e 3.3V in our case.
+
+*waveform*:
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd%23day%2012/waveform_of_DAC.png">
+
+*We can also calculate the corresponding anolog value*.
+
+```ruby
+Consider the below data:
+ Vref = 3.3V
+ N = 10
+ Digital Data = (0101111010)2 = (378)10
+ Anolog Data = (D) x (Vref) / (2N - 1)
+ Anolog Data = (378) x (3.3) / 210 -1) = 1.219354838709677 V
+```
+*waveform*:
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd%23day%2012/output%20wave_vsdbaby.png">
+
+**Modelling the PLL**:
+
+A phase-locked loop (PLL) is an electronic circuit with a voltage or voltage-driven oscillator that constantly adjusts to match the frequency of an input signal. PLLs are used to generate, stabilize, modulate, demodulate, filter or recover a signal.
+Verilog code and test bench are attached here: verilog code & Test Bench
+
+*Block Diagram*:
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd%23day%2012/pllll1.png">
+
+
+*waveform*:
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd%23day%2012/waveform_of_pll.png">
+
+
+
+**Modelling the SoC**:
+
+Now interconnect all the three IPs and execute at once.
+Verilog code and test bench are attached here: verilog code & Test Bench
+
+
+*waveform*:
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd%23day%2012/waveform_combine.png">
+
+
+Commands used:
+```ruby
+iverilog design.v testbench.v -o op.out
+./op.out
+gtwave design_tb.vcd
+```
