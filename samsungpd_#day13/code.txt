@@ -1,3 +1,8 @@
+Testbench: Behaviour
+A Testbench is a simulation block that is used to provide inputs to the design block. The best way to write Testbench is having is a good insight into the truth table. Once you have the truth table ready provide the input values inside the testbench.
+
+
+
 
 module priorityencoder_83(en,i,y);
   // declare
