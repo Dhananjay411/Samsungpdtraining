@@ -3140,3 +3140,86 @@ iverilog design.v testbench.v -o op.out
 ./op.out
 gtwave design_tb.vcd
 ```
+ </details>
+
+# Day 13 Post-Synthesis simulation
+
+
+<details>
+<summary>Post_Synthesis of Priority Encoder</summary>
+
+
+The Priority Encoder output as discussed for the pre-synthesis simulation matches with the post-simulation output.The following are the sequnece of steps for simulating the output.
+
+```ruby
+iverilog full_add_net.v tb_add4.v primitives.v sky130_fd_sc_hd.v
+./a.out
+gtkwave tb_full_add_4.vcd
+```
+The iverilog command uses the simulated gatelevel netlist and the same testbench for post-synthesis simulation. The ./a.out dumps the vcd format file with respect to netlist. The gtkwave is used to view the waveform. The post-simulation output is as follows:
+
+*waveform*:
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day13/waveform_of%20prio_encoder.png">
+
+So, The output of post-synthesis and pre-synthesis exactly matches so the logical corectness of the design is verified.
+
+The inputs a and b are given to each full adder and the carry from previous stage is given as input to the next stage. The following sequence of commands writes the netlist and ddc format as follows:
+
+```ruby
+read_verilog add4.v
+link
+compile_ultra
+write -f verilog -out full_add_net.v
+write -f ddc -out full_add.ddc
+```
+The read_db command is not used as the target_library and link_library are previously set to sky130 technology .db. The schematic of the full-adder can be viewed as follows:
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day13/schematic_of%20prio_encoder1.png">
+
+
+</details>
+<details>
+<summary>Post-Synthesis of BabySOC</summary>
+
+The Post-synthesis of the RISC-V processor RYMYTH is as follows:
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day13/waveform_of%20mythcore_gls.png">
+
+The commands used for generating the out netlist are as follows:
+
+```ruby
+read_verilog mythcore_test.v
+link
+compile_ultra
+write -f verilog -out rvmyth_net.v
+```
+
+The netlist being written here as out is the output of the clk_gate as it is default in code. So, the current_design is changed to core and the netlist is written out as follows:
+
+```ruby
+current_design core
+write -f verilog -out rvmyth_net.v
+```
+The processor output increments in the same way as at the pre-synthesis stage, So, the logic is properly defined. The following commands are used to simulate the output waveform.
+
+```ruby
+iverilog -DFUNCTIONAL -DUNIT_DELAY=#1 rvmyth_net.v tb_mythcore_test.v primitives.v sky130_fd_sc_hd.v
+./a.out
+gtkwave tb_mythcore_test.vcd
+```
+The post-synthesis of the BabySoC is as follows:
+
+The following commands are used to simulate the output waveform.
+
+```ruby
+iverilog -DFUNCTIONAL -DUNIT_DELAY=#1 rvmyth_net.v testbench.v primitives.v sky130_fd_sc_hd.v avsddac.v avsdpll.v vsdbabysoc.v
+./a.out
+gtkwave dump.vcd
+```
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day13/waveform_babysoc_gls.png">
+
+</details>
+
+
+
