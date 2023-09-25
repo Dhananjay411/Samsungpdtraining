@@ -2929,89 +2929,100 @@ These microchips should be made in clean room . A clean room is a controlled env
 <details>
 <summary>Task</summary>
 	
- **RAM**: Random Access Memory is the temporary memory used in a processor or the digital system which requires larger memory for storing temporary data. When designing any system on FPGA, sometimes we require a RAM block which is also called BRAM or block RAM. In this post, we'll how to describe a RAM in Verilog HDL. Most of the latest FPGAs have BRAM and if we synthesize this, it will be synthesized into a BRAM.
+ **Priority Encoder**: In Digital System Circuit, an Encoder is a combinational circuit that takes 2n  input signal lines and encodes them into n output signal lines. When the enable is true i.e., the corresponding input signal lines display the equivalent binary bit output. 
 
- **Verilog Code**:A RAM has a data bus (sometimes called width of RAM) form which we can access content from the RAM or we can put a content on this, and if we give write command to the RAM, it'll write RAM with the content on the data bus. RAM has lots of addresses (sometimes called depth of RAM) and these addresses can be accessed by the address bus.
+For example, 8:3 Encoder has 8 input lines and 3 output lines, 4:2 Encoder has 4 input lines and 2 output lines, and so on. 
 
-Other than data and address bus, RAM has one more input read/write. If it's state is changed, let's say if it is high, the content at data bus is written to the address provided to the RAM from address bus else the content of the address provided by address bus is reflected to the data bus.
+ An 8:3 Priority Encoder has seven input lines i.e., i0 to i7, and three output lines y2, y1, and y0. In 8:3 Priority Encoder i7 have the highest priority and i0 the lowest. 
 
-Below is the code of 1 kilo byte RAM describe using Verilog HDL. The width of the RAM is 8-bit and depth is 1024 (which is 1 kilo). For making the code simple, there are two similar data bus, one will be used to read the content from the RAM and another is used to provide content to the data bus and, when read write input is high, this content is written to the address of the RAM.
+ **Truth Table**:
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day13/Screenshot_2023_0925_122701.jpg">
+
+**Logic Symbol**:
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day13/Screenshot_2023_0925_122726.jpg">
+
+ **Verilog Code**:Most of the programming deals with software development and design but Verilog HDL is a hardware description language that is used to design electronics design. Verilog provides designers to design the devices based on different levels of abstraction that include: Gate Level, Data Flow, Switch Level, and Behavioral modeling. 
+
+*Behavior Modeling*:
+Behavioral Model which is the highest level of abstraction, Since we are using Behavioral Modeling we shall write the code using if-else to ensure the Priority Encoder input values. By using the if condition the output values are assigned based on the priority. 
 
 ```ruby
-
-//1 kilo byte Random Access Memory
-module ram(
-    input clk,
-    input write_enable,
-    input [9:0]address,
-    input [7:0]data_in,
-    output reg [7:0]data_out
-);
-
-reg [7:0]ram_block[0:1023];
-
-always @(posedge clk) begin
-        if(write_enable)
-            ram_block[address] <= data_in;
+module priorityencoder_83(en,i,y);
+  // declare
+  input en;
+  input [7:0]i;
+  // store and declare output values
+  output reg [2:0]y;
+  always @(en,i)
+  begin
+    if(en==1)
+      begin
+        // priority encoder
+        // if condition to choose 
+        // output based on priority. 
+        if(i[7]==1) y=3'b111;
+        else if(i[6]==1) y=3'b110;
+        else if(i[5]==1) y=3'b101;
+        else if(i[4]==1) y=3'b100;
+        else if(i[3]==1) y=3'b011;
+        else if(i[2]==1) y=3'b010;
+        else if(i[1]==1) y=3'b001;
         else
-            data_out <= ram_block[address];
-end
-
+        y=3'b000;
+      end
+     // if enable is zero, there is
+     // an high impedance value. 
+    else y=3'bzzz;
+  end
 endmodule
+
 ```
 
-<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd%23day%2012/rammmmm1111.JPG">
-
-**RAM TestBench** :
-In the testbench given below, we are writing some content to the few location of the RAM and then we are reading back the written data form the same location. If we are able to write and read, everything is fine and this will be synthesized to BRAM of the FPGA (if FPGA have BRAM).
+**Priority Encoder TestBench** :
+Testbench: Behaviour
+A Testbench is a simulation block that is used to provide inputs to the design block. The best way to write Testbench is having is a good insight into the truth table. Once you have the truth table ready provide the input values inside the testbench.
 
 ```ruby
-module ram_tb;
 
-reg clk;
-reg write_enable;
-reg [9:0]address;
-reg [7:0]data_in;
-wire [7:0]data_out;
-
-ram uut(clk,write_enable,address,data_in,data_out);
-
-initial begin
-clk = 0;
-data_in = 8'h56;
-write_enable = 0;
-address = 55;
-#20
-write_enable = 1;
-#20;
-write_enable = 0;
-address = 66;
-data_in = 8'h36;
-#20
-write_enable = 1;
-#20 
-write_enable = 0;
-#20
-address = 55;
-
+module tb;
+  reg [7:0]i;
+  reg en;
+  wire [2:0]y;
+  
+  // instantiate the model: creating 
+  // instance for block diagram 
+  priorityencoder_83 dut(en,i,y);
+  initial
+    begin
+      // monitor is used to display the information. 
+      $monitor("en=%b i=%b y=%b",en,i,y);
+      // since en and i are input values, 
+      // provide values to en and i. 
+      en=1; i=128;#5
+      en=1; i=64;#5
+      en=1; i=32;#5
+      en=1; i=16;#5
+      en=1; i=8;#5
+      en=1; i=4;#5
+      en=1; i=2;#5
+      en=1; i=0;#5
+      en=0; i=8'bx; 
 end
 
-always #10 clk = ~clk;  //clock generation
-initial begin
-
-$dumpfile ("ram_tb.vcd");
+initial 
+begin
+$dumpfile ("dump.vcd");
 $dumpvars;
-#120 $finish ;
+#40 $finish;
 end
 endmodule
-
 ```
-
-Below is the block diagram of a RAM. Note that data bus data_in and data_out are of same size because it needs to be similar. The RAM may have more inputs like RAM enable
 
 
 **Waveform**:
-<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/Samsungpd%23day%2012/output%20wave_ram.png">
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day13/waveform_of%20prio_encoder.png">
 
 
 </details>
