@@ -110,8 +110,15 @@ gtkwave dump.vcd
 
 
 
+In Digital System Circuit, an Encoder is a combinational circuit that takes 2n  input signal lines and encodes them into n output signal lines. When the enable is true i.e., the corresponding input signal lines display the equivalent binary bit output. 
+
+For example, 8:3 Encoder has 8 input lines and 3 output lines, 4:2 Encoder has 4 input lines and 2 output lines, and so on. 
+
+ An 8:3 Priority Encoder has seven input lines i.e., i0 to i7, and three output lines y2, y1, and y0. In 8:3 Priority Encoder i7 have the highest priority and i0 the lowest. 
 
 
 
+Most of the programming deals with software development and design but Verilog HDL is a hardware description language that is used to design electronics design. Verilog provides designers to design the devices based on different levels of abstraction that include: Gate Level, Data Flow, Switch Level, and Behavioral modeling. 
 
-
+Behavior Modeling:
+Behavioral Model which is the highest level of abstraction, Since we are using Behavioral Modeling we shall write the code using if-else to ensure the Priority Encoder input values. By using the if condition the output values are assigned based on the priority. 
