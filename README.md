@@ -3233,4 +3233,195 @@ gtkwave dump.vcd
 </details>
 
 
+ </details>
+
+# Day 13 Post-Synthesis simulation
+
+
+<details>
+<summary>Introduction</summary>
+	
+**1.Introduction**
+
+In VLSI (Very Large Scale Integration) design, a "PVT corner" refers to a specific set of process, voltage, and temperature conditions under which a semiconductor chip or integrated circuit (IC) is designed and tested. PVT corners are essential for ensuring that a chip operates reliably under various operating conditions. Let's break down the components of PVT:
+
+   1.1. **Process (P)**: This component refers to the specific manufacturing process used to create the semiconductor device. Semiconductor manufacturing processes can have variations, and PVT corners help take these variations into account. Different processes can lead to variations in transistor characteristics and other properties of the semiconductor.
+   
+   1.2. **Voltage (V)**: Voltage refers to the operating voltage supplied to the integrated circuit. Chips are designed to work within a specific range of voltages, and different PVT corners may test the chip's performance at various voltage levels, including nominal voltage, minimum voltage, and maximum voltage. This ensures that the chip operates reliably under different voltage conditions.
+   
+   1.3. **Temperature (T)**: Temperature refers to the ambient temperature at which the chip operates. Like voltage, temperature can affect the performance of a semiconductor device. PVT corners typically include testing at different temperature levels, such as room temperature (25°C), high-temperature (elevated temperature), and low-temperature conditions.
+
+2. **Designing and testing a chip under different PVT corners is crucial for several reasons**:
+
+      2.1. **Reliability**: It ensures that the chip functions reliably across a range of conditions. This is particularly important in applications where the chip may be exposed to extreme temperatures or voltage fluctuations.
+
+      2.2. **Performance Optimization**: By testing under different PVT corners, designers can optimize the chip's performance for various scenarios. For example, a chip may need to operate efficiently at both low and high temperatures.
+
+      2.3. **Manufacturing Variability**: Semiconductor manufacturing processes can have variations from one manufacturing run to another. Testing under different PVT corners helps account for these variations and ensures that the chip meets its specifications.
+
+      2.4. **Worst-Case Analysis**: PVT corner testing often includes a "worst-case" scenario, where the chip is tested under the most extreme conditions (e.g., highest temperature and lowest voltage). This helps identify potential failure points and design weaknesses.
+- PVT corners are critical for meeting the design specifications, ensuring reliability, and achieving optimal performance for semiconductor devices. Designers use tools and simulations to assess how the chip performs under different PVT conditions and make necessary adjustments to the design to meet these requirements.
+
+3. **Relationship Between PVT**
+
+In VLSI (Very Large Scale Integration) design, the relationship between PVT (Process, Voltage, and Temperature) is fundamental and plays a crucial role in the design, manufacturing, and testing of semiconductor devices. The relationship can be understood as follows:
+
+3.1. **Process Variation (P)**:
+            Impact on Voltage and Temperature: The manufacturing process of semiconductor devices can have inherent variations, leading to differences in transistor characteristics, gate lengths, doping levels, and other factors. These process variations directly affect how the chip operates under different voltage and temperature conditions.Design Margins: To account for process variations, designers often need to add design margins, which are extra performance allowances, to ensure that the chip will function correctly even under the worst-case process conditions.
+
+3.2 **Voltage Variation (V)**
+Impact on Process and Temperature: The operating voltage supplied to a chip affects its power consumption, speed, and reliability. Different voltage levels may be applied to test the chip's performance under various conditions.
+
+*Dynamic Voltage Scaling (DVS)*: In some cases, chips are designed with dynamic voltage scaling capabilities, allowing them to adjust their operating voltage to optimize power consumption and performance depending on the workload and temperature conditions.
+
+ 3.3 **Temperature Variation (T)**:
+*Impact on Process and Voltage*: Temperature has a significant impact on the electrical characteristics of semiconductor devices. As temperature increases, the mobility of charge carriers in transistors changes, affecting their performance. Chips must be tested at different temperatures to ensure proper functionality across the specified operating range.
+      *Thermal Management*: In VLSI design, thermal management strategies, such as heat sinks, fans, and thermal simulations, are used to control the temperature of the chip and maintain it within acceptable limits.
+
+The relationship between PVT factors is intricate because changes in one factor can affect the others. For example:
+Process variations can affect the electrical characteristics of transistors, which, in turn, can impact the voltage levels required for proper operation.
+Voltage changes can result in power dissipation, which can increase the chip's temperature.
+Temperature fluctuations can affect transistor performance and alter the required voltage levels for reliable operation.
+Designers must carefully consider the interplay between these factors to ensure that the chip meets its performance and reliability specifications under various PVT conditions. This often involves extensive simulations, modeling, and testing at different PVT corners to validate the chip's functionality and robustness.
+Ultimately, achieving a successful VLSI design involves a delicate balance between these PVT factors to ensure that the semiconductor device operates reliably and efficiently across a range of real-world operating conditions.
+
+4. **Slack**:
+   
+    PVT corners are essential in VLSI design because semiconductor devices' behavior can vary significantly based on these parameters. Characterizing a design at various PVT corners helps ensure that the circuit or device will function correctly and within specified performance limits under a range of real-world operating conditions.
+        Designers use PVT corners to analyze the worst-case performance, optimize for power, or achieve a balance between performance, power consumption, and other design goals. It's important to consider and account for process, voltage, and temperature variations to create robust and reliable integrated circuits.
+        TNS (Total Negative Slack), WNS (Worst Negative Slack), and WHS (Worst Hold Slack) are terms used in the context of timing analysis in digital integrated circuit design. These terms are used to evaluate the timing performance of a circuit and ensure that it meets the specified timing requirements.
+
+      4.1 **TNS (Total Negative Slack)**: TNS represents the sum of the negative slack across all paths in a circuit. Slack is the amount of time by which a signal can be delayed without violating the specified timing constraints. A negative slack indicates that a path violates its timing requirements. TNS provides an overall view of how much timing violation exists in the entire design.
+
+      4.2 **WNS (Worst Negative Slack)**: WNS is the most critical or largest negative slack among all paths in the circuit. It represents the timing violation that is closest to breaching the specified timing constraints. Addressing the WNS is crucial in design optimization and fixes, as it determines the worst-case timing scenario in the circuit.
+
+      4.3. **WHS (Worst Hold Slack)**: WHS is similar to WNS but specifically relates to hold timing violations. Hold timing refers to the minimum amount of time that data must be held stable after a clock edge to ensure correct operation. WHS identifies the path with the largest negative slack with respect to hold timing, indicating the worst-case hold violation in the design.
+
+      These metrics are critical for timing closure in the VLSI design process. Designers use various techniques such as gate resizing, buffer insertion, clock skew adjustment, and pipeline optimization to address negative slack, minimize WNS, and ensure that the circuit meets its timing requirements. Achieving good TNS and eliminating WNS and WHS is essential to ensure the circuit operates reliably and within the specified timing bounds.
+
+</details>
+<details>
+<summary>Labs</summary>
+
+Steps
+
+1.Get all the .lib files by cloning https://github.com/Geetima2021/vsdpcvrd.git
+
+2. Delete the lines from the .lib with the error stated. (REPEAT THIS FOR ALL THE .LIB)
+
+3. After deleting the lines , load LC shell and convert it into .db using the following commands
+
+    ```ruby
+    read_lib <library_name>
+     write_lib <library_name> -f db -o <name_of_the_db_file>
+```
+
+4. Now generate a constaraint file
+
+```ruby
+set_units -time ns
+create_clock -name MYCLK -per 2 [get_pins {pll/CLK}];
+
+set_clock_latency -source 1 [get_clocks MYCLK]
+set_clock_uncertainty -setup 0.5 [get_clocks MYCLK]; 
+set_clock_uncertainty -hold 0.4 [get_clocks MYCLK]; 
+
+set_input_delay -max 1 -clock \[get_clocks MYCLK] [all_inputs];
+set_input_delay -min 0.5 -clock \[get_clocks MYCLK] [all_inputs];
+set_output_delay -max 1 -clock \[get_clocks MYCLK] [all_outputs];
+set_output_delay -min 0.5 -clock \[get_clocks MYCLK] [all_outputs];
+
+set_input_transition -max 0.2 \[all_inputs];
+set_input_transition -min 0.1 \[all_inputs];
+
+set_max_area  800;
+
+set_load -max 0.2 \[all_outputs];
+set_load -min 0.1 \[all_outputs];
+
+```
+
+Now set the required db files (sky130.db,avsddac.db,avsdpll.db), read the design , link the library and do compile_ultra
+
+Commands for implementing this are as follows
+
+```ruby
+set target_library { <sky130_PVT_corner> , avsddac.db , avsdpll.db}
+set link_library {* sky130_PVT_corner> , avsddac.db , avsdpll.db}
+read_verilog vsdbabysoc.v
+link
+source <constraints_file_name>
+compile_ultra
+report_qor
+```
+
+**Output**:
+1.For sky130_fd_sc_hd__ff_100C_1v65 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ff_1v65.png">
+ 
+2.For sky130_fd_sc_hd__ff_100C_1v95 
+  <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ff_100c_1v95.png">
+  
+3.For sky130_fd_sc_hd__ff_n40C_1v56
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ff_n40c_1v56.png">
+
+4.For sky130_fd_sc_hd__ff_n40C_1v65 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ff_n40c_1v65.png">
+
+5.For sky130_fd_sc_hd__ff_n40C_1v76
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+6.For sky130_fd_sc_hd__ss_100C_1v40
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+7.For sky130_fd_sc_hd__ss_100C_1v60
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+8.For sky130_fd_sc_hd__ss_n40C_1v28 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+9.For sky130_fd_sc_hd__ss_n40C_1v35 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+10.For sky130_fd_sc_hd__ss_n40C_1v40 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+11.For sky130_fd_sc_hd__ss_n40C_1v44
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+12.For sky130_fd_sc_hd__ss_n40C_1v76 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+13.For sky130_fd_sc_hd__tt_025C_1v80
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+**Table and Graph for setup**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+
+**Table and Graph for setup**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+
+
+
+**Observation**
+
+Hold violations are more prone in faster cells and setup is more prone in slower cells.
+
+The worst corner for setup is ss_n40C_1v28 , if this corner is satisfied then all the others will be satisfied automatically.
+
+The best PVT corner is ff_n40C_1v76 as it has no setup violation and very minimal hold violation.
+
+
+
+</details>
+
+
+
 
