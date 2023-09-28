@@ -3235,7 +3235,7 @@ gtkwave dump.vcd
 
  </details>
 
-# Day 13 Post-Synthesis simulation
+# Day 14 Post-Synthesis simulation
 
 
 <details>
@@ -3316,7 +3316,7 @@ Steps
      write_lib <library_name> -f db -o <name_of_the_db_file>
 ```
 
-4. Now generate a constaraint file
+ 4. Now generate a constaraint file
 
 ```ruby
 set_units -time ns
@@ -3369,44 +3369,44 @@ report_qor
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ff_n40c_1v65.png">
 
 5.For sky130_fd_sc_hd__ff_n40C_1v76
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ff_n40c_1v76.png">
 
 6.For sky130_fd_sc_hd__ss_100C_1v40
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ss_100c_1v40.png">
 
 7.For sky130_fd_sc_hd__ss_100C_1v60
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ss_100c_1v60.png">
 
 8.For sky130_fd_sc_hd__ss_n40C_1v28 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ss_n40c_1v28.png">
 
 9.For sky130_fd_sc_hd__ss_n40C_1v35 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ss_n40c_1v35.png">
 
 10.For sky130_fd_sc_hd__ss_n40C_1v40 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ss_n40c_1v40.png">
 
 11.For sky130_fd_sc_hd__ss_n40C_1v44
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ss_n40c_1v44.png">
 
 12.For sky130_fd_sc_hd__ss_n40C_1v76 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/ss_n40c_1v76.png">
 
 13.For sky130_fd_sc_hd__tt_025C_1v80
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/tt_025c_1v80.png">
 
 **Table and Graph for setup**
 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/SETUP_TABLE.JPG">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/WNS_SETUP.JPG">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/TNS_SETUP.JPG">
 
 
 **Table and Graph for setup**
 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/tree/master/samsungpd_%23day14">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/HOLD_TABLE.JPG">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/WNS_HOLD.JPG">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day14/TNS_HOLD.JPG">
 
 
 
