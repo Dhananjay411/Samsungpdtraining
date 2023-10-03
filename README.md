@@ -3424,4 +3424,186 @@ The best PVT corner is ff_n40C_1v76 as it has no setup violation and very minima
 
 
 
+</details>
 
+# Day 15 Inception of open source EDA, openLANE and sky130PDK
+
+
+<details>
+<summary>Introduction</summary>
+	
+**1.Introduction to QFN-48, RISC-5(ISA), software and hardware**
+
+A QFN-48 package is a type of surface mount device (SMD) package commonly used in electronics to house integrated circuits (ICs) or chips. QFN stands for Quad Flat No-Lead, and the "48" in QFN-48 indicates the number of pins or pads on the package. Here's an introduction to some key components and concepts related to QFN-48 packages:
+
+**1.Package**: The QFN-48 package is a compact, square or rectangular-shaped component designed to protect and provide electrical connections to an integrated circuit or chip. It has a flat bottom with exposed metal pads for soldering onto a printed circuit board (PCB).
+
+**2.Chip**: The chip, also known as the integrated circuit or IC, is the core of the electronic component. It contains the active electronic components, transistors, resistors, and other elements necessary to perform specific functions, such as processing data or amplifying signals.
+
+**3.Pads**: In the context of a QFN-48 package, pads refer to the metal areas on the bottom of the package that make electrical contact with the PCB. These pads are usually arranged in a grid pattern around the edges of the package, and they are used for soldering the QFN package onto the PCB.
+
+**4.Core Die**: The core die is the actual semiconductor chip within the QFN-48 package. It is a small, silicon-based wafer on which the electronic circuitry is fabricated. The core die is connected to the metal pads on the package, allowing it to communicate with the outside world through these electrical connections.
+
+**5.IPs (Intellectual Property)**: In the context of electronics and semiconductor design, IPs refer to Intellectual Property blocks or modules. These are pre-designed and pre-verified functional blocks that can be integrated into a chip's design to save time and effort. IPs are often used for common functions like microprocessors, memory, communication interfaces, or analog circuitry. Chip designers can license or purchase these IPs from third-party vendors to incorporate them into their chip designs, reducing the need to design these components from scratch.
+
+In summary, a QFN-48 package is a specific type of surface mount package used to house integrated circuits (chips). The package has metal pads on the bottom that connect to the core die inside the chip. Designers may use IPs to incorporate pre-designed functional blocks into the chip's design, which can streamline the development process and improve efficiency in creating complex electronic devices
+
+**RISC-5 Instruction set Architecture**:
+standard "RISC-5" instruction set architecture (ISA) in the field of computer architecture. However, there are several RISC (Reduced Instruction Set Computer) architectures with various versions and extensions developed by different organizations and researchers.
+
+One of the well-known RISC architectures is RISC-V, which you might be referring to as "RISC-5." RISC-V is an open-source ISA that has gained popularity for its flexibility, simplicity, and extensibility. It is designed to be highly customizable, allowing designers to tailor the instruction set to meet the specific needs of their applications or hardware implementations.
+
+The RISC-V ISA is based on several principles commonly found in RISC architectures:
+
+1.*Simplicity*: RISC-V simplifies the instruction set by reducing the number of instructions and addressing modes, which can lead to more efficient and predictable performance.
+
+2.*Load-Store Architecture*: RISC-V, like most RISC architectures, uses a load-store architecture. This means that arithmetic and logical operations typically involve registers, and memory access is performed through specific load and store instructions.
+
+3.*Fixed-Length Instructions*: Instructions in RISC-V are typically of fixed length, making instruction fetching and decoding straightforward.
+
+4.*Register-Based*: RISC-V architectures often have a set of registers that instructions operate on. These registers are typically general-purpose and can be used for various operations.
+
+5.*Pipeline Friendly*: RISC architectures are designed to be easily pipelined, which can improve instruction throughput and overall performance.
+
+It's important to note that the "5" in "RISC-5" does not correspond to a specific version or extension of the RISC-V ISA. Instead, RISC-V has different standard extensions denoted by single-letter mnemonics like "I" for integer instructions, "M" for integer multiplication and division, "A" for atomic instructions, and so on. Depending on the specific needs of a system or application, designers can choose which extensions to include in their RISC-V implementation.
+
+Please keep in mind that developments in computer architecture may have occurred since my last knowledge update in September 2021. If "RISC-5" refers to a specific ISA that has emerged after that date, I recommend consulting more recent sources for the most up-to-date information.
+
+
+**connection between system software and hardware**
+The connection between application software, system software, and hardware in a computer system is crucial for the overall functioning of the system. These three components work together in a layered fashion, with each layer serving a specific purpose. Here's an overview of the connection between these components:
+
+1.*Hardware*:
+
+Hardware is the physical component of a computer system, including the CPU, memory, storage devices, input/output devices (e.g., keyboard, mouse, display), and various other peripherals.
+It provides the raw computational power and resources necessary for running software.
+
+2.*System Software*:
+
+System software serves as an intermediary between hardware and application software.
+The operating system (OS) is a core component of system software. It manages hardware resources, including CPU scheduling, memory management, file system operations, and device drivers.
+Device drivers are software components that allow the OS to communicate with specific hardware devices.
+System software provides a platform for running application software by abstracting the hardware complexities and providing a set of services and APIs (Application Programming Interfaces) for applications to utilize.
+
+3.*Application Software*:
+
+Application software includes all the programs and applications that users interact with directly to perform specific tasks or functions, such as word processors, web browsers, games, and business applications.
+Application software relies on system software to access hardware resources and perform tasks. It uses APIs and services provided by the operating system to access files, display graphics, receive input, and communicate over networks.
+Application software abstracts the underlying system and hardware details from the user, allowing them to interact with the computer system in a user-friendly manner.
+
+Here's a simplified illustration of how these components interact:
+
+1. The user interacts with application software (e.g., a word processing program).
+2. The application software issues requests and commands for various tasks, such as saving a document or printing.
+3. The application software communicates these requests to the operating system via system calls or APIs.
+4. The operating system, as part of system software, manages the hardware resources required to fulfill the requests. For example, it may allocate memory for the document, manage the printer connection, or retrieve data from storage.
+5. The operating system communicates with hardware through device drivers and manages the hardware operations necessary to complete the tasks.
+6. The results or output are then relayed back through the layers, and the user sees the intended action or outcome on the application software's interface.
+This layered approach to computer architecture allows for abstraction, efficiency, and flexibility, enabling various applications to run on diverse hardware platforms with minimal modification. It also ensures that hardware resources are shared and managed efficiently among multiple applications running concurrently on the same system.
+
+
+</details>
+<details>
+<summary>SOC Design and openLANE</summary>
+	
+SOC (System-on-Chip) design is a complex process of integrating various hardware and software components into a single chip to perform specific functions or tasks. OpenLANE, on the other hand, is an open-source ASIC (Application-Specific Integrated Circuit) design flow automation tool that simplifies the process of designing and manufacturing custom chips. Let's explore how SOC design and OpenLANE are related:
+
+**1.SOC Design Overview**:
+
+SOC design involves the integration of multiple components, including CPUs, GPUs, memory, input/output interfaces, and custom hardware accelerators, onto a single chip.
+It requires expertise in hardware architecture, digital design, verification, physical design, and manufacturing processes.
+SOC designers need to make critical decisions regarding chip architecture, power management, clocking, communication protocols, and more.
+
+**2.OpenLANE**:
+
+OpenLANE is an open-source ASIC design flow that automates many of the steps involved in designing a custom chip.
+It is built on open-source EDA (Electronic Design Automation) tools and aims to make ASIC design more accessible to a broader community of designers.
+OpenLANE includes tools for synthesis, place and route, clock tree synthesis, and more, all integrated into a single pipeline.
+It provides a set of scripts and methodologies that automate the steps required to convert a chip design from RTL (Register Transfer Level) description to a manufacturable GDSII file.
+The connection between SOC design and OpenLANE lies in OpenLANE's ability to streamline and simplify the design and manufacturing process for custom chips. SOC designers can use OpenLANE to:
+
+*1.Rapidly Prototype*: OpenLANE allows designers to quickly prototype and experiment with custom ASIC designs without the need for a proprietary design flow.
+
+*2.Reduce Costs*: By utilizing open-source tools and methodologies, OpenLANE can significantly reduce the cost of custom chip development compared to proprietary EDA tools.
+
+*3.Improve Accessibility*: OpenLANE's open-source nature makes it accessible to a wide range of designers, including academic researchers, startups, and hobbyists.
+
+*4.Optimize for Specific Requirements*: SOC designers can use OpenLANE to optimize their chip designs for specific requirements, such as low power, high performance, or specialized functions.
+
+In summary, SOC design is a complex process that involves integrating various hardware and software components into a single chip. OpenLANE is a valuable tool that simplifies the ASIC design flow, making SOC design more accessible and cost-effective for a broader range of designers. It can be used to automate many of the design and manufacturing steps, ultimately helping bring custom chips to market more efficiently.
+
+
+
+
+</details>
+<details>
+<summary>open source ASIC Design flow</summary>
+
+An open-source ASIC (Application-Specific Integrated Circuit) design flow refers to the use of open-source software tools and methodologies for the entire process of designing and manufacturing custom integrated circuits. Open-source ASIC design flows provide an alternative to proprietary Electronic Design Automation (EDA) tools, making chip design more accessible, cost-effective, and transparent. Here is an overview of the steps and components typically involved in an open-source ASIC design flow:
+
+*1.Specification and Design*:
+  -Define the specifications and requirements for the ASIC.
+ - Create a high-level architectural design of the chip, including the overall functionality and major components.
+  
+*2.RTL Design*:
+-Write the RTL (Register Transfer Level) description of the digital logic using a hardware description language (HDL) such as Verilog or VHDL.
+-Design custom digital blocks and IP (Intellectual Property) cores, if necessary.
+
+*3.Verification*:
+-Perform simulation and verification of the RTL design using open-source simulation tools like Icarus Verilog or Verilator.
+-Write testbenches to verify the correctness of the design.
+
+*4.Synthesis*:
+-Use open-source synthesis tools like Yosys to convert the RTL design into a gate-level netlist.
+-Optimize the design for area, power, and timing constraints.
+
+*5.Physical Design*:
+-Perform floorplanning to allocate space for different components on the chip.
+-Use open-source tools like Magic or KLayout for layout design.
+-Perform placement and routing using tools like OpenROAD or Qflow.
+
+*6.Clock Tree Synthesis (CTS)*:
+-Generate a clock tree to distribute clock signals evenly across the chip using open-source CTS tools.
+
+*7.DRC (Design Rule Check) and LVS (Layout vs. Schematic)*:
+-Verify the layout against design rules and ensure it matches the RTL description using open-source tools like Netgen or Magic.
+
+*8.Static Timing Analysis (STA)*:
+-Analyze the design to ensure that it meets timing requirements using open-source STA tools like OpenSTA or TritonRoute.
+
+*9.Simulation and Post-Layout Verification*:
+-Perform post-layout simulation and verification to ensure that the final layout meets functional and timing requirements.
+
+*10.Mask Generation*:
+-Generate the GDSII file, which contains the physical mask data necessary for manufacturing.
+
+*11.Manufacturing*:
+-Send the GDSII file to a semiconductor foundry for the fabrication of physical ASICs.
+
+*12.Testing and Characterization*:
+-Once the chips are fabricated, they are tested and characterized to ensure they meet the specifications.
+
+*13.Packaging and Integration*:
+-Package the ASICs and integrate them into the target system.
+
+Throughout the open-source ASIC design flow, various open-source EDA tools and scripts are used to perform different tasks, from RTL design to manufacturing preparation. By using open-source tools, designers can reduce costs, increase transparency, and collaborate with a broader community of engineers and researchers in the development of custom integrated circuits. It also promotes innovation and democratizes chip design by making the entire process more accessible.
+
+
+</details>
+<details>
+<summary>LABS</summary>
+
+
+
+
+
+
+
+
+</details>
+
+# Day 16 Good floorplan Vs Bad floorplan and introduction to library cell
+
+
+<details>
+<summary>Introduction</summary>
