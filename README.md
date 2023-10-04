@@ -3593,7 +3593,44 @@ Throughout the open-source ASIC design flow, various open-source EDA tools and s
 <details>
 <summary>LABS</summary>
 
+**Skywater130 PDK Files**
 
+ The skywater130 PDK contains 3 directories:
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/commit/dac213cdb40630a5e0d533b3d71b8a4d024b20b9">
+
+1. skywater-pdk : It contains all pdk related files (.lib,.lef)
+2. open-pdks : It contains scripts that bridge the compatibility gap between closed-source and open-source PDKs for Electronic Design Automation (EDA) tools.
+3. sky130A : It contains open source compatible EDA files.
+   
+   
+The commands for invoking Openlane
+```ruby
+docker
+flow.tcl -interactive
+```
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd%23day15/img_000000001_first.png">
+
+Importing the package
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/commit/dac213cdb40630a5e0d533b3d71b8a4d024b20b9#diff-492532d0a74dd0f991d68073dd4cbee749642a7c49378b5544ffc2b88995cf1e">
+
+Preparing Design:
+
+The "prep" phase sets up the file structure for your design within OpenLane.
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd%23day15/img_less_merger_lef_7.png">
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd%23day15/img_less_confi_8.png">
+
+Inside a runs folder a folder is created with date is created
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd%23day15/img_run_file_crt_5.png">
+
+Config file in the new directory shows the default parameters taken by the run.
+
+After running the command run_synthesis
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd%23day15/img_no%20of%20cell_10.png">
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd%23day15/img_run_synthesis_9.png">
 
 
 
