@@ -3597,7 +3597,7 @@ Throughout the open-source ASIC design flow, various open-source EDA tools and s
 
  The skywater130 PDK contains 3 directories:
 
-<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/commit/dac213cdb40630a5e0d533b3d71b8a4d024b20b9">
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd%23day15/first.png">
 
 1. skywater-pdk : It contains all pdk related files (.lib,.lef)
 2. open-pdks : It contains scripts that bridge the compatibility gap between closed-source and open-source PDKs for Electronic Design Automation (EDA) tools.
@@ -3612,7 +3612,7 @@ flow.tcl -interactive
 <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd%23day15/img_000000001_first.png">
 
 Importing the package
-<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/commit/dac213cdb40630a5e0d533b3d71b8a4d024b20b9#diff-492532d0a74dd0f991d68073dd4cbee749642a7c49378b5544ffc2b88995cf1e">
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd%23day15/second.png">
 
 Preparing Design:
 
