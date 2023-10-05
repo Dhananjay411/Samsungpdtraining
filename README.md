@@ -3919,9 +3919,9 @@ The values chosen are chosen based on set of prioprities, the least pripriority 
 
 <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/confi.tcl_rpt_3.png">
 
-3. sky130A_sky130_fd_sc_hd.tcl in picorv32a directory
+3. sky130A_sky130_fd_sc_hd.tcl in chacha directory
 
-<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/confi.tcl_rpt_3.png">
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/io_place_log_rpt_5.png">
 
 The values chosen in our case are utilization ratio 35 , vertical metal layer as 2 , horizonatal metal layer as 3
 
