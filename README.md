@@ -3901,6 +3901,59 @@ ASIC design flow.
 Running the floorplan using the command *run_floorplan*
 <img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/8.png">
 
+</details>
+<details>
+<summary>Labs (Floorplan using openLANE) </summary>
+
+Running the floorplan using the command run_floorplan
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/run_floorplan_rpt_4.png">
+
+The values chosen are chosen based on set of prioprities, the least pripriority is for floorplan.tcl then config.tcl in designs and the highest is for sky130A_sky130_fd_sc_hd.tcl
+
+1.floorplan.tcl
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/floorplaning_default_rpt_2.png">
+
+2.config.tcl in design chacha folder
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/confi.tcl_rpt_3.png">
+
+3. sky130A_sky130_fd_sc_hd.tcl in picorv32a directory
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/confi.tcl_rpt_3.png">
+
+The values chosen in our case are utilization ratio 35 , vertical metal layer as 2 , horizonatal metal layer as 3
+
+The reult is stored as .def file
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/floorplan_def_7.png">
+
+command to invoke magic is
+```ruby
+magic -T <path_of_tech_file> lef read <path_of_lef_file> def read <path_of_def_file>
+```
+
+The floorplan in magic is as follows
+
+
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/floorplan_sch_8.png">
+
+As the mode is set to 1 all the pins are equidistant
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/floorplan_sch_detail_9.png">
+
+We can select and check its metal layer by just selecting it in magic and giving what command in tkkon2.3
+
+
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/8.png">
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/8.png">
+
+
+
 
 </details>
 <details>
@@ -4361,3 +4414,22 @@ Transition Time
 Transition time affects the shape and quality of the signal waveform and can impact the setup and hold times of downstream flip-flops or logic gates.
 A shorter transition time allows for faster signal switching, which can be advantageous in high-speed designs.
 In summary, propagation delay measures the time it takes for a signal to traverse a digital circuit from input to output, while transition time measures the time it takes for a signal to change between logic levels. Both parameters are essential in digital circuit analysis and design, as they influence circuit speed, timing, and signal quality. Designers use these values to ensure that the circuit meets timing constraints and operates reliably at the desired clock frequency.
+
+
+
+</details>
+<details>
+<summary>Labs (Placement using openLANE) </summary>
+
+
+As the mode is set to 1 all the pins are equidistant
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/placement_rpt_10.png">
+
+
+The placement in the magic is as follows
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/placement_sch_11.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/placement_sch_detail_12.png">
+
+The placement of different images can be seen in the below image
