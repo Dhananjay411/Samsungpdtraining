@@ -3643,4 +3643,715 @@ After running the command run_synthesis
 
 
 <details>
-<summary>Introduction</summary>
+<summary>Chip Floorplan Considerations</summary>
+
+1. **Utilization Factor  and Aspect Ratio**:
+   
+Utilization factor and aspect ratio are concepts often used in engineering and design to assess and optimize the efficiency and performance of various systems or structures, including buildings, machines, and materials. Here's an explanation of each term:
+
+**Utilization Factor**:
+
+Utilization factor, also known as the duty cycle or load factor, is a measure of how efficiently a particular system or resource is being used or utilized over a specific period of time.
+It is typically expressed as a ratio or percentage and indicates the portion of time or capacity that a system is actively in use compared to its total available capacity.
+The formula for utilization factor is:
+Utilization Factor = (Actual Usage) / (Maximum Capacity)
+A high utilization factor indicates efficient and effective use of the resource, while a low utilization factor may suggest inefficiency or underutilization.
+Example: In manufacturing, if a machine is operational for 8 hours in a 24-hour day, its utilization factor would be 8/24 = 1/3 or 33.33%.
+
+**Aspect Ratio**:
+
+Aspect ratio refers to the proportional relationship between the length and width (or height) of an object, system, or structure. It is commonly used in various fields, including architecture, aviation, and engineering.
+Aspect ratio is often expressed as a simple ratio, such as 4:3 or 16:9, or as a decimal value. In the context of rectangular shapes, it is the ratio of the longer dimension to the shorter dimension.
+For example, in the case of a rectangular building, the aspect ratio would be the ratio of its length to its width.
+Example: If a rectangular building has a length of 60 meters and a width of 30 meters, the aspect ratio would be 60/30 = 2.
+
+In aerodynamics, aspect ratio is used to describe the shape of aircraft wings. Wings with a higher aspect ratio (longer and narrower) tend to have better aerodynamic performance and higher lift-to-drag ratios.
+Optimizing the utilization factor and aspect ratio can help improve efficiency, reduce waste, and enhance the performance of systems and structures in various applications. Engineers and designers often consider these factors when designing and evaluating different solutions.
+
+
+
+
+-Height and Width of core and die Let us consider a simple netlist that has a reg-reg timing path with 2 flops and 2 combinational gates as follows:
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/1.png">
+
+The dimensions of core and die are the summation of the area of standard cells present in the design. Let us assume that the area of the standard cell as 1sq. unit and the area of flipflop as 1 sq. unit. So, the minimum area occupied by the netlist is 4 sq. units, however may be placed.
+
+A core is the section of a chip where the fundamental logic of a design is placed. A die, which consists of core, is a small semiconductor material specimen on which the fundamental circuit is fabricated. The core is encapsulated with the die. When our design is placed on the core, the logic cells completely occupy the area of the core i.e., the utilization of area is 100%. So, Utilization factor = Area occupied by netlist/Total area of the core When the utilization factor is 1, there is no space left on die for any other optimization. So, ideally the utilization factor used is 50-60%.
+
+Aspect Ratio = Height/Width Whenever the aspect ratio is 1, it signifies a square chip. Otherwise, it is a rectangle. Let us now consider the following example that has a utilization factor of 0.5 and aspect ratio of 0.5. The length of the die is 2 units and height is 4 units. So, aspect ratio=2/4=0.5. The area required by the logic is 4 units so the utilization factor = 4/2x4=1/2=0.5.
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/2.png">
+
+Let us consider another core with area of 4x4 sq.units with the same netlist. So, The utilization factor now would be (2x2)/(4x4)= 0.25. So, Only 25% of area is utilized, the reamining area can be used for optimization.The aspect ratio here is 1, so it is a square chip.
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/3.png">
+
+**2.concept of Pre-placed Cells**:
+
+Pre-placed cells, also known as pre-placed blocks or predefined blocks, are a concept used in digital integrated circuit design. They are an integral part of the process of designing complex integrated circuits, such as microprocessors, memory chips, and other digital systems. The concept involves designing and specifying certain predefined blocks or cells that are already created and optimized for specific functions, and then integrating these blocks into the overall circuit design. Here's an explanation of the concept:
+
+*Custom vs. Standard Cells*:
+
+In digital integrated circuit design, there are two main approaches: custom design and standard cell design.
+Custom design involves creating every individual transistor and interconnect in the circuit, which can be highly time-consuming and labor-intensive. It is typically used for very specialized and high-performance applications.
+Standard cell design, on the other hand, relies on pre-designed and pre-characterized cells or blocks. These standard cells are reusable and come in various sizes and functions, such as logic gates (AND, OR, etc.), flip-flops, multiplexers, and more.
+
+*Pre-placed Cells**:
+
+Pre-placed cells are a subset of standard cells. They are specific standard cells that are selected and positioned manually or with the help of automated tools in certain critical or specialized areas of the chip.
+These pre-placed cells are often used for functions that require specialized optimization or are critical to the performance of the circuit.
+Designers choose pre-placed cells based on their specific needs and knowledge of the circuit's requirements.
+
+*Advantages*:
+
+Pre-placed cells offer several advantages in chip design:
+Performance Optimization: Designers can manually select and optimize the performance-critical parts of the circuit.
+Customization: Specialized cells can be used for functions that may not be adequately addressed by standard cells.
+Control: It provides greater control over the placement and utilization of critical components.
+
+*Disadvantages*:
+
+Complexity: Manually placing pre-placed cells can be complex and time-consuming.
+Limited Reusability: Pre-placed cells are specific to the current design and may not be as reusable as standard cells.
+Increased Design Time: Integrating pre-placed cells requires careful planning and may increase the overall design time.
+
+*Application*:
+
+Pre-placed cells are often used in high-performance digital designs where achieving specific speed, power, or area goals is critical.
+They can also be used in mixed-signal designs, where digital and analog components are combined, and custom analog blocks need to be integrated.
+In summary, pre-placed cells are a strategy used in digital integrated circuit design to combine the benefits of standard cells with the customization and performance optimization of specific blocks. Designers strategically place these predefined blocks in critical areas of the chip to meet the design's requirements efficiently.
+
+Location of Preplaced Cells Preplaced cells are the piece of combinational logic such as macros, IPs that is being reused multiple times. The preplaced cells are placed based on the design scenario.The location of the preplaced cells need to be very well-defined. The preplaced cells can be understood with an example. Let us consider a combinational logic with 100k gates that can be granularised. Let us divide the circuit into two parts that can be seperated as two blocks. 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/4.png">
+
+The IO pins of these blocks are extended and are seperated as two different IP modules, where the logic in the block is a black box. These blocks can be used multiple times on the netlist and designed only once. In other words, the block is designed as an IP and defined as blackbox in the main netlist and can be reused.
+
+These models functionality defined once and reused on the chip. This is done before actual placement and routing. The location of these cells is usually fixed. The arrangement of these IPs is referrred as floorplanning. These IPs have user-defined locations, hence are placed in chip before automated place and route, and are called as pre-placed cells. The tool places the remaining logical cells in the design onto chip. The tool do not touch the location of these pre-placed cells.
+
+These pre-placed cells needs to be surrounded with decoupling capacitors. When the output of a logic gate changes from 0 to 1, an amount of current is demanded by the output capacitance of the gate. It is the responsibility of Vdd to supply the necessary voltage for switching the logic in the design.Similary, From logic 1 to 0, the Vss should be able to handle the discharged currents by logic in the design. The physical wires that connect the design will have a drop as they have resistance, inductance and capacitance. 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/5.png">
+
+During switching operation, the circuit demands switching current. There will be a voltage drop across them and voltage will be Vdd-IRdrop. If this value goes below noise margin, due to IR drop, the logic 1 at output won't be detected as 1 at the input of circuit. As shown, any voltage between Vol and Vil is considered logic '0' and voltage between Voh and Vih is considered as logic '1' and the voltage between Vil and Vih is undefined region as the voltage may rise to Vih or degrade to Vil.
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd%23day15/img_run_synthesis_9.png">
+
+
+**3. De-coupling Capacitor**:
+
+A decoupling capacitor, often simply called a bypass capacitor or a noise-reduction capacitor, is an electronic component used in electronic circuits to reduce or eliminate voltage ripples, noise, and fluctuations in the power supply lines. It plays a crucial role in ensuring stable and reliable operation of digital and analog electronic devices. Here's how a decoupling capacitor works and why it's important:
+
+**Voltage Stabilization**: Electronic circuits require a stable and consistent supply voltage to operate correctly. However, power supplies often have small fluctuations or noise due to various factors, including switching of other components on the same power rail, variations in the power source itself, or electromagnetic interference. These voltage fluctuations can disrupt the proper operation of sensitive components like microprocessors, memory, and other integrated circuits.
+
+**Capacitor Basics**: A decoupling capacitor is typically a small ceramic or tantalum capacitor connected in parallel to the power supply lines of a device or integrated circuit. Capacitors store electrical charge and can release it quickly when needed. They act as a kind of "reservoir" of electrical energy.
+
+**Filtering Noise**: When the supply voltage experiences a momentary drop or spike, the decoupling capacitor can discharge or charge to compensate for these fluctuations almost instantaneously. This rapid response effectively filters out the high-frequency noise and keeps the voltage across the component or IC stable.
+
+**Parasitic Effects**: Besides noise reduction, decoupling capacitors also help counteract parasitic inductance and resistance in the power supply traces on a printed circuit board (PCB). These parasitic effects can cause voltage drops during rapid changes in current demand. The decoupling capacitor provides a nearby source of energy, minimizing these voltage drops.
+
+**Placement Matters**: Decoupling capacitors should be placed as close as possible to the power pins of the component they are protecting. This minimizes the length of the power traces and ensures the capacitor can respond quickly to changes in current demand.
+
+**Values and Types**: The choice of decoupling capacitor value and type depends on the application. Smaller ceramic capacitors (e.g., 0.1 µF) are commonly used for high-frequency noise suppression, while larger electrolytic capacitors may be used for filtering lower-frequency fluctuations. The choice often involves a combination of capacitors to address a range of frequencies effectively.
+
+In summary, a decoupling capacitor is a crucial component in electronic circuits, helping to maintain stable and noise-free power supplies for sensitive components. It ensures that electronic devices operate reliably and without glitches, making it an essential consideration in circuit design.
+
+The decoupling capacitors helps to overcome the noise due to long distance from the supply voltage. So, Addition of decoupling capacitor in parallel with circuit is done. So, Every time the circuit switches, it draws current from decoupling capacitor (Cd) as the RL network is used to replenish the charge into Cd. 
+
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/6.png">
+
+
+Addition of decoupling capacitor will avoid the problems of crosstalk and degradation of logic.
+
+**4.Power Planning**:
+
+Power planning is a crucial aspect of integrated circuit (IC) design that focuses on ensuring the efficient distribution of power throughout the chip while minimizing power consumption and maintaining signal integrity. It involves careful consideration of how power is supplied to various parts of the IC, how power is distributed, and how to manage power delivery to meet performance and reliability requirements. Here are some key aspects of power planning in IC design:
+
+*Power Distribution Network (PDN)*:
+The power distribution network consists of metal layers, power rails, and a network of power delivery components (such as power gates, voltage regulators, and decoupling capacitors) that ensure a stable and consistent supply of power to all the components on the chip.
+
+*Voltage Domains*:
+Many modern ICs have multiple voltage domains with varying power requirements. Power planning involves defining these voltage domains and ensuring that each domain receives the appropriate voltage levels and noise isolation.
+
+*Decoupling Capacitors*:
+Decoupling capacitors are strategically placed throughout the chip to filter out high-frequency noise and provide instantaneous current during switching. Proper placement and sizing of decoupling capacitors are critical for maintaining signal integrity.
+
+*Power Gating*:
+Power gating is a technique used to turn off power to specific sections or blocks of the chip when they are not in use. This helps reduce power consumption in idle or standby modes.
+
+*Clock Distribution*:
+Power planning also includes the distribution of clock signals, which must be synchronized with the power delivery network to ensure that clock signals are clean and that clock domains operate correctly.
+
+*Signal Integrity*:
+Power planning must consider the impact on signal integrity. Proper power distribution minimizes voltage drops and noise, which can affect the quality of digital signals.
+
+*Thermal Considerations*:
+Power planning takes into account the generation of heat within the IC. Efficient power delivery and distribution can help manage thermal issues and prevent hotspots.
+
+*Electromigration and IR Drop Analysis*:
+Electromigration is a phenomenon where metal atoms migrate due to the flow of current, potentially causing failures. IR drop analysis is performed to ensure that voltage drops do not violate design specifications.
+
+*Low-Power Design Techniques*:
+Power planning often involves the use of low-power design techniques such as clock gating, data gating, and voltage scaling to reduce dynamic and static power consumption.
+
+*Simulation and Analysis*:
+Engineers use specialized tools for power analysis and simulation to verify that the power delivery network meets the design requirements, including voltage levels, noise margins, and power consumption.
+
+*Iterative Process*:
+Power planning is an iterative process that may involve multiple design iterations to optimize power distribution and minimize power-related issues.
+Effective power planning is essential to achieving the desired performance, power efficiency, and reliability in modern integrated circuits, especially in applications where power consumption is a critical concern, such as mobile devices, IoT devices, and battery-powered systems.
+
+The macros requires the current for each cell in the design when reused.Let us assume a design where it ocntains various macros surrounded with decoupling capacitors. The Power Supply Vdd and Vss are connected as shown to each macro.Now, let the two macros connected as shown be the driver and load. The signal should propagate from the driver to load without any degradation. Assume that the driver is sending logic 0 to logic 1 to the load. It is not feasible to add decoupling capacitor to each cell in the logic. The critical blocks are added with decoupling capacitor. Consider the connect is a 16-bit bus, that has 16-bit logic, that is it charges and discharges as shown. The logic at output is connected to an inverter. This means all the capacitors which were charged to 'V' volts will have to discharge to '0' volts through single ground tap point. This will cause a bump in Ground tap point. If this bump exceeds the noise margin level, the output will be in a undefined region. (In undefined region, the output becomes unpredictable). 
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/7.png">
+
+Also, all capacitors which were 0 volts will charge to V volts through single Vdd tap point. This causes a voltage droop. If it goes beyond noise margin, it again becomes unpredictable. All this occur due to a single Vdd point, if there are multiples power supply points then each capacitor can charge and discharge from its nearest points as shown. So, Powermesh is the exact solution to mitigate voltage droops and ground bounces.
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/8.png">
+
+**5.Pin Placement and Logical cell placement blockage**:
+
+In integrated circuit (IC) design, pin placement and logical cell placement are critical steps in the physical design phase. They involve determining the physical locations of pins (input and output connections) and logical cells (standard cells or custom-designed functional blocks) on the chip's layout. Blockages are also used in the placement process to reserve areas on the chip for specific purposes or to prevent certain components from being placed in those areas. Here's an overview of pin placement, logical cell placement, and blockages in IC design:
+
+*Pin Placement*:
+
+The connectivity information between the gates is coded using VHDL/verilog language and is called the netlist. Let us consider an example. There are two timing paths driven by different clocks, two timing paths driven by two (interclocks)clocks (alternate flops) and preplaced cells are connected in the design as shown.
+
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/9.png">
+
+The pins are usually placed in the region between die and the core. This area is reserved for pin location. The logical cell placement blockage is used to avoid tool from inserting cells in this region. Let us consider that the input ports are connected on the left hand side and the output ports are connected on the right hand side. The ordering of the ports is random, it depends on where the cells are planned to place. The flipflops should not be placed on the preplaced cells, because their location is fixed. The clock port drives the cells continuously, so the least resistance path is required for the clock.
+
+
+*Logical Cell Placement*:
+
+Logical cells are the building blocks of the digital circuitry within the IC. They can be standard cells (pre-designed functional blocks like AND gates, flip-flops, etc.) or custom-designed blocks for specific functions.
+Logical cell placement determines where these cells are physically located on the chip's silicon die.
+Placement algorithms aim to optimize factors such as signal delay, power consumption, and area utilization.
+
+*Blockages*:
+
+Blockages are reserved areas on the chip where no logic cells or routing can be placed. They are used for various purposes:
+
+Keep-Out Regions: Blockages can be used to define regions that must be kept clear for specific reasons, such as accommodating external connectors, avoiding sensitive analog components, or leaving space for test structures.
+
+Power and Ground Grids: Blockages are used to reserve space for power and ground grids, ensuring that there is enough room for the distribution of power and ground across the chip.
+
+Custom Circuitry: In mixed-signal IC design, blockages can reserve space for custom analog circuitry that requires isolation from digital components.
+
+Routing Channels: Blockages may define areas where routing channels are allowed, ensuring there's enough room for signal traces.
+
+Isolation: Blockages can isolate sensitive regions from noisy or high-power areas to prevent interference.
+Blockages are typically defined using design rules and constraints provided by the IC design tools.
+
+*Timing and Optimization*:
+
+The placement of pins, logical cells, and blockages can significantly impact the overall performance of the IC in terms of speed, power, and area.
+Timing-driven placement algorithms aim to optimize the placement to meet specific performance goals, such as maximum clock frequency.
+Placement tools may use iterative algorithms to improve placement based on timing, power, and area constraints.
+
+*Iterative Process*:
+
+The placement process is often iterative, involving multiple runs of placement tools to fine-tune the arrangement of pins, cells, and blockages.
+Effective pin placement, logical cell placement, and blockage definition are crucial for achieving a well-balanced IC design that meets the desired performance, power, and area requirements while adhering to design constraints and objectives. These steps are part of the broader physical design process in semiconductor manufacturing.
+
+**6. Step to run floorplan using openLANE**:
+OpenLANE is an open-source digital ASIC (Application-Specific Integrated Circuit) design flow that includes various stages of ASIC design, including floorplanning. Floorplanning is the process of determining the approximate placement of logical cells, I/O pads, and power distribution on a semiconductor die. Below are the steps to run floorplanning using OpenLANE:
+
+*Setup Environment:*
+Open a terminal and navigate to the directory where OpenLANE is installed.
+
+*Prepare Your Design*:
+Create or obtain the RTL (Register Transfer Level) description of your digital design. This is typically provided as Verilog or VHDL files.
+
+*Design Configuration*:
+Specify your design and configuration in the OpenLANE configuration file (designs/design_name/config.tcl). You need to provide details like your target technology, design name, library paths, and other parameters relevant to your design.
+
+*Floorplanning:*
+Run the floorplanning stage using OpenLANE. In the terminal, execute the following command, replacing design_name with the name of your design:
+
+bash
+```ruby
+./flow.tcl -design design_name -init_design -tag floorplan
+```
+This command will initiate the floorplanning process for your design.
+
+*Review Floorplan Results*:
+After the floorplanning process is complete, you can examine the results, including the generated floorplan and floorplan-related reports, in the designs/design_name/runs/floorplan directory.
+
+*Refinement*:
+Depending on the results of the initial floorplanning, you may need to refine the floorplan to meet specific design goals or constraints.
+Adjustments may include optimizing the placement of logical cells, I/O pads, power grid structures, and blockages.
+
+*Iterate as Necessary*:
+Floorplanning is an iterative process, and you may need to run the floorplanning stage multiple times while refining the floorplan until you achieve the desired results.
+
+*Document and Analyze*:
+Document your floorplan decisions and analyze the floorplan's impact on aspects like signal routing, power distribution, and overall chip performance.
+
+*Continue with the Design Flow*:
+Once you are satisfied with the floorplan, you can proceed with the subsequent stages of the OpenLANE design flow, including placement, routing, and physical verification.
+It's important to note that the specific steps and configuration parameters may vary depending on your design, target technology, and design goals. Therefore, you should refer to the OpenLANE documentation and the documentation for your specific technology library for detailed guidance on using OpenLANE for floorplanning and the entire 
+ASIC design flow.
+
+
+</details>
+<details>
+<summary>Library Binding and Placement</summary>
+
+**1. Netlist Binding and initial place design**:
+
+
+Netlist binding and initial placement design are important steps in the physical design of integrated circuits (ICs). These steps involve associating logical components from a netlist with physical locations on a semiconductor die or chip. Here's an overview of these two processes:
+
+Netlist Binding:
+
+Netlist binding is the process of mapping logical components and connections from a high-level or RTL (Register-Transfer Level) design description to their corresponding physical representations. This step bridges the gap between the logical and physical domains, setting the stage for the subsequent stages of physical design. The key aspects of netlist binding include:
+
+Cell Mapping: Assign logical cells or gates from the library to the components specified in the netlist. For example, map AND gates, OR gates, flip-flops, and other logical elements to their physical representations in the technology library.
+
+Pin Assignment: Determine the physical locations (coordinates) of each pin on the cells. This step is critical for ensuring that connections between cells are feasible and optimized for performance.
+
+Logical-to-Physical Connection: Create physical connections (wires and interconnects) between the pins of logical cells based on the netlist's connectivity information. These connections will be further optimized in later stages.
+
+Constraint Consideration: Account for design constraints, such as timing, power, and area requirements, during netlist binding. These constraints influence the placement and routing of cells.
+
+Initial Place Design:
+
+Initial place design, also known as placement, is the process of determining the initial physical positions of logical cells or gates on the semiconductor die or chip. The goal is to find an arrangement that optimizes various aspects of the design, including signal timing, power consumption, and area utilization. The key aspects of initial place design include:
+
+Floorplanning: Create a preliminary floorplan that defines the approximate locations and sizes of functional blocks or regions within the chip. This includes areas for logic cells, I/O pads, memory, and other components.
+
+Cell Placement: Determine the placement of individual cells or gates within their designated regions. Optimize the placement to minimize signal delays, reduce power consumption, and adhere to design constraints.
+
+Legalization: Ensure that the placement of cells is "legal" and complies with design rules and manufacturing constraints, such as minimum spacing, alignment, and clearances.
+
+Timing-Driven Placement: Consider the timing requirements of the design when placing cells. Place critical cells and clocked elements strategically to minimize critical path delays.
+
+Power Planning: Plan the distribution of power and ground networks to ensure that all cells have access to stable power supplies and that voltage drops are within acceptable limits.
+
+Iterative Refinement: Initial placement is often an iterative process, as placement decisions can impact other stages of physical design. Refinement is done to improve overall design quality.
+
+Both netlist binding and initial place design are foundational steps in the physical design flow of integrated circuits. They set the stage for subsequent stages such as routing, clock tree synthesis, and physical verification. The goal is to achieve a well-balanced placement that meets performance goals while adhering to manufacturing constraints and design specifications.
+
+
+**2.Optimize placement using estimated wire-length and capacitance**
+
+
+
+Optimizing placement using estimated wirelength and capacitance is a common technique in physical design automation for integrated circuits. This approach focuses on improving the initial placement of logical cells by considering the estimated wirelength (interconnect length) and capacitance (interconnect capacitance) between the cells. The goal is to minimize signal delays, reduce power consumption, and improve overall circuit performance. Here's how this optimization process typically works:
+
+Initial Placement:
+
+Start with an initial placement of logical cells on the chip's layout. This placement may be generated through floorplanning and initial placement algorithms.
+Wirelength Estimation:
+
+Estimate the total wirelength or interconnect length between all pairs of logical cells in the current placement. This estimation can be based on factors like Manhattan distance or other distance metrics between cell centroids.
+Capacitance Estimation:
+
+Estimate the interconnect capacitance associated with each net (interconnecting wires) in the design. The capacitance estimation considers the length, width, and layer stack of the wires.
+Calculate Signal Delay:
+
+Using the estimated wirelength and capacitance values, calculate the signal delay for each net or signal path in the design. The delay estimation can be based on the RC time constant, where R represents the resistance and C represents the capacitance.
+Objective Function:
+
+Define an objective function that combines wirelength and capacitance with other optimization goals, such as minimizing total signal delay or power consumption. The specific form of the objective function depends on the design goals and constraints.
+Placement Optimization Algorithm:
+
+Apply a placement optimization algorithm that aims to minimize the objective function. Common optimization techniques include simulated annealing, genetic algorithms, and gradient descent methods.
+Iterative Refinement:
+
+The optimization algorithm iteratively adjusts the placement of cells to reduce wirelength and minimize capacitance-induced signal delays. During each iteration, the algorithm may swap, move, or perturb cell positions while respecting placement constraints.
+Timing-Driven Considerations:
+
+In many cases, the placement optimization is timing-driven, meaning it prioritizes reducing signal delays for critical paths and meeting required timing constraints.
+Convergence:
+
+The optimization process continues until a convergence criterion is met, such as a specified number of iterations or when the objective function reaches a satisfactory value.
+Final Placement:
+
+Once the optimization process is complete, the resulting placement is considered the final optimized placement, which should provide improved wirelength and capacitance characteristics.
+Verification and Analysis:
+
+Verify the final placement using timing analysis, power analysis, and other verification techniques to ensure that it meets the design requirements and constraints.
+Optimizing placement using wirelength and capacitance estimation is a valuable technique for improving the performance of digital integrated circuits. It helps balance the trade-offs between area utilization, signal timing, and power consumption, ultimately leading to more efficient and high-performance designs
+
+**3.Final placement optimization**:
+
+
+Final placement optimization is a crucial step in the physical design of integrated circuits (ICs). It involves refining the initial placement of logical cells to meet design objectives and constraints, such as optimizing timing, power, and area utilization. Here are the key aspects and techniques involved in final placement optimization:
+
+Objective Function Definition:
+
+Define an objective function that quantifies the quality of the placement. The objective function may include multiple factors, such as wirelength minimization, timing optimization, and power reduction.
+Wirelength Minimization:
+
+Minimize the total wirelength or interconnect length between logical cells. This helps reduce signal propagation delays and power consumption associated with interconnects.
+Timing-Driven Placement:
+
+Prioritize timing-driven placement to meet critical path requirements. Identify critical paths and ensure that the placement minimizes delays along these paths. This is essential for achieving the desired operating frequency.
+Power Optimization:
+
+Optimize power consumption by considering the proximity of cells to reduce coupling capacitance and minimize dynamic power. Techniques like placement-aware clock gating can also be employed.
+Area Constraints:
+
+Adhere to area constraints and floorplan requirements while optimizing the placement. Ensure that the placement fits within the specified chip area and adheres to blockages and design rules.
+Iterative Algorithms:
+
+Employ iterative placement optimization algorithms, such as simulated annealing, genetic algorithms, or gradient-based methods. These algorithms iteratively adjust the positions of cells to improve the objective function.
+Legalization:
+
+Ensure that the placement remains legal and complies with design rules and constraints throughout the optimization process. Legalization may involve adjusting the positions of cells to meet spacing and alignment requirements.
+Congestion Mitigation:
+
+Address congestion issues that arise during placement optimization. Congestion occurs when certain regions of the chip become densely populated with cells. Techniques like congestion-aware placement can help alleviate this problem.
+Noise and Signal Integrity:
+
+Consider signal integrity and noise issues during placement optimization. Optimize cell locations to minimize cross-talk and electromagnetic interference (EMI) while meeting signal timing requirements.
+Clock Tree Synthesis (CTS):
+
+If applicable, integrate clock tree synthesis with placement optimization to ensure that clock signals are distributed efficiently and with minimal skew.
+Timing Constraints and Feedback:
+
+Continuously monitor and enforce timing constraints during placement optimization. Feedback from timing analysis tools can guide the placement adjustments to meet timing goals.
+Post-Placement Optimization:
+
+After final placement, perform post-placement optimization steps, such as detailed routing and buffer insertion, to further refine the design for better timing and power characteristics.
+Verification and Analysis:
+
+Verify the final placement using various analyses, including static timing analysis (STA), power analysis, and signal integrity checks, to ensure that it meets design specifications and constraints.
+Convergence Criteria:
+
+Establish convergence criteria for the optimization process, such as a maximum number of iterations or a target objective function value.
+Documentation:
+
+Document the final placement and any design trade-offs made during the optimization process. This documentation is crucial for future reference and collaboration with other design teams.
+Final placement optimization is an iterative and resource-intensive process, and the specific techniques used may vary depending on the design goals and constraints. Achieving an optimal placement is essential for the overall performance and manufacturability of digital integrated circuits.
+
+
+
+
+
+**4.Need for libraries and characterization**:
+Libraries and characterization are essential components of the design and development process for digital integrated circuits. They serve crucial roles in ensuring the accuracy, efficiency, and reliability of circuit design. Here's why libraries and characterization are necessary:
+
+Component Reusability:
+
+Libraries provide a collection of pre-designed and pre-characterized building blocks, such as logic gates, flip-flops, and memory cells. These components can be reused across various projects, saving time and effort in the design process.
+Standardization:
+
+Libraries adhere to industry-standard specifications and design rules. This standardization ensures consistency and compatibility in designs, making it easier to integrate third-party IP (intellectual property) and collaborate across different design teams and organizations.
+Characterization for Accuracy:
+
+Characterization involves detailed testing and simulation of library components under various operating conditions. This process produces accurate models and data that reflect the real-world behavior of the components. Without characterization, designers would rely on theoretical models, which may not accurately represent the physical behavior of the components.
+Timing Analysis:
+
+Characterization data, such as delay, setup time, and hold time, are crucial for timing analysis during the design process. They help ensure that signals meet their timing requirements and that the circuit operates reliably at the desired clock frequency.
+Power Analysis:
+
+Characterization provides information on power consumption for different library components. Power data is vital for estimating the overall power consumption of a chip and optimizing it for low power operation.
+Area Estimation:
+
+Libraries include information about the physical size (area) of each component. This data is essential for estimating the chip's total area utilization and ensuring that it fits within the available silicon area.
+Manufacturability:
+
+Libraries consider manufacturing process parameters, such as transistor sizes and process-specific design rules. This helps designers create designs that are manufacturable within a specific semiconductor technology.
+Simulation and Validation:
+
+Characterization data allows designers to simulate and validate their designs with high accuracy. It enables designers to identify and address potential issues early in the design process, reducing the risk of costly errors and redesigns.
+IP Integration:
+
+Libraries often include intellectual property (IP) blocks, such as analog components, communication interfaces, and processors. These IP blocks are characterized and tested to ensure seamless integration into custom designs.
+Efficiency and Productivity:
+
+Using pre-characterized libraries significantly improves design efficiency and productivity. Designers can focus on the high-level aspects of their projects without needing to design and validate every component from scratch.
+Quality Assurance:
+
+Libraries and characterization data undergo rigorous quality assurance processes to ensure their accuracy and reliability. This quality assurance contributes to the overall quality and robustness of the final design.
+In summary, libraries and characterization are fundamental tools in the field of digital integrated circuit design. They facilitate component reuse, standardization, accuracy, and efficiency in the design process, ultimately leading to the development of reliable and high-performance integrated circuits.
+
+**5.Congestion aware placement using RePlace**:
+
+
+</details>
+<details>
+<summary>Cell Design and characterization flows</summary>
+
+**1.Inputs for cell design flow**:
+
+The cell design flow, which involves the creation and optimization of standard cells for digital integrated circuits, encompasses several important steps and considerations. Here are the key inputs and steps in the cell design flow:
+
+*Specification and Requirements:*
+Clearly define the specifications and requirements of the standard cell library. This includes factors like the target technology (e.g., CMOS, FinFET), voltage levels, maximum operating frequency, power consumption, and the desired library variants (e.g., low-power, high-speed).
+
+*Technology Data:*
+Gather or access technology-specific data, such as the process design kit (PDK), which includes information about transistor sizes, metal layers, interconnects, and other technology-specific parameters. The PDK is essential for designing cells that are compatible with the target manufacturing process.
+
+*Cell Characterization:*
+Perform transistor-level characterization of the library cells. This involves simulating the behavior of individual standard cells to generate data on their timing characteristics (delay, setup time, hold time), power consumption, and area usage under various operating conditions.
+
+*Cell Templates:*
+Create cell templates or templates for different logic functions (AND gates, OR gates, flip-flops, etc.). These templates serve as the basis for designing individual cells.
+
+*Transistor Sizing:*
+Determine the appropriate transistor sizes for each cell based on performance and power considerations. The sizing is a crucial aspect of cell optimization.
+
+*Layout Design:*
+Design the physical layout of each standard cell. This involves placing and connecting transistors and other components to create the cell's logic functionality.
+Adhere to design rules and manufacturing constraints provided by the PDK to ensure manufacturability.
+
+*Liberty Format*:
+Generate Liberty format files (.lib) for each standard cell. These files contain timing, power, and area information and are used by synthesis tools during the design of larger digital circuits.
+
+*Timing Models:*
+Develop timing models that describe the cell's behavior under different operating conditions (e.g., corner cases, voltage levels). Timing models include delay, setup time, hold time, and other timing-related information.
+
+*Functional Verification:*
+Perform functional verification of each standard cell to ensure it performs its intended logic function correctly.
+
+*Physical Verification:*
+Perform physical verification checks, such as Design Rule Checking (DRC) and Layout vs. Schematic (LVS), to ensure that the cell layout complies with the manufacturing process rules.
+
+*Power Analysis:*
+Conduct power analysis to estimate the power consumption of each standard cell under different operating conditions and load scenarios.
+
+*Library Characterization*:
+Characterize the entire standard cell library as a whole, considering corner cases and variations, to create a comprehensive library characterization database.
+
+*Documentation*:
+Create documentation for the standard cell library, including datasheets, usage guidelines, and documentation on how to integrate the library into the design flow.
+
+*Quality Assurance*:
+Implement a rigorous quality assurance process to validate the accuracy and reliability of the standard cells.
+
+*Release and Integration*:
+Once the library is validated and meets all requirements, it can be released for integration into larger digital design projects.
+The cell design flow is an essential part of ASIC (Application-Specific Integrated Circuit) and FPGA (Field-Programmable Gate Array) design processes, providing the fundamental building blocks for designing complex digital circuits. The quality and efficiency of the cell design flow directly impact the performance, power consumption, and manufacturability of digital integrated circuits.
+
+**2.Circuit Design step**:
+
+Circuit design is a systematic process used to create electronic circuits for various applications, from simple analog circuits to complex digital integrated circuits. The process typically involves several steps to ensure that the circuit meets the desired functionality, performance, and reliability requirements. Here are the key steps in the circuit design process:
+
+*Define Requirements and Specifications:*
+Begin by clearly defining the requirements and specifications of the circuit. Understand the purpose of the circuit, its input and output characteristics, power requirements, operating conditions, and any specific constraints or standards it must meet.
+
+*Conceptual Design:*
+Create a high-level conceptual design or block diagram of the circuit. Identify the major functional blocks and their interconnections. This step helps in visualizing the overall architecture of the circuit.
+
+*Component Selection:*
+Choose electronic components, such as resistors, capacitors, transistors, integrated circuits, and sensors, based on the circuit's requirements. Consider factors like component tolerances, voltage and current ratings, and availability.
+
+*Schematic Design:*
+Create a detailed schematic diagram of the circuit using a schematic capture tool. Represent each component and its connections accurately. Pay attention to signal paths, power distribution, and ground connections.
+
+*Simulate and Analyze:*
+Use circuit simulation software to analyze and validate the design. Simulate the circuit's behavior under various operating conditions to ensure it meets the desired performance and functionality.
+
+*Component Footprint and PCB Layout:*
+If the circuit is to be implemented on a printed circuit board (PCB), create component footprints and design the PCB layout. Consider factors like component placement, routing, and signal integrity.
+
+*BOM (Bill of Materials) Generation:*
+Create a BOM that lists all the components needed for the circuit. Include part numbers, quantities, and suppliers.
+
+*Prototyping:*
+Build a prototype of the circuit on a breadboard or PCB. Verify that the physical implementation matches the schematic and that the circuit behaves as expected.
+
+*Testing and Debugging:*
+Test the prototype rigorously to ensure it meets the specifications. Debug and troubleshoot any issues that arise during testing.
+
+*Optimization:*
+Optimize the circuit for factors like power consumption, size, cost, and performance. Make necessary adjustments to improve efficiency and meet design goals.
+
+*Documentation:*
+Create comprehensive documentation for the circuit, including schematics, PCB layout files, assembly instructions, and user manuals. Well-documented designs are essential for future reference and replication.
+
+*Compliance and Certification:*
+If the circuit must adhere to specific standards or regulations (e.g., safety standards, electromagnetic compatibility), perform the necessary tests and obtain certifications as required.
+
+*Production and Manufacturing:*
+Once the design is finalized and tested, it can be sent for production. Ensure that the manufacturing process aligns with the design specifications and quality standards.
+
+*Lifecycle Management:*
+Continuously monitor and manage the circuit's lifecycle, including updates, maintenance, and potential redesigns as technology evolves or requirements change.
+
+*Quality Assurance:*
+Implement quality assurance practices throughout the design process to ensure the circuit meets all performance and reliability standards.
+
+*Documentation Updates:*
+Keep documentation up to date with any design changes or improvements made during the product's lifecycle.
+Circuit design is an iterative process, and designers may revisit various steps as they refine and optimize the circuit to meet evolving requirements or address issues discovered during testing and deployment. Effective communication and collaboration among multidisciplinary teams of engineers (electrical, mechanical, software, etc.) are essential for successful circuit design projects.
+
+**3.Layout Design step**:
+
+Layout design, also known as physical design, is a critical phase in integrated circuit (IC) design that involves translating a schematic or logical representation of a circuit into the physical layout on a silicon wafer or printed circuit board (PCB). This process includes determining the physical placement and interconnection of transistors, gates, and other components. Below are the key steps in layout design:
+
+*Schematic-to-Layout Translation:*
+Start with a schematic diagram that represents the logical connections and components in your circuit. This schematic serves as a blueprint for the layout.
+
+*Floorplanning:*
+Create a floorplan that defines the overall arrangement of different functional blocks or areas on the chip or PCB. Allocate space for components, power grid, clock distribution, and I/O pads.
+
+*Component Placement:*
+Place individual components (transistors, gates, etc.) onto the layout according to the floorplan. Ensure that components are placed optimally to minimize signal delay, power consumption, and area usage.
+
+*Routing:*
+Create the interconnections (wires) between components based on the schematic connections. Consider routing constraints, such as minimum wire widths, spacing, and layers.
+
+*Power Distribution:*
+Design the power distribution network to deliver a stable and low-noise power supply to all components. Include power rails, ground lines, and decoupling capacitors to reduce voltage drops and noise.
+
+*Signal Integrity:*
+Ensure signal integrity by minimizing signal propagation delays, avoiding cross-talk between neighboring signals, and maintaining controlled impedance for high-speed signals.
+
+*Clock Tree Synthesis (CTS):*
+If your design includes clocked elements, create a clock tree to distribute clock signals to various parts of the chip efficiently and with minimal skew.
+
+*Design Rule Checking (DRC):*
+Perform DRC checks to verify that the layout adheres to manufacturing-specific design rules, such as minimum feature sizes, spacing, and other constraints defined by the technology process.
+
+*Layout vs. Schematic (LVS) Verification:*
+Compare the physical layout with the original schematic to ensure that they match. LVS checks for consistency in connectivity and component placement.
+
+*Extraction and Parasitic Modeling:*
+Extract parasitic elements (e.g., capacitance and resistance) from the layout and create accurate models for use in simulation tools. These models account for real-world effects on signal behavior.
+
+*Design for Manufacturing (DFM):*
+Consider design for manufacturing principles to enhance yield and manufacturability. Address manufacturing issues early in the design to prevent costly rework.
+
+*Electromigration and IR Drop Analysis:*
+Analyze the layout for potential electromigration issues, where excessive current density can cause metal migration. Also, perform IR drop analysis to ensure that power and ground distribution meet voltage requirements.
+
+*Physical Verification:*
+Run physical verification tools to check for compliance with additional design rules, such as antenna rules, well-tap rules, and more.
+
+*Tapeout:*
+Prepare the final layout for tapeout, which is the process of sending the design data to a semiconductor foundry for fabrication or to a PCB manufacturer for PCB production.
+
+*Documentation:*
+Create comprehensive documentation that includes the layout files, design rules, constraints, and any other information needed for future reference and collaboration.
+
+*Post-Layout Simulation:*
+Perform post-layout simulation to verify the circuit's performance based on the extracted parasitic elements and to ensure that it meets the desired specifications.
+
+*Iterative Optimization:*
+Iterate through the layout design process to optimize the layout for performance, power, and area while addressing any identified issues.
+Layout design is a complex and iterative process that requires a deep understanding of semiconductor technology, manufacturing processes, and electronic design principles. Collaboration with teams specializing in physical design and verification is essential for successful layout design in modern semiconductor and PCB industries.
+
+**4.Typical characterization flow**:
+
+Characterization is a critical step in the design and verification of digital integrated circuits. It involves analyzing and documenting the electrical behavior of the circuit over a range of operating conditions and corner cases. Characterization provides valuable data for ensuring the circuit meets its performance, power, and timing specifications. Here's a typical characterization flow for digital integrated circuits:
+
+*Define Objectives:*
+Clearly define the objectives and goals of the characterization process. Identify the key parameters and metrics to be characterized, such as delay, power consumption, and setup/hold times.
+
+*Select Testbenches:*
+Choose appropriate testbenches and input vectors that cover a wide range of operating conditions. This includes different input patterns, clock frequencies, and environmental conditions (e.g., temperature, voltage variations).
+
+*Setup Simulation Environment:*
+Set up the simulation environment using electronic design automation (EDA) tools. Ensure that the simulation setup accurately represents the target technology, including the process parameters, libraries, and design constraints.
+
+*Corner Cases:*
+Identify corner cases, which are extreme or worst-case scenarios that the circuit may encounter. These include process corners (fast, slow, typical), temperature extremes, and voltage variations.
+
+*Monte Carlo Analysis:*
+Conduct Monte Carlo analysis to account for manufacturing process variations. This involves running simulations with randomized process parameter values to assess the circuit's sensitivity to manufacturing variations.
+
+*Static Timing Analysis (STA):*
+Perform static timing analysis to measure critical path delays, setup times, and hold times for different operating conditions. Ensure that the circuit meets its timing requirements.
+
+*Power Analysis:*
+Analyze power consumption under various conditions, including active, standby, and power-down modes. Characterize dynamic and static power for different input patterns and frequencies.
+
+*Noise and Signal Integrity Analysis:*
+Evaluate noise margins and signal integrity by simulating noise-induced glitches and verifying that signals meet their logic level requirements.
+
+*Functional Verification:*
+Verify that the circuit functions correctly under all operating conditions. Ensure that it produces the expected outputs for various input vectors.
+
+*Generate Characterization Reports:*
+Generate detailed characterization reports that include all measured data, simulation results, and statistical analysis. These reports serve as a reference for circuit performance and are valuable for design validation.
+
+*Create Libraries:*
+Based on the characterization data, create libraries or models (e.g., Liberty format) that describe the circuit's behavior under different conditions. These libraries are used in subsequent stages of the design flow, such as synthesis and place-and-route.
+ 
+*Optimization and Iteration:*
+Review the characterization results to identify areas for optimization. Iterate through the design and characterization process to improve performance, reduce power consumption, and meet specifications.
+
+*Documentation and Compliance:*
+Document all relevant data, assumptions, and methodologies used in the characterization process. Ensure that the design complies with industry standards and specifications.
+
+*Review and Validation:*
+Review the characterization results with cross-functional teams, including design, verification, and manufacturing experts, to validate the circuit's performance and reliability.
+
+*Tapeout and Production:*
+Once characterization is complete and the circuit meets all requirements, proceed with the tapeout process to prepare the design for fabrication or production.
+
+*Post-Silicon Validation (for ASICs):*
+After the silicon chip is manufactured, conduct post-silicon validation to compare real-world measurements with the characterization data. This step helps verify that the chip behaves as expected.
+A well-executed characterization flow is crucial for ensuring that digital integrated circuits perform reliably across a range of operating conditions and manufacturing variations. It provides confidence that the circuit will meet its intended specifications and requirements in real-world applications.
+
+</details>
+<details>
+<summary>Genral Timing characterization Parameter </summary>
+
+**1. Timing threshold definition**:
+
+In digital integrated circuit design, timing thresholds are critical parameters used to specify the acceptable timing margins or constraints for various signals within the circuit. These thresholds help ensure that the circuit operates correctly and reliably by defining when signals should arrive at their destinations with respect to clock edges. Here are some common timing threshold definitions:
+
+*Setup Time (Tsu)*:
+Setup time is the minimum time before the clock edge at which a data input signal (e.g., a flip-flop's D input) must be stable and valid for the flip-flop to correctly capture the data.
+Mathematically, it is defined as Tsu = T_clk - T_data, where T_clk is the clock edge time, and T_data is the data input transition time.
+Violating the setup time can lead to metastability issues or incorrect data capture.
+
+*Hold Time (Thold)*:
+Hold time is the minimum time after the clock edge during which the data input signal must remain stable and valid for the flip-flop to correctly capture the data.
+Mathematically, it is defined as Thold = T_data - T_clk, where T_data is the data input transition time, and T_clk is the clock edge time.
+Violating the hold time can lead to data corruption.
+
+*Clock-to-Q Delay (Tcq):*
+Clock-to-Q delay is the time it takes for a flip-flop's output (Q) to change after a clock edge.
+It is crucial for determining the maximum clock frequency at which the circuit can operate reliably.
+Violating the clock-to-Q delay can result in timing violations and race conditions.
+
+*Propagation Delay (Tpd):*
+Propagation delay represents the time it takes for a signal to travel through a combinational logic path from the input to the output.
+It includes both the input delay and the gate delay.
+Violating the propagation delay can lead to incorrect signal timing and logic errors.
+
+*Clock Skew*:
+Clock skew is the variation in arrival times of the clock signal at different flip-flops within the same clock domain.
+It can cause timing violations and affect circuit performance.
+Designers often aim to minimize clock skew to ensure synchronous operation.
+
+*Max Frequency (Fmax)*:
+Max frequency is the highest clock frequency at which the circuit can operate while meeting all timing constraints.
+It is determined by the critical path delay, which includes setup and propagation times.
+Achieving a higher Fmax is a common goal in design optimization.
+
+*Setup Slack and Hold Slack*:
+Slack represents the amount of time by which a signal's timing margin exceeds or falls short of the required setup or hold time.
+Positive slack indicates that the timing margin is met, while negative slack indicates a timing violation.
+Slack values are important for identifying critical paths and areas for optimization.
+These timing thresholds and constraints are essential for ensuring the correct and reliable operation of digital circuits. Designers use various tools and methodologies, including static timing analysis (STA), to verify that these timing thresholds are met during the design process. Meeting these timing constraints is crucial for achieving the desired performance and functionality of digital integrated circuits
+
+**2. Propagation delay and transition time**
+
+Propagation delay and transition time are important timing parameters in digital integrated circuit design. They both play crucial roles in determining the speed and performance of digital circuits. Let's explore each of these concepts:
+
+1.*Propagation Delay*:
+
+Propagation delay, often denoted as Tpd, is the time it takes for a change in the input of a digital gate or circuit to propagate through the gate and appear at its output.
+It represents the time delay associated with the signal as it travels through the logic gates, wires, and interconnects in the digital circuit.
+Propagation delay is typically measured from the point where the input signal reaches 50% of its final value to the point where the output signal reaches 50% of its final value.
+Propagation delay is a key factor in determining the overall speed of a digital circuit. Short propagation delays enable faster operation, while longer delays limit the maximum clock frequency at which the circuit can operate.
+
+2.*Transition Time (or Propagation Time)*:
+Transition time, often denoted as Ttr or Tt, refers to the time it takes for the signal to change from one logic level to another within a digital circuit.
+It measures the time it takes for the signal to transition from the 10% point (low-to-high transition) to the 90% point (high-to-low transition) of its full voltage swing.
+Transition time is a critical parameter for evaluating the signal integrity and timing characteristics of a digital circuit.
+Transition Time
+
+Transition time affects the shape and quality of the signal waveform and can impact the setup and hold times of downstream flip-flops or logic gates.
+A shorter transition time allows for faster signal switching, which can be advantageous in high-speed designs.
+In summary, propagation delay measures the time it takes for a signal to traverse a digital circuit from input to output, while transition time measures the time it takes for a signal to change between logic levels. Both parameters are essential in digital circuit analysis and design, as they influence circuit speed, timing, and signal quality. Designers use these values to ensure that the circuit meets timing constraints and operates reliably at the desired clock frequency.
