@@ -3856,7 +3856,8 @@ Placement tools may use iterative algorithms to improve placement based on timin
 The placement process is often iterative, involving multiple runs of placement tools to fine-tune the arrangement of pins, cells, and blockages.
 Effective pin placement, logical cell placement, and blockage definition are crucial for achieving a well-balanced IC design that meets the desired performance, power, and area requirements while adhering to design constraints and objectives. These steps are part of the broader physical design process in semiconductor manufacturing.
 
-**6. Step to run floorplan using openLANE**:
+**6. Step to run floorplan using openLANE and Labs**:
+
 OpenLANE is an open-source digital ASIC (Application-Specific Integrated Circuit) design flow that includes various stages of ASIC design, including floorplanning. Floorplanning is the process of determining the approximate placement of logical cells, I/O pads, and power distribution on a semiconductor die. Below are the steps to run floorplanning using OpenLANE:
 
 *Setup Environment:*
@@ -3894,6 +3895,11 @@ Document your floorplan decisions and analyze the floorplan's impact on aspects 
 Once you are satisfied with the floorplan, you can proceed with the subsequent stages of the OpenLANE design flow, including placement, routing, and physical verification.
 It's important to note that the specific steps and configuration parameters may vary depending on your design, target technology, and design goals. Therefore, you should refer to the OpenLANE documentation and the documentation for your specific technology library for detailed guidance on using OpenLANE for floorplanning and the entire 
 ASIC design flow.
+
+
+**Labs**
+Running the floorplan using the command *run_floorplan*
+<img  width="1085" alt="hand_writ_exam" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/8.png">
 
 
 </details>
