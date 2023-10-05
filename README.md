@@ -4417,6 +4417,12 @@ In summary, propagation delay measures the time it takes for a signal to travers
 
 
 
+
+
+
+
+
+
 </details>
 <details>
 <summary>Labs (Placement using openLANE) </summary>
@@ -4433,3 +4439,61 @@ The placement in the magic is as follows
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day16/placement_sch_detail_12.png">
 
 The placement of different images can be seen in the below image
+
+
+
+
+
+</details>
+
+# Day 17 Design library cell using Magic Layout and ngspice characterization
+
+
+<details>
+<summary>Labs for CMOS inverter ngspice simulations</summary>
+
+
+
+<details>
+<summary>Labs for CMOS inverter ngspice simulations</summary>
+
+
+
+<details>
+<summary>Inception of Layout CMOS fabrication process</summary>
+
+
+
+<details>
+<summary>Tech file labs</summary>
+
+
+
+
+
+
+
+
+
+
+# Day 18 Pre-layout timing analysis and importance of good clock tree
+
+<details>
+<summary>Labs for CMOS inverter ngspice simulations</summary>
+
+
+
+<details>
+<summary>Labs for CMOS inverter ngspice simulations</summary>
+
+
+
+<details>
+<summary>Inception of Layout CMOS fabrication process</summary>
+
+
+
+<details>
+<summary>Tech file labs</summary>
+
+
