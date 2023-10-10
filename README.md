@@ -4448,30 +4448,206 @@ The placement of different images can be seen in the below image
 
 # Day 17 Design library cell using Magic Layout and ngspice characterization
 
-
 <details>
-<summary>Labs for CMOS inverter ngspice simulations</summary>
+<summary>IO Placer Revised</summary>
+	
+We can change the allignment of the Input/output pins by the changing the FP_IO_MODE. By Default it is set to 1. This can be changed by using the below command
+```ruby
+set ::env(FP_IO_MODE) 2
+```
+Before changing the mode the layout in magic
 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/floorplan_1.png">
 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/floorplan_detail_2.png">
 
+After changing the mode 2
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/readme_floorplan_3.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/floorplan_tcl_4.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/floorplan_layout_aftr_set_2_5.png">
+
+</details>
 <details>
-<summary>Labs for CMOS inverter ngspice simulations</summary>
+
+<summary>spice simulation for CMOS inverter</summary>
+
+SPICE (Simulation Program with Integrated Circuit Emphasis) is a widely used tool for simulating electronic circuits, including CMOS inverters. To perform a SPICE simulation for a CMOS inverter, you typically need to follow these steps:
+
+1. Create the CMOS Inverter Circuit: You'll need to define the CMOS inverter circuit in a SPICE-compatible format. In this case, a CMOS inverter consists of an NMOS transistor and a PMOS transistor connected in series. Here's an example of a simple CMOS inverter circuit:
+
+Copy code
+```ruby
+* CMOS Inverter
+.model nmos NMOS
+.model pmos PMOS
+Vdd 1 0 DC 5V
+Vin 2 0 DC 0V
+M1 3 2 1 1 NMOS
+M2 3 2 0 0 PMOS
+.DC Vin 0V 5V 0.1V
+.PRINT DC V(2) V(3)
+.END
+```
+In this example, M1 is the NMOS transistor, M2 is the PMOS transistor, Vdd is the power supply voltage, and Vin is the input voltage.
+
+2. Specify Model Parameters: You should specify the model parameters for the NMOS and PMOS transistors, including threshold voltage (Vth), channel length (L), channel width (W), mobility, and other relevant parameters. These parameters depend on the technology node and the specific transistors being used.
+
+3. Simulation Commands: Include simulation commands in your SPICE input file to define the type of analysis you want to perform. Common types of analyses for CMOS inverters include DC analysis, transient analysis, and AC analysis.
+
+4. DC Analysis: Simulates the behavior of the circuit under constant (DC) input voltage. In the example above, .DC Vin 0V 5V 0.1V performs a DC sweep of input voltage from 0V to 5V in 0.1V steps.
+
+5. Transient Analysis: Simulates the behavior of the circuit over time. You can apply a pulse or step input and observe how the output voltage changes over time.
+
+6. AC Analysis: Analyzes the frequency response of the circuit. Useful for examining gain, bandwidth, and other AC characteristics.
+
+7. Run the Simulation: Use a SPICE simulator such as LTspice, HSPICE, or ngspice to run the simulation. The specific commands and syntax may vary slightly depending on the simulator you are using.
+
+8. Analyze Simulation Results: After the simulation is complete, you can analyze the results to understand how the CMOS inverter behaves under different input conditions. Common parameters to examine include the input/output characteristics, voltage transfer curve (VTC), rise/fall times, and propagation delay.
+
+9. Optimize and Fine-Tune: Based on the simulation results, you can optimize and fine-tune your CMOS inverter circuit to meet your design specifications and requirements.
+
+SPICE simulations are an essential part of integrated circuit design and allow engineers to predict and understand the behavior of circuits before they are physically fabricated.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/spice%20file%20created_6.png">
 
 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/vim_spice_7.png">
 
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/vim_spice_code_8.png">
+</details>
 <details>
-<summary>Inception of Layout CMOS fabrication process</summary>
 
 
+<summary>16 Mask CMOS fabrication process</summary>
 
+The term "16-mask CMOS fabrication" refers to the process of manufacturing complementary metal-oxide-semiconductor (CMOS) integrated circuits using 16 distinct photolithography masks. CMOS technology is widely used in the semiconductor industry for building digital and analog integrated circuits, including microprocessors, memory chips, and various other electronic devices. Each mask in the fabrication process plays a crucial role in defining different aspects of the integrated circuit's design and functionality.
+
+Here is a general overview of the steps involved in a typical 16-mask CMOS fabrication process:
+
+1. Substrate Preparation: The process starts with a silicon wafer, which serves as the base material. The wafer is cleaned and polished to remove impurities.
+
+2. Oxidation: A thin layer of silicon dioxide (SiO2) is grown or deposited on the wafer's surface. This oxide layer serves as an insulating layer and can be used to create gate oxides for transistors.
+
+3. N-Well and P-Well Formation: The wafer is then exposed to a mask to define areas for N-wells (for NMOS transistors) and P-wells (for PMOS transistors). These regions are implanted or diffused with the appropriate dopants to create the desired conductivity types.
+
+4. Gate Oxide Formation: Another mask is used to define the areas where gate oxides will be formed for the transistors. The gate oxide insulates the gate electrode from the semiconductor material.
+
+5. Gate Electrode Formation: A mask is employed to define the gate electrode areas for both NMOS and PMOS transistors. Polysilicon is typically used for gate electrodes.
+
+6. Source/Drain Implantation: Masks are used to define the source and drain regions of the transistors. Dopants are implanted or diffused into the silicon to create the necessary regions.
+
+7. Interlayer Dielectric (ILD) Deposition: A layer of insulating material (often SiO2) is deposited and planarized. This layer isolates different components and provides a foundation for the metal interconnect layers.
+
+8. Contact and Via Formation: Masks are used to define contact holes and vias in the ILD, allowing for connections between different layers of the integrated circuit.
+
+9. Metal Layer Deposition: Metal layers are deposited, and masks are used to define the metal interconnects that connect various parts of the circuit.
+
+10. Passivation Layer: A final mask may be used to define openings for a passivation layer, which protects the integrated circuit and provides a smooth surface.
+
+11. Testing and Inspection: The fabricated wafer is tested and inspected to ensure it meets the desired specifications.
+
+12. Dicing: The wafer is cut into individual chips.
+
+13. Packaging: Each chip is packaged for protection and connection to external devices.
+
+The specific details of each mask and the exact fabrication steps can vary depending on the desired circuit and technology node. Advanced semiconductor processes may require even more masks and complex steps. The goal is to create functional and reliable integrated circuits with a high level of precision and performance.
+
+
+**CMOS Inverter layout in Magic**
+
+When a poly crosses n-diffusion it is NMOS
+
+In Magic if we select that and give what in tkcon window we get
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/inv%20layout_output_y1.png">
+
+When a poly crosses n-diffusion it is PMOS
+
+In Magic if we select that and give what in tkcon window we get
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/inv%20layout_pmos_what_y2.png">
+
+The connection of Y with the drain of PMOS and NMOS is as shown in the figure
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/inv%20layout_nmos_what_y3.png">
+
+
+The other connection of Source of PMOS and Source of NMOS are as follows
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/inv%20layout_pmos_source_y4.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/inv%20layout_nmos_source_y5.png">
+
+</details>
 <details>
-<summary>Tech file labs</summary>
+<summary>Labs on DRC</summary>
+
+First we need to clone the open_pdks.git from RTimothyEdwards
+These are list of various .mags in the directory
 
 
 
+The met3.mag is as shown below
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img1x.PNG">
+
+Now we see that rule 3.4 is not the visible one but we can visualize it as follows
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img19.PNG">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img18.PNG">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img17.PNG">
+
+Now we load poly
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img16.png">
+
+<img  width="1085" alt="" src="">
 
 
+These violations can be rectified by editing the .tech files drc rules
 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img15.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img14.png">
+
+
+The other violations and their corrections are as follows
+
+1.First we need to copy the 3 poly metal and paste it into 2 different places and add pmos and nmos substrate and contact. This is to fix the issue with poly resistor spacing to diff and tap.Then we edit the .tech files to rectify this.
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img12.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img11.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img10.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img09.png">
+
+Second one is describing DRC errors as geometrical construct
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img07.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img06.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img05.png">
+
+Shrinking the Nwell to fix the NMOS 6 drc violation
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img04.png">
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img03.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img02.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img01.png">
 
 
 
