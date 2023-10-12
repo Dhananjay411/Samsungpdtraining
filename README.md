@@ -4676,7 +4676,7 @@ Shrinking the Nwell to fix the NMOS 6 drc violation
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img01.png">
 
-
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/error%20.png">
 
 
 # Day 18 Pre-layout timing analysis and importance of good clock tree
