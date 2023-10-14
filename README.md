@@ -4676,13 +4676,99 @@ Shrinking the Nwell to fix the NMOS 6 drc violation
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day18/img01.png">
 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/error%20.png">
 
+</details>
 
 # Day 18 Pre-layout timing analysis and importance of good clock tree
 
 <details>
-<summary>Labs for CMOS inverter ngspice simulations</summary>
+<summary>Timing modelling using delay tables</summary>
+
+**Lab 1: Lab steps to convert grid info to track info**
+
+*Lab steps to convert grid info to track info*
+
+ **Library Exchange Format (LEF)**
+-A specification in which representing the physical layout of an integrated circuit in an ASCII format
+-It includes design rules and abstract information about the standard cells
+-LEF only has basic information required at that level to serve the purpose of the concerned CAD tool
+-Containing information on input, output, power and group port, does not consists logic path information
+*Objective*: extract LEF file from .mag file and then plug the file into the picorv32a flow (previous is standard cell library)
+
+-Main guidelines:
+1. The input and output ports must lie on the intersection of the vertical and horizontal tracks
+2.The width of standard cell should be on the track pitch, and the height should be on the track vertical pitch
+
+```ruby
+~/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/openlane/sky130_fd_sc_hd
+vim tracks.info
+```
+
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/vsdstdcelldesign
+magic -T sky130A.tech sky130_inv.mag
+```
+*Track information (using during routing stage) routes can go over the track/layer (metal traces)*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/inv_layout_2.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/track%20info_1.png">
+
+
+**Lab 2: Lab steps to convert magic layout to std cell LEF**
+
+ *Lab steps to convert magic layout to std cell LEF*
+-We need to only define layers, not ports in layout
+-Ports definitions are required when we want to extract LEF file
+-Ports will be defined as pins of a macro
+
+*How to define ports?*
+
+    Select port --> edit --> Text --> fill those required information
+
+Note: For A; and Y in locali while for VPWR and VGND in metal1
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/inv_layout_A_input_3.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/inv_layout_Y_output_4.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/inv_layout_top_pmos_5.png">
+
+
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/inv_port%20vgnd_7.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/port_8.png">
+
+
+    Extract the LEF file
+
+    In tkcon
+```ruby
+save sky130A_vsdinv.mag
+```
+    Checking the saved file
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/vsdstdcelldesign
+ls
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/create%20_vsdinv.mag_file_9.png">
+
+
+
+<img  width="1085" alt="" src="
+
+
+<img  width="1085" alt="" src="
+
+<img  width="1085" alt="" src="
+
+<img  width="1085" alt="" src="
+
+
+
+
+
 
 
 
