@@ -5250,3 +5250,279 @@ run_cts
 
 </details>
 
+
+</details>
+
+
+ </details>
+
+# Day 19 Final steps for RTL2GDS
+
+<details>
+<summary>Routing and design rule check (DRC)</summary>
+	
+**Theory 1: Introduction to Maze Routing using Lee's algorithm**
+
+**Introduction to Maze Routing using Lee's algorithm**
+
+**Routing stage**
+ -Maze Routing-Lee’s Algorithm [Lee 1961]: Algorithm to find the shortest path between two nodes in a grid
+
+*Routing*: the process of creating the physical wire connections within the design in which it helps in determining the best way of routing that can be done between two endpoints, the source, and the target, with the shortest distance as well as the least number of zig-zag turns.
+
+ -However, the algorithm needs to be aware of any blockages set that hinders any routing to be done in the particular area.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x1.png">
+
+
+*Steps in Lee's Algorithm*
+
+1. Create the routing grid behind the floorplan
+
+2. The two points were created which are the source and target
+
+   -Algorithm will look for the best route to connect the two points with the help of the routing grid
+
+3. The tool will label the grid ground (adjacent of horizontal and vertical grid)
+
+    -However, it did not label the grid under the blockage and at the boundary
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x2.png">
+
+**Theory 2: Lee's Algorithm conclusion**
+
+**Lee's Algorithm conclusion**
+
+1.It is preferable to choose the LHS instead of RHS of the figure below
+
+2.It is because the chosen route in the LHS figure got the best route which is less bending (L-shaped) rather than the RHS figure
+
+Therefore, LHS figure will proceed to do the global routing
+
+3.Performing the routing for 1 route will be fairly simple, but when we have millions of start and endpoints to route between, this method will consume a lot of time and memory
+
+4. Maze routing consumes more time and memory if the design is huge
+
+5. There are some algorithms that can help to reduce the time and memory consumption such as line-search algorithm, stanner-tree algorithm
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x3.png">
+
+**Theory 3: Design Rule Check**
+
+**Design Rule Check**
+
+1. Design Rule Check (DRC): the rules that should be followed whenever the routing of the design is performed.
+
+2. One of the rules may be the minimal wire width, where the width of the wire should be no less than a specified amount based on the limitations of the fabrication process.
+
+3. Another rule that is based on the fabrication process of lithography is the wire pitch, where the centre-to-centre distance between 2 wires should be no smaller than a certain distance.
+
+4. Another rule includes wire spacing rule, where distance between 2 wires should be no smaller than a certain distance.
+
+5. These are many rules that the tool needs to take into account when performing the routing of the design.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x4.png">
+
+1. One type of DRC violation is a signal short, where two wires that are not intended to be connected becomes in contact on the same layer.
+
+2. This could lead to functional failure, so this needs to be taken care of.
+
+3. To fix this, we need to simply moving one of the wires onto a different metal layer.
+
+4. However, please keep in mind that there are new drc rules that need to be taken into account.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x5.png">
+
+**New drc rules after fixing**
+
+**Via width** where the width of the via should be no less than a certain value.
+
+**Via spacing** where the distance between 2 vias cannot be less than a specific distance.
+
+Most of these DRC rules come from the lithographic process and the limitations that come with the technology.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x6.png">
+
+Performing parasitic extraction, where the resistances and capacitances of the wires are extracted and will be used for further processes.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x7.png">
+</details>
+
+<details>
+<summary>Power Distribution Network and routing</summary>
+
+**Lab 1: Lab steps to build power distribution network**
+
+**Lab steps to build power distribution network**
+
+If exited from openlane
+
+```ruby
+cd work/tools/openlane_working_dir/openlane
+make mount
+pwd
+ls -ltr
+./flow.tcl -interactive
+package require openlane 0.9
+prep -design picorv32a -tag 
+```
+
+Note: If we want to retain the configurations from the last openlane job, we need to use ```rubyprep -design -tag.``` If we want to create a fresh run with new configurations but without changing the tag name, we need to use ```rubyprep -design -tag -overwrite.```
+
+In openlane
+
+```ruby
+echo $::env(CURRENT_DEF)    (Ensure current_def is on the CTS stage)
+gen_pdn                     (To generate power distribution network)
+```
+-Error encountered during “gen_pdn” in which the stage cannot perform routing as current_def has not changed to floorplan.pdn
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/routing_strategy.png">
+
+
+**Lab 2: Lab steps from power straps to std cell power**
+**Lab steps from power straps to std cell power**
+
+This is just a review on PDN
+
+If the power and ground rails has a pitch of 2.72, thus the customized inverter cell will have a height of 2.72 or else the power and ground rails will not be able to power up the cell.
+
+As shown below, power and ground flows from power/ground pads --> power/ground ring --> power/ground straps --> power/ground rails.
+
+Source: https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#timing-analysis-with-real-clocks
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x8.png">
+
+**Lab 3: Basics of global and detail routing and configure TritonRoute**
+
+**Basics of global and detail routing and configure TritonRoute**
+
+```ruby
+echo $::env(CURRENT_DEF)            (Ensure the def file of pdn has been created)
+echo $::env(ROUTING_STRATEGY)
+run_routing
+```
+
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/configuration
+vim README.md
+```
+    Assuming power distribution network has been successfully generated without being encountered by any error
+
+<img  width="1085" alt="" src="">
+
+<img  width="1085" alt="" src="">
+
+
+</details>
+<details>
+<summary>TritonRoute Features</summary>
+
+**Theory 1: TritonRoute feature 1 - Honors pre-processed route guides**
+
+**TritonRoute feature 1 - Honors pre-processed route guides**
+
+OpenLane routing stage consists of two stages:
+**Global Routing:** Form routing guides that can route all the nets. The tool used is FastRoute.
+**Detailed Routing:** Uses the global routing's guide to connect the pins with the least amount of wire and bends. The tool used is TritonRoute.
+
+**Triton Route**
+
+-In fast routing, a rough routing draft is created.
+
+-Fast routing is the engine which is used for global routing.
+
+-During global routing, the region is divided into grid cells, which acts as a route guide for the TritonRoute to be used for the detail routing, where an algorithm is used to find the best connectivity between the points.
+
+-It honours the preprocessed route guides (obtained after fast routes), wherein the tool attempts as much as possible to route within route guides.
+
+-The tool assumes route guides for each net satisfies inter-guide connectivity.
+
+-Triton route works on proposed MILP (Mixed integer liner programming) based panel routing scheme with intra-layer parallel and inter-layer sequential routing framework, to finds the best way to perform the routing.
+
+-Intra-layer refers to the routing within a layer, while inter-layer routing refers to routing between layers, through the uses of vias.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x9.png">
+
+
+**Theory 2: TritonRoute Feature 2 & 3 - Inter-guide connectivity and intra- & inter-layer routing**
+
+**TritonRoute Feature 2 & 3 - Inter-guide connectivity and intra- & inter-layer routing**
+
+-Preprocessed guides should have unit width and must be in the preferred direction of the layer.
+
+-Global route is done by fast route, and the output would be the routing guide.
+
+-The initial route guides are transformed into the preprocessed guides through splitting, merging, and bridging.
+
+-Whenever the tool detected the route guide with non-preferred direction, it divides the route guide into unit widths, and then the route with preferred direction is merged, while the non-preferred direction route is bridged to be a route on another layer, which is the preferred direction for routing.
+
+-This way, parallel routing with higher layers are avoided, as well as avoiding parallel plate capacitance.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x10.png">
+
+ -Each layer or panel will have its own preferred routing direction assigned to it, in which the routes should be formed.
+
+-Routing in higher layers will begin only once the routing the bottom layers have been completed.
+
+-Two guides are connected if they are on the same metal layer with touching edges, or if they are on neighbouring metal layers with a non-zero vertically overlapped area.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x11.png">
+
+-Each unconnected terminal i.e. pin of a standard cell instance, should have its pin shape overlapped by a route guide.
+
+-The purple box in the RHS figure below would be the routing guide on the metal 1 layer that would overlap with the unconnected terminal.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x12.png">
+
+**Theory 3: TritonRoute method to handle connectivity**
+
+**TritonRoute method to handle connectivity**
+
+-Inputs file needed for TritonRoute are the LEF file, DEF file, and the Preprocessed route guides.
+
+-Outputs from the TritonRoute would be a detailed routing solution with optimized wire-length and via count.
+
+-Constraints needed in TritonRoute are the route guide honouring, connectivity constraints and design rules.
+
+**TritonRoute method**
+
+TritonRoute handles connectivity through 2 ways
+Access Point (AP)
+Access Point Cluster (APC)
+
+**Access point:** on-grid point on the metal layer of the route guide, and is used to connect to lower-layer segments, upper-layer segments, pins or IO ports.
+
+**Access Point Cluster:** a union of all Access Points derived from the same lower-layer segment, upper-layer guide, a pin or an IO port.
+
+Access point refers to the point where the via can be placed to allow connectivity between layers.
+
+The objective of the Mixed Integer Liner Programming (MILP) is to connect one access point to another optimally.
+Choose one of the access points where the via should be dropped
+Determining how the first access point will be connected to the next access point.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x13.png">
+
+
+**Lab 1: Routing topology algorithm and final files list post-route**
+
+**Routing topology algorithm and final files list post-route**
+
+**Optimization algorithm for routing topology**
+
+-For each APC, the algorithm needs to find the cost associated with the distance between 2 APCs which are the minimum spanning tree, MST, between the APCs and the costs.
+
+*The objective of the algorithm*
+-To find the minimal and most optimal point between the 2 APCs.
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day20/x14.png">
+
+-There are 3 violations as shown in the figure below
+
+-TritonRoute strategy = 0 is chosen right now
+
+-If TritonRoute strategy = 14 is chosen, the violations might be 0 but it might take some time to finish running
+
+-Therefore, we need to fix the violations manually
+
+</details>
