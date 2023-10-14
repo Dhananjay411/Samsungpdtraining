@@ -4732,8 +4732,9 @@ Note: For A; and Y in locali while for VPWR and VGND in metal1
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/inv_layout_top_pmos_5.png">
 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/inv_layout_BOTTOM_NMOS_6.png">
 
-
+Then, define classes of ports
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/inv_port%20vgnd_7.png">
 
@@ -4754,35 +4755,498 @@ ls
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/create%20_vsdinv.mag_file_9.png">
 
+```ruby
+magic -T sky130A.tech sky130_vsdinv.mag
+```
+    In tkcon
+```ruby
+lef write
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/created_lef_file_10.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/lef_file_detail_11.png">
+
+*vim sky130_vsdinv.lef*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/lib_typical_12.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/lib_slow_13.png">
 
 
-<img  width="1085" alt="" src="
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/lib_fast_14.png">
+
+**Lab 3: Introduction to timing libs and steps to include new cell in synthesis**
+
+**Introduction to timing libs and steps to include new cell in synthesis**
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/vsdstdcelldesign
+cp sky130A_vsdinv.lef /home/nur.nazahah.mohd.amri/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/vsdstdcelldesign/libs
+cp sky130_fd_sc_hd__* /home/nur.nazahah.mohd.amri/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/
+vim config.tcl
+```
+*Modifying config.tcl file*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/config_tcl_16A.png">
 
 
-<img  width="1085" alt="" src="
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane
+make mount
+./flow.tcl -interactive
+package require openlane 0.9
+prep -design picorv32a -tag 13-01_14-09 -overwrite      (Check run date at ls ~/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs)
+set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
+add_lefs -src $lefs
+run_synthesis
+```
 
-<img  width="1085" alt="" src="
+Successfully invoke openlane and doing synthesis
 
-<img  width="1085" alt="" src="
-
-
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/synthesis%20successful.png">
 
 
+**Theory 1: Introduction to delay tables**
+
+**Introduction to delay tables**
+
+-With the use of gates for clock nets, such as shown in the below figure, which is the method known as clock gating, we can ensure no dynamic switching and short circuit power consumed by the clock tree, during the time the clock gets gated.
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/123.png">
 
 
 
+1. We need to look into the timing characteristics of the buffer, in the case where we want to swap out the buffer for a gate.
+2.For each level of buffering, we should have an identical buffer being used, and each node should be driving the same node.
+3.Keep in mind that the load at the output will be varying, and since the load of one buffer is varying, the input transition of the following buffer will also vary.
+4.This means that we will have a variety of delays.
 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/1234.png">
+
+1. The delay table is characterized based on varying the input transition and output load of a cell, against the delay of that cell.
+2. Each cell will have its own delay table for different sizes and threshold tables.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/12345.png">
+
+**Theory 2: Delay table usage**
+
+**Delay table usage**
+
+-Each type of cell will be having its own individual delay table, as the internal pmos and nmos width/length ratio gets varied, the resistance changes, then RC constant  -gets varied as well, meaning the delay of each cell gets varied.
+-The values of delay which are not available in the table are extrapolated based on the given data.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/32.png">
+
+
+-Similarly, the ways on how we have a delay table, we will also have a characterization table for input transition.
+-The latency at the endpoints will be the sum of the delays of each individual cell in that path.
+-The total skew value between two endpoints will be non-zero if the output load driven for a cell is varied, meaning different delay numbers are seen between endpoints,   this is why it is preferred to have the nodes at each level driving the same load.
+-Another case in which we can retain the skew to be zero in the presence of varied load, is by using a different buffer size at the same level that can achieve the same level of delay as the other buffer in same level based on its delay table.
+-These are factors which should be looked into in the early stages of the clock tree design stage.
+-Now we must look into power aware CTS, where we have to consider endpoints which are only active under certain conditions.
+-In this case, we do not need to propagate the clock into those cells during the period of inactivity.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/321.png">
+
+**Lab 4: Lab steps to configure synthesis settings to fix slack and include vsdinv**
+
+**Lab steps to configure synthesis settings to fix slack and include vsdinv**
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/configuration
+vim README.md
+```
+-SYNTH_STRATEGY: control the area and timing
+-SYNTH_BUFFERING: control if we want to buffer high fanout net
+-SYNTH_SIZING: control in cell sizing instead of buffering
+-SYNTH_DRIVING_CELL: ensure more drive strength cell to drive input
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/synth_strategy.png">
+
+In openlane terminal
+
+```ruby
+echo $::env(SYNTH_STRATEGY)
+set ::env(SYNTH_STRATEGY) "DELAY 0"
+echo $::env(SYNTH_STRATEGY)
+echo $::env(SYNTH_BUFFERING)
+echo $::env(SYNTH_SIZING)
+set ::env(SYNTH_SIZING) 1
+echo $::env(SYNTH_SIZING)
+echo $::env(SYNTH_DRIVING_CELL)
+```
+-With SYNTH_STRATEGY of Delay 0, the tool will focus more on optimizing/minimizing the delay, index can be 0 to 3 where 3 is the most optimized for timing (sacrificing more area).
+-SYNTH_BUFFERING of 1 ensures cell buffer will be used on high fanout cells to reduce delay due to high capacitance load.
+-SYNTH_SIZING of 1 will enable cell sizing where cell will be upsize or downsized as needed to meet timing.
+-SYNTH_DRIVING_CELL is the cell used to drive the input ports and is vital for cells with a lot of fan-outs since it needs higher drive strength (larger driving cell needed).
+
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/13-01_14-09/results/synthesis
+rm -rf picorv32a.synthesis.v
+```
+In openlane terminal
+
+```ruby
+run_synthesis
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/synth_strategy_4.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/synth_wns_tns_0000_5.png">
+
+In openlane
+```ruby
+run_floorplan
+```
+
+After that run_placement, another error will occur relating to remove_buffers, the solution is to comment the call to remove_buffers_from_nets in OpenLane/scripts/tcl_commands/placement.tcl.
+
+After successfully running placement, runs/[date]/results/placement/picorv32.def will be created.
+
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/scripts/openroad
+vim or_basic_mp.tcl
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/scripts/tcl_commands
+vim floorplan.tcl
+```
+*Modification in gvim*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/macro%20comment_6.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/macro%20comment__2___7.png">
+
+In openlane
+```ruby
+run_floorplan
+run_placement
+```
+In terminal
+
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/13-01_14-09/results/placement
+magic -T ~/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/placement_getcell.png">
+</details>
 <details>
-<summary>Labs for CMOS inverter ngspice simulations</summary>
+
+<summary>Timing analysis with ideal clocks using openSTA</summary>
+	
+**Theory 1: Setup timing analysis and introduction to flip-flop setup time**
+**Setup timing analysis and introduction to flip-flop setup time**
+
+-At the zero time stamp, there is one clock edge that reaches the launch flop.
+-At T time stamp, the second rising edge reaches the capture flop. Any analysis that needs to be done is between 0 and T. For the combinational circuit to work, the combinational delay needs to be less than the period, T.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/xy.png">
+
+-Looking at more practical scenarios and how the flop works, there will be a delay within the internal flop circuitry, between mux 1 and mux 2.
+-These internal delays will restrict the combinational delay requirements.
+-This internal delay is known as the setup time, and this setup time needs to be subtracted away from the complete clock period T.
+-Now the capture flop has enough time for it to compute the data within the flop and ensure the data is ready at Q by the time the second rise edge of clock reach.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/xyz.png">
+
+
+**Theory 2: Introduction to clock jitter and uncertainty**
+
+**Introduction to clock jitter and uncertainty**
+**Jitter**
+Deviation of a clock edge from its ideal location
+
+Typically caused by clock generator circuitry, noise, power supply variations, interference from nearby circuitry etc. Jitter is a contributing factor to the design margin specified for timing closure
+
+The next practical scenario to take into consideration is jitter.
+
+The clock is expected to reach the clock pin at exactly 0s or at Ts, but in real scenarios, the clock signal may not be able to reach at the exact moment, as the clock source generation may have its own built-in variation.
+
+This is known as jitter, the temporary variation of the clock period.
+
+The combinational delay will become more stringent as a result. Thus we change our combinational delay to factor in the uncertainty factor from the jitter.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/k1.png">
+
+The combinational delay of a path will look as shown above.
+The next challenge comes in performing timing analysis with multiple ideal clocks.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/k2.png">
+
+**Lab 1: Lab steps to configure OpenSTA for post-synth timing analysis**
+**Lab steps to configure OpenSTA for post-synth timing analysis**
+
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane
+vim pre_sta.conf                                          (For pre-layout timing analysis)
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/pre_sta_tcl0.01.png">
+
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src
+vim my_base.sdc
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/vsdstdcelldesign/libs
+vim sky130_fd_sc_hd__typical.lib
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/pre_sta_sdc_0.02.png">
+
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane
+sta pre_sta.conf
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/setup_for%20presta_0.03.png">
 
 
 
+**Lab 2: Lab steps to optimize synthesis to reduce setup violations**
+
+**Lab steps to optimize synthesis to reduce setup violations**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/hold_for_presta_0.03.png">
+
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/configuration
+vim README.md
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/readme_config_21.png">
+
+In openlane
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane
+echo $::env(SYNTH_MAX_FANOUT)
+set ::env(SYNTH_MAX_FANOUT) 4
+```
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/13-01_14-09/results/synthesis
+rm -rf picorv32a.synthesis.v
+```
+In openlane
+```ruby
+run_synthesis
+```
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane
+sta pre_sta.conf
+report_net -connections _18242_                           
+replace_cell _41952_ sky130_fd_sc_hd__dfxtp_4             (Pick the highest fanout, cap, slew and replace the worst violations of the cell by increasing drive strength --> upsize cell from 2 to 4)
+report_checks -fields {net cap dlew input pins} -digits 4
+report_tns
+report_wns
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/fanout_set_22.png">
+
+
+</details>
 <details>
-<summary>Inception of Layout CMOS fabrication process</summary>
 
 
 
+<summary>Clock tree synthesis TritonCTS and signal integrity</summary>
+
+**Theory 1: Clock tree routing and buffering using H-Tree algorithm**
+**Clock tree routing and buffering using H-Tree algorithm**
+
+-Clock tree synthesis is done to propagate the clock signals to all the clock pins in the design.
+-However, a good clock tree needs to be designed to take into account the skew between the clock pins due to long routing.
+-Through the use of H-tree, which is a smarter implementation for a clock tree design, that is designed based on the distances between the clock pins in the design between the clock port.
+-This is to give a skew value as close to 0 as possible by having the clock signals reach all the cells at the same time.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/p1.png">
+
+-The next step is to perform clock tree buffering.
+-The wires for the clock routes each will have resistances and huge number of capacitances, and with the long routing, there will be signal integrity issues.
+-Thus, to maintain the signal integrity, we need buffering on these nets.
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/p2.png">
+
+**Theory 2: Crosstalk and clock net shielding**
+**Crosstalk and clock net shielding**
+
+-Another topic to understand before moving to using real clocks is clock net shielding.
+-Clock nets are the critical nets in the design, we build the clock tree to ensure there is a minimum skew.
+-However, if there is any cross talk that happens and affect the clock signals, that will affect the design very badly.
+-By shielding, we are protecting the clock nets from the outside world, avoiding glitches and delta delays from occurring.
+-If a glitch occurs on the clock net, incorrect data in the memory will cause inaccurate functionality for the design.
+-The shield can be connected to ground or to Vdd, as long as there is no switching activity occurring.
+-Critical data nets are also necessary to be shielded.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/a1.png">
+
+**Lab 1: Lab steps to run CTS using TritonCTS**
+
+**Lab steps to run CTS using TritonCTS**
+
+In sta terminal
+```ruby
+write_verilog ~/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/13-01_14-09/results/synthesis/picorv32a.synthesis.v
+```
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/13-01_14-09/results/synthesis
+ls -lrt picorv32a.synthesis.v
+date
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/synthesis%20successful.png">
+
+In openlane
+```ruby
+run_floorplan
+run_placement
+run_cts
+```
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/configuration
+vim README.md
+```
+**Lab 2: Lab steps to verify CTS runs**
+
+**Lab steps to verify CTS runs**
+
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/scripts/tcl_commands
+vim cts.tcl
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk_2_or_cts_4.png">
+
+Each stage has its own .tcl file, except synthesis since it is not in openroad
+```ruby
+cd ~/Desktop/work/tools/openlane_working_dir/openlane/scripts/openroad
+vim or_cts.tcl
+```
+In openlane
+```ruby
+echo $::env(LIB_TYPICAL)
+echo $::env(CURRENT_DEF)
+echo $::env(CTS_MAX_CAP)
+echo $::env(CTS_CLK_BUFFER_LIST)
+echo $::env(CTS_ROOT_BUFFER)
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk3_echo%20define_3.png">
+
+
+</details>
 <details>
-<summary>Tech file labs</summary>
+<summary>Timing analysis with real clocks using openSTA</summary>
 
+**Theory 1: Setup timing analysis using real clocks**
+**Setup timing analysis using real clocks**
+
+-After buffer has been added in, more clock network delay has been introduced and it will combining all the delays.
+-With real clocks, we will need to have buffers inserted into the clock path to ensure the clock signal integrity.
+-Because of the buffer introduction, the clock edge will reach the clock pin with consideration to the delays of the buffers inserted.
+-The clock network delay will also need to take into consideration the delays from the buffers inserted.
+-The window will become shifted as a result of the delays from the buffers inserted.
+-The skew for this design will now be the difference between the deltas, and the equation for setup timing analysis will also changed based on the image shown.
+-If the data arrival time is higher than the data required time, then we will have negative slack on the path, meaning we have violations.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/b1.png">
+
+
+-For hold timing analysis, where the capture edge is on the o clock rise edge, the combinational delay should be greater than the hold time of the flop.
+-Hold time refers to the second mux delay, which is the time required for the data to be sent after the clock edge within the flop.
+-So the data needs to be arrived after the hold time, so the new data can be captured into the flop, after existing data is launched out.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/b2.png">
+
+**Theory 2: Hold timing analysis using real clocks**
+
+**Hold timing analysis using real clocks**
+
+-Introducing more real factors into our design for hold analysis will yield the below equation for hold timing.
+-Jitter for the launch clock and capture flop will not need to be taken into consideration as the design is on the 0 clock edge, and the arrival difference for the capture and launch flop will be the same.
+-So, the uncertainty should be kept low for the hold analysis.
+-The slack formula will be --> data arrival time – data required time
+-If data required time is higher, we will have negative slack, meaning the timing path for hold will be violated.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/c1.png">
+
+-For the timing path setup for real clocks, we need to take into considerations the deltas that were mentioned earlier.
+-For delta1, will be launch clock network delay, while delta2, will be capture clock network delay.
+-The equations for setup time and hold time are shown below.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/c2.png">
+
+**Lab 1: Lab steps to analyze timing with real clocks using OpenSTA**
+
+**Lab steps to analyze timing with real clocks using OpenSTA**
+
+In openlane
+
+```ruby
+openroad                                                                                                       (Invoking openroad)
+read_lef /openLANE_flow/designs/picorv32a/runs/13-01_14-09/tmp/merged.lef
+read_def /openLANE_flow/designs/picorv32a/runs/13-01_14-09/results/cts/picorv32a.cts.def
+write_db pico_cts.db
+read_db pico_cts.db
+read_verilog /openLANE_flow/designs/picorv32a/runs/13-01_14-09/results/synthesis/picorv32a.synthesis_cts.v
+read_liberty -max $::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc_hd__slow.lib
+read_liberty -min $::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc_hd__fast.lib
+set_propagated_clock [all_clocks]
+read_sdc designs/picorv32a/src/my_base.sdc
+report_checks -path_delay min_max -format full_clock_expanded -digits 4
+```
+This step is not practical, therefore it violated.
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk4_final_roadmap.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk4_openroad_final.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk_4_hold_report_2.png">
+
+
+**Lab 2: Lab steps to execute OpenSTA with right timing libraries and CTS assignment**
+
+**Lab steps to execute OpenSTA with right timing libraries and CTS assignment**
+
+    Continuing from previous lab
+```ruby
+exit        (Exit openroad)
+openroad
+read_db pico_cts.db
+read_verilog /openLANE_flow/designs/picorv32a/runs/13-01_14-09/results/synthesis/picorv32a.synthesis_cts.v
+read_liberty $::env(LIB_SYNTH_COMPLETE)
+link_design picorv32a
+read_sdc designs/picorv32a/src/my_base.sdc
+set_propagated_clock [all_clocks]
+report_checks -path_delay min_max -fields {slew trans net cap input pin} -format full_clock_expanded
+echo $::env(CTS_CLK_BUFFER_LIST)                              (To see the list of buffers)
+```
+
+Both timing are already met after post CTS
+The tool picked small cell first to meet the skew and area
+skew values are within 10% of the max clock period
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk4_openroad_final.png">
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/setup%20repot%20aftr%20run_23.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk4_buffername.png">
+
+**Lab 3: Lab steps to observe impact of bigger CTS buffers on setup and hold timing**
+
+**Lab steps to observe impact of bigger CTS buffers on setup and hold timing**
+
+In openlane
+```ruby
+exit 
+echo $::env(CTS_CLK_BUFFER_LIST)
+set ::env(CTS_CLK_BUFFER_LIST) [lreplace $::env(CTS_CLK_BUFFER_LIST) 0 0]
+echo $::env(CURRENT_DEF)
+set ::env(CURRENT_DEF) /openLANE_flow/designs/picorv32a/runs/13-01_14-09/results/placement/picorv32a.placement.def
+run_cts
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk4_final_roadmap.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk4_final_report.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk_4_hold_report_2.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day19/disk4_last.png">
+
+
+</details>
 
