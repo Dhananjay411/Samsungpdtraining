@@ -5526,6 +5526,7 @@ Determining how the first access point will be connected to the next access poin
 -Therefore, we need to fix the violations manually
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr.png">
+
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/errorrrr11111111111111.png">
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/2222222222222222errorrrr00000000000001.png">
