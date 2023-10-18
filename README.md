@@ -5530,5 +5530,5 @@ Determining how the first access point will be connected to the next access poin
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/errorrrr11111111111111.png">
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/2222222222222222errorrrr00000000000001.png">
-
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/was_successfully_linked_stuck.png">
 </details>
