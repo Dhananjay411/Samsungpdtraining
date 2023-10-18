@@ -5525,10 +5525,394 @@ Determining how the first access point will be connected to the next access poin
 
 -Therefore, we need to fix the violations manually
 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr.png">
+</details>
 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/errorrrr11111111111111.png">
 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/2222222222222222errorrrr00000000000001.png">
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/was_successfully_linked_stuck.png">
+</details>
+
+# Day 20 Floorplanning and power planning labs
+
+<details>
+<summary>Theory</summary>
+
+**Physical Design Flow**
+
+-Refers to a fundamental process of converting synthesized netlist design restriction and standard library to a layout as per the design rules provided by the foundary. The layout is sent to the foundary for the chip creation.
+
+-It is an algorithm with definite objectives, some of them consist of wire length, minimum area, and power optimization.
+
+-Steps in the Physical Design Flow are divided into several main processes.
+
+-Firstly, partitioning, where it divides a circuit into smaller sub-circuits or modules, each of which can be constructed and examined separately.
+
+-Chip planning may consists of floorplanning and power planning process.
+
+-Floorplanning determines the dimensions of all the blocks and place them in appropriate spots on the chip. 
+
+-Another step is power planning, which distributes power (VDD) and ground (GND) nets throughout the chip, and is commonly associated with floorplanning. 
+
+-Placement is the process of determining the geographic placements of all cells within a block. 
+
+-Clock network/tree synthesis establishes how the clock signal is buffered, gated and routed to fulfil specified skew and latency criteria.
+
+-The next step would be signal/global routing which allocates routing resources that are used for connections. Within the global routing resources, detailed routing assigns routes to individual metal layers and routing tracks.
+
+Lastly, timing closure is used for unique placement or routing strategies to improve circuit performance
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/ab2.png">
+
+**Main steps in Physical Design Flow**
+
+*Create a gate-level netlist (after synthesis)*
+
+The netlist is the result of the synthesis process and it is the foundation for physical design.
+Synthesis translates RTL designs written in VHDL or Verilog HDL into gate-level specifications that can be understood by the next set of tools.
+The cells employed, their interconnections, the area used, and other parameters are all listed in this netlist.
+
+**Floorplanning**
+
+Under this step, we calculate the dimensions of all the blocks and place them in appropriate spots on the chip.
+This step is performed to keep the blocks that are highly connected close to one another. 
+
+**Partitioning**
+
+The next step of partitioning helps in dividing the chip into separate chunks.
+This procedure is performed primarily to distinguish between distinct functional blocks and to facilitate placement and routing. When the design engineer separates the overall design into sub-blocks and then proceeds to design each module during the RTL design phase, this is known as partitioning. 
+
+**Placement**
+
+Placement is the process of placing the standard cells inside the core boundary in an optimal location.
+The tool tries to place the standard cell in such a way that the design should have minimal congestions and the best timing.
+Every PnR tool provides various commands/switches so that users can optimize the design in a better way in terms of timing, congestion, area, and power as per their requirements.
+Based on the preferences set by the user, the tool tray to place and optimize it for better QoR.
+Placement does not place only the standard cells present in the synthesized netlist but also places many physical only cells and adds buffers/inverters as per the requirement to meet the timings, DRV, and foundry requirements.
+Here are the basic steps which the tool performs during the placement and optimization stage. 
+
+**Static Time Analysis**
+
+Static timing analysis (STA) is a method of validating the timing performance of a design by checking all possible paths for timing violations.
+STA breaks a design down into timing paths, calculates the signal propagation delay along each path, and checks for violations of timing constraints inside the design and at the input/output interface.
+Another way to perform timing analysis is to use dynamic simulation, which determines the full behaviour of the circuit for a given set of input stimulus vectors.
+Compared to dynamic simulation, static timing analysis is much faster because it is not necessary to simulate the logical operation of the circuit.
+STA is also more thorough because it checks all timing paths, not just the logical conditions that are sensitized by a set of test vectors.
+However, STA can only check the timing, not the functionality, of a circuit design.
+
+**Clock Tree Synthesis (CTS)**  
+
+Clock Tree Synthesis(CTS) is one of the crucial steps in VLSI physical design flow.
+It is used to reduce skew and insertion delay.
+This step helps distribute the clock evenly among all sequential elements of a design.
+
+**Routing**
+
+Routing helps in making the links between the cells and the blocks.
+There are two types of routing: global routing and detailed routing.
+Connections are routed through global routing, which assigns routing resources.
+It also keeps track of a network’s assignment.
+Whereas, the actual connections are made by detailed routing. 
+
+**Physical verification**
+
+Physical verification ensures that the produced layout design is valid.
+This involves ensuring that the layout is correct and includes all technological prerequisites, density verification, cleaning density etc.  
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/ab1.png">
+
+</details>
+
+<details>
+<summary>Labs</summary>
+
+Sources
+
+https://github.com/Devipriya1921/VSDBabySoC_ICC2#getting-started-with-vsdbabysoc
+
+```ruby
+cd /nfs/png/disks/png_mip_gen6p9ddr_0032/nazahah/lab/d20
+git clone https://github.com/manili/VSDBabySoC.git
+git clone https://github.com/Devipriya1921/VSDBabySoC_ICC2.git
+git clone https://github.com/bharath19-gs/synopsys_ICC2flow_130nm.git
+git clone https://github.com/kunalg123/icc2_workshop_collaterals.git
+git clone https://github.com/google/skywater-pdk-libs-sky130_fd_sc_hd.git
+git clone https://github.com/kunalg123/sky130RTLDesignAndSynthesisWorkshop.git
+```
+```ruby
+gvim vsdbabysoc.tcl &
+gvim avsdpll.lib &
+```
+**vsdbabysoc.tcl**
+
+Modifying the contents to my path, remove -lib in read_lib commands, and replace MYCLK to clk since the clock used in the design is {clk}
+All of the commands have been inserted in gvim and the tool will run it once at a time
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/1.png">
+
+**avsdpll.lib**
+
+*Remove the unwanted pins*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/img2.png">
+
+*source vsdbabysoc.tcl*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/img3.png">
+
+**Report**
+Report area
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/img7_area.png">
+
+Report Power
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/img8_power.png">
+
+Report Timing
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/img9_timing.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_dayxxx20/img11_timing_2.png">
+
+Report Constraint
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/7.png">
+
+**Output Schematic**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/10.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/img5.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/11.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/11.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/12.png">
+
+*Performing Physical Design*
+
+```ruby
+gvim /home/pavday.s/physical_design/day_20/icc2_collaterals/standaloneFlow/top.tcl
+gvim /home/pavday.s/physical_design/day_20/icc2_collaterals/standaloneFlow/icc2_common_setup.tcl
+gvim /home/pavday.s/physical_design/day_20/icc2_collaterals/standaloneFlow/icc2_dp_setup.tcl
+gvim /home/pavday.s/physical_design/day_20/icc2_collaterals/standaloneFlow/init_design.read_parasitic_tech_example.tcl
+gvim /home/pavday.s/physical_design/day_20/icc2_collaterals/standaloneFlow/init_design.mcmm_example.auto_expanded.tcl
+gvim /home/pavday.s/physical_design/day_20/icc2_collaterals/standaloneFlow/pns_example.tcl
+```
+
+**Modifying files**
+1. genrate tclplus file
+  <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/18.png">
+
+top.tcl
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/top.tcl_last2.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/top.tcl_last1.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/top.tcl_last.png">
+
+icc2_common_setup.tcl
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_dayxxx20/icc_common.png">
+
+icc2_dp_setup.tcl
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/init_design.mcmm.pn">
+
+init_design.read_parasitic_tech_example.tcl
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_dayxxx20/int_design_read_parasitic.png">
+
+init_design.mcmm_example.auto_expanded.tcl
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_dayxxx20/init_design.mcmm.png">
+
+pns_example.tcl
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_dayxxx20/pns_example.png">
+
+**output**
+*invoking icc2_shell*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/21.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/22.png">
+
+In icc2_shell
+```ruby
+set_propagated_clock [all_clocks]             (Converting clock object from ideal clock to propagated clock)
+report_timing
+estimate_timing
+report_constraints -all_violators -nosplit -verbose -significant_digits 4 
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/23.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/24.png">
+
+*estimate_timing report could not be generated since there is no estimate timing rules detected on nets*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/25.png">
+
+**violators.rpt**
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/27.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/34.png">
+
+Observing for 40% of utilization
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/44.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/45.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/46.png">
+
+**Placement Report**
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/49.png">
+
+Modifying constraints
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/35.png">
+
+-Rerun the script in dc_shell and generate reports
+
+-Generated vsdbabysoc.sdc after synthesis
+-Modifying core utilisation= 40%in top.tcl
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/35.png">
+
+**Output Layout**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/41.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/42.png">
+
+**Slack**
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/51.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/52.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/53.png">
+
+</details>
+
+
+
+
+</details>
+
+# Day 21 Placement and CTS labs
+
+<details>
+<summary>Theory</summary>
+
+**Placement**
+
+    Pre-placement sanity check: floating pins in netlist, unconstrained pins, timing, pin direction mismatch, and etc.
+
+*What is placement?*
+
+    Standard cell
+    Placement stages including:
+        Global placement
+        Legalization
+        Detailed placement
+
+*Placement objectives*
+
+    Congestion
+    Performance
+    Timing
+    Routability
+    Runtime
+
+**Clock Tree Synthesis (CTS)**
+
+*Inputs of CTS*
+
+    Placement DB
+    CTS Spec file
+
+*CTS Steps*
+
+    Clustering
+    DRV Fixing
+    Insertion Delay Reduction
+    Power reduction
+    Balancing
+    Post-conditioning
+
+*CTS Quality Checks*
+
+    Skew
+    Pulse width
+    Duty cycle
+    Latency
+    Clock tree power
+    Signal integrity and Crosstalk
+    Timing analysis and fixing
+
+
+</details>
+
+<details>
+<summary>Labs</summary>
+
+Observing for 40% of utilization
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/44.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/45.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/46.png">
+
+**Placement Report**
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/49.png">
+
+Modifying constraints
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/35.png">
+
+-Rerun the script in dc_shell and generate reports
+
+-Generated vsdbabysoc.sdc after synthesis
+-Modifying core utilisation= 40%in top.tcl
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/35.png">
+
+**Output Layout**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/41.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/42.png">
+
+**Slack**
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/51.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/52.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/53.png">
+
+
+
+
+```ruby
+report_port_placement.rpt
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/49.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/50.png">
+
+```ruby
+icc2_output.txt
+```
+Post estimated timing report for the design shows the slack has met with the value of 0.71
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/51.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/52.png">
+
+```ruby
+vsdbabysoc.post_estimated_timing.rpt
+```
+-Post estimated timing qor shows there is no violating path reported with 92 nets having violations, 79 max trans violations, and 83 max cap violations.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/54.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/55.png">
+
+Summary of post estimated timing qor
+```ruby
+vsdbabysoc.post_estimated_timing.qor
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/53.png">
+
+*CTS Schematic design*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/56.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/57.png">
+
+
+
 </details>
