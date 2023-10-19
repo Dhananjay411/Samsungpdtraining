@@ -5913,6 +5913,234 @@ vsdbabysoc.post_estimated_timing.qor
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/56.png">
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/57.png">
 
+</details>
 
+
+ </details>
+
+# Day 22 CTS analysis labs
+
+<details>
+<summary>Theory</summary>
+	
+**CTS**
+
+**What is CTS?**
+
+1. Clock Tree Synthesis
+2. A technique for distributing the clock equally among all sequential parts of VLSI design
+3. It will balancing the delays to all clock input pins when the clock is distributed equally
+4. The goal of CTS is to minimize skew and insertion delay
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/ac1.png">
+
+
+**Various algo’s used for CTS**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/ac2.png">
+
+**H-tree algorithm**
+
+1. Find out all the flops present
+2. Find out the center of all the flops
+3. Trace clock port ot the center point
+4. Divide the core into two parts, trace both the parts and reach to each center
+5. From the center, again, divide the area into two and again trace till center at both the end
+6. Repeat this algo till the time we reach the flop clock pin
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/ac3.png">
+
+**Various CTS checks**
+
+1. Skew check
+2. Pulse width check
+3. Duty cycle check
+4. Latency check
+5. Power check
+6. Crosstalk Quality check
+7. Delta Delay Quality check
+8. Glitch Quality check
+
+**Some useful commands**
+
+This command checks and reports issues that can lead to bad QoR
+1. Clock tree structure
+2. Constraints
+3. Clock tree exceptions
+   
+```ruby
+check_clock_tree
+```
+-This command checks the design whether the placement done input is perfect or not
+-If it is legal, it is well and good
+
+```ruby
+check_legality
+```
+
+Else, use below command
+    
+```ruby
+legalize_placement
+```
+
+-There are some default constraints that CTS used, refer table below
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/ac4.png">
+
+-To edit those default constraints, use command below
+
+```ruby
+set_clock_tree_options
+```
+
+-Below are some examples (be careful keeping min and max values in sight)
+
+```ruby
+-max_capacitance
+-max_transition 
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/ac5.png">
+
+-IC Compiler uses the CTS design rule constraints for all optimization phases, as well as for CTS
+
+-For information about setting the clock tree synthesis design rule constraint, below are the commands
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/ac6.png">
+
+We can use ICC2 with debug mode by using below command
+
+Note: Please refer the ICC2 manual from synopsys
+
+```ruby
+-set cts_use_debug_mode true
+```
+
+The main command we need to do is as below command
+
+```ruby
+compile_clock_tree
+```
+
+**CTS results analysis**
+
+-We can use the report for the tree that has been built using below command
+
+```ruby
+report_clock_tree
+-summary 
+-settings 
+```
+*Other reports to see*
+1. Reports Max global skew
+2. Late/Early insertion delay
+3. Number of levels in clock tree
+4. Number of clock tree references (Buffers)
+5. Clock DRC violations
+
+-Also, another report related to clock timing report for paths that are related
+1. Reports actual
+2. Relevant skew
+3. Latency
+4. Interclock latency
+
+```ruby
+report_clock_timing
+–type skew
+```
+
+-After observing the reports, if we see the clock tree could be better, perform CTS and incremental physical optimization as command below
+
+-This process results in a timing optimized design with fully implemented clock trees
+
+*The command below does the following:*
+
+1. Performs clock tree power optimization
+2. Synthesizes(Re-Synthesizes) the clock trees
+3. Optimizes the clock trees
+4. Adjusts the I/O timing
+5. Performs RC extraction of the clock nets and computes accurate clock arrival times
+6. Performs placement and timing optimization
+
+```ruby
+clock_opt
+```
+
+-Sometimes, there will be some unrouted clock trees
+-To remove them, perform the command below
+
+```ruby
+remove_clock_tree
+```
+**After CTS, we do synthesis**
+
+-Before we synthesize the clock trees, use below command to verify that the clock trees are properly defined
+
+```ruby
+check_clock_tree 
+icc2_shell> check_clock_tree -clocks my_clk
+```
+
+**Another useful commands**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/ac7.png">
+
+</details>
+
+
+<details>
+<summary>Labs</summary>
+	
+**CTS Lab analysis**
+*Using 40% of utilization*
+
+Modifying constraints
+```ruby
+home/pavday.s/physical_design/day20/icc2_workshop_collaterals/standflow/vsdbabysoc.tcl
+
+```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/1.png">
+
+Rerun the script in dc_shell and generate reports
+
+Modifying core utilization = 40% in top.tcl
+
+**Output Layout**
+
+    The core of DAC now seems to be bigger in size as compared to previous run where core utilization = 7%
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/21.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/22.png">
+
+*In icc2 terminal*
+```ruby
+check_clock_tree                        (Checking the issues that can lead to bad QoR)
+check_legality                          (Checking the legality of the current placement and report out the violation statistics)
+report_clock_timing -type summary   
+report_clock_timing -type skew
+report_clock_timing -type latency
+report_clock_timing -type transition
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/1.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/2.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/3.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/4.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/5.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/6.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/7.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/8.png">
 
 </details>
