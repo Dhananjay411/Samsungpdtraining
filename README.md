@@ -6208,15 +6208,88 @@ Basically, route_opt command is used during routing stage
 <details>
 <summary>Labs</summary>
 
-**Resolving "cannot find usable buffers or inverters" Error in CTS**
+ *Three types of routing: P/G routing, Clock routing and Signal routing*
+
+**P/G routing:**
+
+This we can see in pns_example.tcl as shown in the below figure
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day23/1.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day23/2.png">
+
+**Clock Routing and signal routing:**
+1. place_opt: Place and optimize the current design
+2. clock_opt: Synthesize and route the clocks in the current design and then further optimize the design based on the propagated clock latencies
+3. route_auto: runs global routing, track assignment and detail routing in one step
+
+top.tcl
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/4.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day23/10.png">
+
+We need to add 3 lines between place_opt and clock_opt , to insert the clock buffers in the design.
+
+ ```ruby
+set_lib_cell_purpose -include cts {sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__buf_*}
+synthesize_clock_tree
+set_propagated_clock \[all_clocks]
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/5.png">
+
+*Resolving "cannot find usable buffers or inverters" Error in CTS*
 
 During the Clock Tree Synthesis (CTS) stage in the physical design flow, I encountered an error indicating that there were "cannot find usable buffers or inverters." This error occured due to a mismatch between the voltage settings in the library cells and the voltage used for setup in the design. Below are the steps taken to resolve this issue:
 
 **Identifying the Issue:** The first step was to identify the cause of the error. The error message pointed to a lack of available inverters and buffers, which are essential components in clock tree construction.
 
+**Using check_bufferability Command:** To gain further insights into the issue, I executed the *check_bufferability* command. This command is a valuable tool for identifying and diagnosing issues related to bufferability in the design.
 
-<img  width="1085" alt="" src="">
+```ruby
+check_bufferability -nets CLK -verbose
+```
 
-<img  width="1085" alt="" src="">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/7.png">
 
-<img  width="1085" alt="" src="">
+**Voltage Mismatch Detected:** The check_bufferability command revealed that the error was linked to a voltage mismatch. This mismatch occurred between the library cells used in the design and the voltage setting specified in the design setup.
+
+**Modifying MCMM File:** To address the voltage mismatch issue,I ensured that the library cells and the design setup both had the correct voltage settings. This typically involves editing the MCMM setup file associated with the design.
+
+**Re-Running the Flow:** After making the necessary changes to the MCMM file, I re-ran the CTS step. This time, the CTS process completed successfully without the "cannot find usable buffers or inverters" error.
+
+After running *place_opt*
+
+**gui window**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/1.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/2.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/3.png">
+
+
+**Clock Gating Lab**
+
+For clock gating, compile_ultra -incremental -gate_clock command is used at synthesis stage, the def and gate-level netlist generated after synthesis is given as input to the flow here ICGs are inserted in the design
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/7.png">
+
+ICGs insertion can be seen here
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/6.png">
+
+In below snapshot you can see the ICG cell, its ref_name is SNPS_CLOCK_GATE_HIGH_core_21, it contains latch from sky130 lib
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/9.png">
+
+</details>
+
+
+
+
+
+
+
+
+
+
