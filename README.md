@@ -6208,6 +6208,12 @@ Basically, route_opt command is used during routing stage
 <details>
 <summary>Labs</summary>
 
+**Resolving "cannot find usable buffers or inverters" Error in CTS**
+
+During the Clock Tree Synthesis (CTS) stage in the physical design flow, I encountered an error indicating that there were "cannot find usable buffers or inverters." This error occured due to a mismatch between the voltage settings in the library cells and the voltage used for setup in the design. Below are the steps taken to resolve this issue:
+
+**Identifying the Issue:** The first step was to identify the cause of the error. The error message pointed to a lack of available inverters and buffers, which are essential components in clock tree construction.
+
 
 <img  width="1085" alt="" src="">
 
