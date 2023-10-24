@@ -5,6 +5,30 @@
 - [Day-3-Combinational and sequential logic optimizations](#Day-3-Combinational-and-sequential-logic-optimizations)
 - [Day-4-Gate level simulation(GLS), Blocking Vs Non Blocking and Synthesis Simulation mismatch](#Day-4-Gate-level-simulation(GLS),-Blocking-Vs-Non-Blocking-and-Synthesis-Simulation-mismatch)
 - [Day-5-DFT](#Day-5-DFT)
+- [Day-6-Introduction to Logic Synthesis](#Day-6-Introduction-to-Logic-Synthesis)
+- [Day-7-Basic of STA](#Day-7-Basic-of-STA)
+- [Day-8-Advanced Costraints](#Day-8-Advanced-Costraints)
+- [Day-9-Optimizations](#Day-9-Optimizations)
+- [Day-10-Quality Checks](#Day-10-Quality-Checks)
+- [Day-11-SoC](#Day-11-SoC)
+- [Day-12-BabySoC Modelling](#Day-12-BabySoC-Modelling)
+- [Day-13-Post Synthesis Simulation](#Day-13-Post-Synthesis-Simulation)
+- [Day-14-SynopsysDC and Timing Analysis](#Day-14-SynopsysDC-and-Timing-Analysis)
+- [Day-15-Inception of EDA and PDK](#Day-15-Inception-of-EDA-and-PDK)
+- [Day-16-Chip Floorplanning and Standard Cells](#Day-16-Chip-Floorplanning-and-Standard-Cells)
+- [Day-17-Design Library Cell](#Day-17-Design-Library-Cell)
+- [Day-18-Pre Layout Timing analysis and Importance of good Clock Tree](#Day-18-Pre-Layout-Timing-analysis-and-Importance-of-good-Clock-Tree)
+- [Day-19-Final steps RTL to GDS](#Day-19-Final-steps-RTL-to-GDS)
+- [Day-20-Floorplanning and Powerplanning in ICC2](#Day-20-Floorplanning-and-Powerplanning-in-ICC2)
+- [Day-21-Placement and CTS Labs](#Day-21-Placement-and-CTS-Labs)
+- [Day-22-CTS Analysis Labs](#Day-22-CTS-Analysis-Labs)
+- [Day-23-Clock Gating Technique](#Day-23-Clock-Gating-Technique)
+
+
+
+Day-0-Installation
+Summary
+Getting started
   
 ## Day-0-Installation
 
