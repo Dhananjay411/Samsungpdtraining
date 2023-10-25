@@ -6307,13 +6307,104 @@ In below snapshot you can see the ICG cell, its ref_name is SNPS_CLOCK_GATE_HIGH
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/9.png">
 
 </details>
+</details>
+
+</details>
+
+# Day 24 Timing violations and ECO
+
+<details>
+<summary>Theory</summary>
 
 
+**Introduction to Engineering Change Order (ECO)**
+
+An Engineering Change Order (ECO) is a formal document used in engineering and manufacturing to control and document changes to a product's design or manufacturing processes. ECOs are commonly employed in industries such as aerospace, automotive, electronics, and other fields where product design and manufacturing precision is critical.
+
+**Key components of an Engineering Change Order typically include:**
+
+*1. Description of the Change:* This section outlines the specific details of the proposed change. It may include text, diagrams, and specifications to provide a clear understanding of what needs to be modified.
+
+*2. Justification:* ECOs include a rationale or justification for why the change is necessary. This might involve issues like design flaws, safety concerns, cost reduction, regulatory compliance, or customer feedback.
+
+*3. Impact Assessment:* An ECO should detail the expected impact of the change on various aspects of the product or process. This could include cost, schedule, and potential effects on other components or systems.
+
+*4. Proposed Solution:* The ECO should describe the proposed solution or modification, including technical details, engineering drawings, and specifications. It should make clear what needs to be done to implement the change.
+
+*5. Authorization:* ECOs require approval from relevant stakeholders, such as engineers, quality control, project managers, and sometimes customers or regulatory authorities. The ECO should specify who needs to approve the change.
+
+*6. Implementation Plan:* This section outlines the steps and procedures to implement the change, including any testing or verification processes.
+
+*7.Documentation Updates:* ECOs often necessitate updates to technical documents, manuals, drawings, or other relevant records. The ECO should specify which documents require revision.
+
+*8. Timeline:* An ECO should include a timeline for the change, outlining when the implementation should begin and when it is expected to be completed.
+
+*9. Verification and Validation:* This section details how the changes will be verified and validated to ensure that they meet the intended goals and do not introduce new problems.
+
+*10. Review and Sign-off:* ECOs typically undergo a review and approval process by relevant stakeholders. This may involve cross-functional teams and departments.
+
+Once an ECO is approved, it becomes an official instruction for making changes to a product's design, manufacturing, or related processes. The ECO helps maintain product quality, ensure compliance with standards and regulations, and manage engineering changes systematically.
+ECOs are essential for quality control, traceability, and continuous improvement in industries where product specifications and standards are critical. They help organizations maintain control over their products and processes as they evolve over time
 
 
+**ECO Stratergy**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/aaaaaaaaaaaaaaaaaaaaaa.png">
+
+Developing a sound Engineering Change Order (ECO) strategy is essential for organizations, especially those in engineering, manufacturing, and product development fields. An effective ECO strategy ensures that changes to product design, manufacturing processes, or related areas are managed efficiently, while minimizing risks and maintaining product quality. Here are some key components of an ECO strategy:
+
+1. *Clear Process Definition:*
+Clearly define the process for initiating, reviewing, and approving ECOs. Ensure all stakeholders understand their roles and responsibilities in the process.
+
+2. *Documentation Standards:*
+Establish standards for documenting ECOs. This includes format, required content, and templates. Consistency in documentation helps streamline the process.
+
+3. *Change Control Board (CCB):*
+Form a Change Control Board or committee responsible for reviewing and approving ECOs. Include cross-functional representatives from engineering, quality control, manufacturing, and other relevant departments.
+
+4. *Prioritization Criteria:*
+Develop criteria for prioritizing ECOs. Consider factors like safety, regulatory compliance, cost savings, and customer impact. This helps determine the urgency of changes.
+
+5. *Risk Assessment:*
+Implement a process for assessing the potential risks associated with ECOs. This includes considering the impact on existing products, processes, schedules, and budgets.
+
+6. *Change Impact Analysis:*
+Establish a method for analyzing and documenting the impact of proposed changes on the product, manufacturing process, supply chain, and related documentation. This is crucial for understanding the full scope of a change.
+
+7. *Approval Workflow:*
+Define a clear approval workflow, including the individuals or teams responsible for approving ECOs at different stages. Ensure that this workflow aligns with the organization's hierarchy and operational needs.
+
+8. *Communication and Collaboration:*
+Foster effective communication and collaboration among stakeholders involved in the ECO process. Use technology and tools, such as document management systems, to facilitate this.
+
+9. *Verification and Validation:*
+Specify procedures for verifying and validating ECOs. Define how changes will be tested and evaluated to ensure they meet the intended objectives without introducing new issues.
+
+10. *Documentation Updates:*
+Outline processes for updating technical documents, manuals, drawings, and any other relevant records affected by the ECO. Ensure that this is done systematically.
+
+11. Change Tracking and Auditing:*
+Implement a system for tracking the status and history of ECOs. Regularly audit the ECO process to identify areas for improvement and compliance with standards.
+
+12. *Training and Awareness:*
+Train employees and stakeholders involved in the ECO process on its procedures, standards, and best practices. Ensure they are aware of the importance of following the ECO strategy.
+
+13. *Continuous Improvement:*
+Continuously monitor the ECO process for opportunities to enhance efficiency and reduce cycle times. Regularly review the strategy and update it as needed.
+
+14. *Feedback Mechanism:*
+Establish a mechanism for collecting feedback from employees and stakeholders involved in the ECO process to identify challenges and areas for improvement.
+
+15. *Documentation Retention:*
+Establish a policy for retaining ECO documentation and associated records for compliance and historical reference.
+An effective ECO strategy helps organizations manage change systematically, maintain product quality, and comply with standards and regulations while supporting continuous improvement in product design and manufacturing processes. It also helps in reducing the likelihood of errors, rework, and potential negative impacts on customers and the bottom line.
 
 
+</details>
 
+
+<details>
+<summary>Labs</summary>
 
 
 
