@@ -6937,12 +6937,12 @@ In Schematic:
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/7.png">
 
-To ease up the set-up analysis two cells core/U617(incr = 0.1822) and core/315(incr = 0.3852) are selected for resizing based in delay they are providing.
+To ease up the set-up analysis two cells core/U449(incr = 0.12) and core/U68(incr = 0.36) are selected for resizing based in delay they are providing.
 Above names are instance name , to get refence name i.e library cell attached to it use below command:
 ```ruby
-icc2_shell>>  get_lib_cells -of_objects [get_cells core/U617]
+icc2_shell>>  get_lib_cells -of_objects [get_cells core/U449]
 {sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__xor2_1} 
-icc2_shell>> get_lib_cells -of_objects [get_cells core/U315]
+icc2_shell>> get_lib_cells -of_objects [get_cells core/U68]
 {sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand2_1}
 ```
 
