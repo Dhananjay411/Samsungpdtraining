@@ -6406,5 +6406,25 @@ An effective ECO strategy helps organizations manage change systematically, main
 <details>
 <summary>Labs</summary>
 
+**1. Set-up and Hold Analysis before solving violations**
+
+**1.1 Timing violations are resolved using two methods in this design, sizing the cell and inserting buffer/inveretr pairs.**
+
+**1.2 Sizing the cell:**
+ command: ```size_cell <cell_to_be_replaced> <lib_cell_to_be_replaced_with>```
+ Incase of set-up violations we can up-size the cells (increase the drive strenght of of cell => decreases the delay)
+
+**1.3 Inserting a buffer:**
+ command: ```insert_buffer <pin_where_buffer_is_inserted> <lib_cell-buffer/buffer>```
+ To remove the buffer use command ```remove_buffer <name_of_inserted_buffer>```
+
+**1.4 Below is the analysis of various reports before reducing violations.**
+
+Timing analysis :
+command:```report_global_timing -significant_digits 4```
 
 
+</details>
+
+
+<details>
