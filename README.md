@@ -5995,12 +5995,16 @@ This command checks and reports issues that can lead to bad QoR
 ```ruby
 check_clock_tree
 ```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/clock_timing.png">
 -This command checks the design whether the placement done input is perfect or not
 -If it is legal, it is well and good
 
 ```ruby
 check_legality
 ```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/man.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/man1.png">
 
 Else, use below command
     
@@ -6075,6 +6079,7 @@ report_clock_tree
 report_clock_timing
 –type skew
 ```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/clock_timing.png">
 
 -After observing the reports, if we see the clock tree could be better, perform CTS and incremental physical optimization as command below
 
@@ -6107,6 +6112,9 @@ remove_clock_tree
 check_clock_tree 
 icc2_shell> check_clock_tree -clocks my_clk
 ```
+command: ```synthesized_clock_tree```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/synthesize_clock_trees.png">
 
 **Another useful commands**
 
@@ -6119,53 +6127,121 @@ icc2_shell> check_clock_tree -clocks my_clk
 <summary>Labs</summary>
 	
 **CTS Lab analysis**
-*Using 40% of utilization*
 
-Modifying constraints
-```ruby
-home/pavday.s/physical_design/day20/icc2_workshop_collaterals/standflow/vsdbabysoc.tcl
-
-```
-
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/1.png">
-
-Rerun the script in dc_shell and generate reports
-
-Modifying core utilization = 40% in top.tcl
-
-**Output Layout**
-
-    The core of DAC now seems to be bigger in size as compared to previous run where core utilization = 7%
-
-
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/21.png">
-
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/20/22.png">
-
-*In icc2 terminal*
-```ruby
-check_clock_tree                        (Checking the issues that can lead to bad QoR)
-check_legality                          (Checking the legality of the current placement and report out the violation statistics)
-report_clock_timing -type summary   
-report_clock_timing -type skew
-report_clock_timing -type latency
-report_clock_timing -type transition
-```
+Command: ```check_clock_tree```
+ Checks the clock trees of current design for possible problems with netlist, timing constraints, clock constraints, routing constraints, or other tool configurations that can adversely impact clock tree synthesis.
+ 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/1.png">
-
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/2.png">
+
+-As we can see in above image there is no errors but only one warning under refence cells section.
+-CTS-904 means some clock refernce have no LEQ cell specified fo resizing.
+-This warning arise because tool cannot find cell of different size to replace with while performing optimization and this warning can be ignored as it wont affect further flow.
+
+Command: ```check_legality```
+This command checks he legality of current placement and output a report ofviolations statistics.
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/3.png">
 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/4.png">
+reported violations above can be classified as:
+
+```ruby
+Two objects overlap.
+A cell violates a pnet.
+A cell is illegal at a site.
+A cell is not aligned with a site.
+A cell has an illegal orientation.
+A cell spacing rule is violated.
+A layer rule is violated.
+A cell is in the wrong region.
+Two cells violate cts margins.
+Two cells violate coloring.
+```
+Command: ```clock_opt```
+The default behavior of this command is as follows:
+Synthesizes and optimizes the clock trees.
+Completes the detail routing of the clock trees.
+Further optimizes the design for timing,electrical DRC violations, area, power, and routability, based on actual propagated clock laten- cies, and legalizes the design placement.
+Adjusts the I/O timing
+Performs RC extraction of the clock nets and computes accurate clock arrival times
+Performs placement and timing optimization.
+
+
+
+There are some default constraints that CTS used, refer to values below
+```ruby
+max_trans  - 0.5ns
+max_cap    - 0.6pF
+max_fanout - 2000
+```
+To modify these default constraints, use commands below
+```set_clock_tree_options``` : Specifies settings like target skew or latency for clocks, exception duplication across modes or fanout-based nondefault routing rule limit.
+
+IC Compiler uses the CTS design rule constraints for all optimization phases, as well as for CTS
+
+Command : ```set cts_use_debug_mode true```
+We can use ICC2 with debug mode with above command.
+
+Command : ```report_clock_timing -type summary```
+Specify a summary report, which shows the worst instances of transition time, latency and skew over the clock networks or subnetworks of interest.
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/5.png">
 
+```rp-+``` means rising transition(r), propagated clock(p) in the clock pin from launch to capture.
+Clock Skew is the time difference between arrival of the same edge of a clock signal at the Clock pin of the capture flop and launch flop. Any signal takes some time to travel from one point to another. The time taken by Clock signal to reach from clock source to the clock pin of a particular flip flop is called as Clock latency. Clock skew can also be termed as the difference between the 'capture flop latency' and the 'launch flop latency'.
+In this report we can find the maximum setup launch latency of 2.45 ns and Minimum setup capture latency of 2.21.
+func1 is the corner whole flow PD flow was ran on and it represent corner sky130_fd_sc_hd__tt_025C_1v80.
+
+Command : ```report_clock_timing -type skew```
+Specify a skew report.
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/6.png">
 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/7.png">
+```
+ Skew is the differnce in arrival time of clock at launch flop and capture flop.
+* In our design we can see there's no skew.
+* Latency is found to be 3 as expected(latency was set based on sdc file generated  'set_clock_latency 1
+```
+Command : ```report_clock_timing -type latency```
 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/7.png">
+```ruby
+Clock latency is the time taken by a clock signal to  move from the clock source to the clock pin of a particular flip-flop.
+* In sdc  command 'set_clock_latency 1  [get_clocks clk]'  is setting network latency to 1 and  command 'set_clock_latency -source 2 [get_clocks clk]' is setting source latencyto 2. same can be observed in above report.
+```
+Command : ```report_global_timing```
+The report_global_timing command generates a top-level summary of the timing for the design. The report shows the worst negative slack per endpoint, the sum of all worst negative slacks per endpoint, and a number of violating endpoints. By default, each violating endpoint is onlycounted one time and only one worst slack at each violating endpointcontributes to TNS and WNS. With the -groups option, each endpoint con-tributes to the worst negative slack and total negative slack of each group in which it has a violating slack.
+
+
+command: ``report_clock_timing```
+This is a command used to generate a timing report for a specific clock signal or a set of clock signals in a digital design. It provides information about the timing relationships between different elements in the design.
+
+```-type_transition:``` This part of the command specifies the type of transition for which the timing information is being reported. In digital design, "type transition" refers to the timing analysis for either the rising edge or falling edge of a signal. Timing analysis is crucial to ensure that signals transition within specified limits to guarantee proper operation of the design.
+
+The specific usage and syntax of this command may vary depending on the EDA tool you are using and the specific context of your digital design project. If you have a particular use case or question related to this command, please provide more details, and I can offer more precise information or assistance.
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/8.png">
+
+command: ```compile_clock_tree```
+The "compile_clock_tree" command or process generally refers to the step in synthesis where the EDA tool analyzes the design to generate the clock distribution network. This includes:
+
+*Buffer Insertion:* The EDA tool determines the locations where clock buffers are needed to ensure that the clock signal reaches all parts of the design with minimal skew and within the specified clock-to-q (clock-to-output) constraints.
+
+*Clock Tree Optimization*: The tool optimizes the clock tree for factors like skew, power consumption, and area usage. This may involve selecting different types of clock buffers, adjusting buffer sizing, and optimizing the clock network topology.
+
+*Clock Gating:* In some designs, clock gating cells may be inserted to reduce power consumption when parts of the design are not actively processing data.
+
+*Clock Routing:* The EDA tool routes the clock signal to all sequential elements (flip-flops, latches, etc.) in the design.
+
+*Clock Tree Synthesis Reports:* After the "compile_clock_tree" step is completed, the tool typically generates reports that provide information about the clock distribution network's characteristics, such as clock tree skew, clock tree depth, and power consumption.
+
+The exact syntax and usage of the "compile_clock_tree" command can vary depending on the EDA tool you're using. It is an automated process carried out by the tool based on the design's requirements and the constraints provided by the user.
+
+Overall, the generation of an optimized clock tree is crucial to ensure that the clock signal is reliably and efficiently distributed in the design, which is essential for meeting timing requirements and minimizing power consumption in modern digital designs
+
+**buffer**
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/cts_buffer.png">
+
+**CTS Schematic**
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day22/cts_schematic.png">
 
 </details>
 
@@ -6178,6 +6254,33 @@ report_clock_timing -type transition
 
 **What have been done till now?**
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/ad1.png">
+
+**Clock Gating**
+Clock gating is a technique used in VLSI (Very Large Scale Integration) design to reduce power consumption in digital circuits, particularly in synchronous designs. It involves controlling when the clock signal is applied to specific portions of a circuit, allowing those portions to be turned off when they are not in use. This helps to reduce dynamic power consumption in integrated circuits.
+
+Here's how clock gating works:
+
+**Clock Signal:** In synchronous digital circuits, a clock signal is used to synchronize the operations of various elements. The clock signal is typically active for the entire duration of the operation.
+
+**Clock Gating Logic:** Clock gating involves inserting logic gates between the clock source and the clock input of certain elements in the design. This gating logic is used to control whether the clock signal is allowed to pass through to the destination registers or not.
+
+**Enable Signal:** The gating logic generates an enable signal, which determines whether the clock should be allowed to propagate to the registers and combinational logic. When the enable signal is asserted, the clock is enabled, and when it is deasserted, the clock is gated, preventing it from reaching the destination registers.
+
+**Controlled Clocking:** By controlling when the clock is enabled or gated, designers can ensure that specific parts of the circuit only operate when necessary. For example, a portion of the circuit may be idle during certain cycles, so the clock can be gated to save power.
+
+**Power Savings:** Clock gating reduces dynamic power consumption because it minimizes the switching activity in the clocked elements. When the clock is gated, the flip-flops or latches in the registers do not toggle, which results in reduced power consumption.
+
+**Benefits of Clock Gating in VLSI Design:**
+
+**Power Reduction:** Clock gating is an effective technique for reducing dynamic power consumption, which is a significant concern in modern VLSI design, especially in battery-powered devices.
+
+**Improved Performance:** It can also improve the performance of the circuit by allowing certain portions to operate at higher clock frequencies while others are temporarily idle.
+
+**Thermal Management:** Clock gating helps manage the thermal characteristics of a chip by reducing power dissipation.
+
+**Timing Closure:** It can aid in achieving timing closure in complex designs by minimizing clock distribution delays.
+
+However, it's important to design clock gating logic carefully to avoid introducing setup and hold time violations, which can lead to functional issues and reduced performance. Additionally, excessive clock gating can make the design more complex and harder to verify, so it should be used judiciously.
 
 **Advanced H-Tree for million flop clock end-points randomly placed**
 
@@ -6211,16 +6314,31 @@ It is being inserted in synthesis stage and being optimized in the implementatio
    
 **Routing**
 
-**What is routing?**
+In Very Large Scale Integration (VLSI) design, routing is a critical step in the physical design process. It involves connecting the various components, such as gates, flip-flops, and other logic cells, on an integrated circuit (IC) using metal wires. Routing is essential for ensuring that data signals and clock signals can flow between these components as intended.
 
-The process of making physical connections between signal pins using metal layers
+Here are the key aspects of routing in VLSI design:
 
-**Types of routing**
+**Global Routing:** Global routing, also known as channel routing, deals with the high-level routing of signals across large sections of the chip. It determines the major metal layers and the general paths for signal flow. Global routing helps avoid congestion and ensures that different blocks or regions of the chip can communicate with each other efficiently.
 
-P/G routing
-Clock routing
-Signal routing: Global & Detailed routing
-Basic flow of routing
+**Detailed Routing:** After global routing, detailed routing comes into play. This stage involves the precise placement and routing of wires at a local level, connecting individual cells within blocks. It considers the specific locations of cells, their sizes, and the available routing resources.
+
+**Metal Layers:** In VLSI, routing is typically done using multiple metal layers, each with its own purpose and characteristics. These metal layers are numbered, with lower-numbered layers generally being used for more critical signals due to their lower resistance. Metal layers are used for both horizontal and vertical routing.
+
+**Wire Sizing:** In advanced VLSI design, the size and width of wires are carefully selected to meet timing, power, and signal integrity requirements. Wider wires have lower resistance and can carry more current but consume more area.
+
+**Obstacle Avoidance:** Routing must avoid obstacles, which can include previously placed wires, standard cells, and other physical design elements. Algorithms are used to find routes around these obstacles.
+
+**Clock Tree Routing:** A crucial part of VLSI design is routing the clock signal. The clock tree is a specialized network of clock distribution wires that ensures synchronous operation of all components on the chip.
+
+**Multi-Layer Routing:** VLSI designs use multiple metal layers, with each layer offering a different routing resource. Multi-layer routing allows designers to efficiently connect different components and manage congestion.
+
+**Design Rule Checking (DRC):** After routing, the design must undergo a DRC process to ensure that the layout adheres to the manufacturing rules, such as minimum spacing, width, and other fabrication constraints.
+
+**Signal Integrity and Timing Analysis:** Once routing is completed, signal integrity and timing analysis are conducted to verify that signals propagate correctly and meet required timing constraints.
+
+**Iterative Process:** Routing often involves an iterative process where the designer may need to make adjustments to meet design goals, such as performance, power consumption, or area utilization.
+
+Efficient and optimal routing is essential to ensure that the VLSI design meets its performance, power, and area targets while avoiding issues like congestion and signal integrity problems. VLSI design tools, such as place-and-route tools, are used to automate and optimize the routing process.
 
 Basically, route_opt command is used during routing stage
 
@@ -6232,6 +6350,14 @@ Basically, route_opt command is used during routing stage
 <details>
 <summary>Labs</summary>
 
+**gui window**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/1.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/2.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/3.png">
+
  *Three types of routing: P/G routing, Clock routing and Signal routing*
 
 **P/G routing:**
@@ -6242,6 +6368,25 @@ This we can see in pns_example.tcl as shown in the below figure
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day23/2.png">
 
+```place_opt``` is used to place and optimize the current design.
+To perform coarse placement, physical optimization, and legalization with a single command, use the place_opt command.
+This command supports multithreading and uses the number of threads specified by the set_host_options -max_cores command.
+The place_opt command consists of the following stages:
+Initial placement (initial_place): During this stage, the tool merges the clock-gating logic and performs coarse placement. If a block contains scan chains that are annotated by reading a SCANDEF file, the tool also performs scan chain optimization.
+Initial DRC violation fixing (initial_drc): During this stage, the tool removes existing buffer trees and performs high-fanout-net synthesis and electrical DRC violation fixing.
+Initial optimization (initial_opto): During this stage, the tool performs timing, area, congestion, and leakage-power optimization.
+Final placement (final_place): During this stage, the tool performs incremental placement to improve timing and congestion, and legalizes the design.
+Final optimization (final_opto):During this stage, the tool performs further optimization and legalization to improve timing and congestion.
+When you run the place_opt command, by default, the tool runs all stages of placement and optimization.
+To run these stages individually use command like ```icc2_shell> place_opt -from initial_drc```
+
+```clock_opt``` is used to synthesize and route the clocks, and then further optimize the design based on the propagated clock latencies
+
+```route_auto``` is used to run global routing, trace assignment, and detailed routing at once/automatically
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day23/10.png">
+
+
+
 **Clock Routing and signal routing:**
 1. place_opt: Place and optimize the current design
 2. clock_opt: Synthesize and route the clocks in the current design and then further optimize the design based on the propagated clock latencies
@@ -6251,16 +6396,51 @@ top.tcl
 
 <img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/4.png">
 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_%23day23/10.png">
+Previously there was an error while running placement to adress this issue use following solution:
+Add below commands between ```place_opt``` and ```clock_opt.```
+```ruby
+set_lib_cell_purpose -include cts {sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__buf_*}
+synthesize_clock_tree
+set_propagated_clock [all_clocks]
+```
+    And change the volage value in init_design.mcmm_example.auto_expanded.tcl as follows:
+
 
 We need to add 3 lines between place_opt and clock_opt , to insert the clock buffers in the design.
 
- ```ruby
-set_lib_cell_purpose -include cts {sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__buf_*}
-synthesize_clock_tree
-set_propagated_clock \[all_clocks]
-```
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/5.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/vltg_change.png">
+
+
+**Below are the images of layout in each stage:**
+
+**Floorplan:**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/floorplan.png">
+
+**CTS:**
+
+We can observe the CTS Buffer inserted in 'visual_mode' window on right side.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/cts_buffer.png">
+
+To view where buffers are inserted unselect all other option in above window and select CTS buffers(total 18 buffers are inserted after CTS) and apply the changes.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/buffer_zoommmmmmmmmmm.png">
+
+**Post Routing:**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/routing.png">
+
+**Timing Reports:**
+For setup
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/report_timing_max.png">
+
+for hold
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/report_timing_min.png">
+
+After proper running of place_opt clock_opt and route_auto, optimization is done properly.
+Set-up violations has reduced and slack got improved from '-2.91' to '0.00975'.
+Similarly hold slack has improved from '-0.19' to '0.00798'.
 
 *Resolving "cannot find usable buffers or inverters" Error in CTS*
 
@@ -6283,14 +6463,6 @@ check_bufferability -nets CLK -verbose
 **Re-Running the Flow:** After making the necessary changes to the MCMM file, I re-ran the CTS step. This time, the CTS process completed successfully without the "cannot find usable buffers or inverters" error.
 
 After running *place_opt*
-
-**gui window**
-
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/1.png">
-
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/2.png">
-
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsung_pd_day_23/3.png">
 
 
 **Clock Gating Lab**
@@ -6406,25 +6578,421 @@ An effective ECO strategy helps organizations manage change systematically, main
 <details>
 <summary>Labs</summary>
 
-**1. Set-up and Hold Analysis before solving violations**
+Timing violations are resolved using two methods in this design, sizing the cell and inserting buffer/inveretr pairs.
 
-**1.1 Timing violations are resolved using two methods in this design, sizing the cell and inserting buffer/inveretr pairs.**
+*Sizing the cell:*
+command: ```size_cell <cell_to_be_replaced> <lib_cell_to_be_replaced_with>```
+Incase of set-up violations we can up-size the cells (increase the drive strenght of of cell => decreases the delay)
 
-**1.2 Sizing the cell:**
- command: ```size_cell <cell_to_be_replaced> <lib_cell_to_be_replaced_with>```
- Incase of set-up violations we can up-size the cells (increase the drive strenght of of cell => decreases the delay)
+*Inserting a buffer:*
+command: ```insert_buffer <pin_where_buffer_is_inserted> <lib_cell-buffer/buffer>```
+To remove the buffer use command ```remove_buffer <name_of_inserted_buffer>```
 
-**1.3 Inserting a buffer:**
- command: ```insert_buffer <pin_where_buffer_is_inserted> <lib_cell-buffer/buffer>```
- To remove the buffer use command ```remove_buffer <name_of_inserted_buffer>```
+Below is the analysis of various reports before reducing violations.
 
-**1.4 Below is the analysis of various reports before reducing violations.**
+*Timing analysis :*
+command: ```report_global_timing -significant_digits 4```
 
-Timing analysis :
-command:```report_global_timing -significant_digits 4```
 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/3.png">
+
+In above report for set-up case, we can observe worst negative slack(WNS) is '-0.06', total negative slack(TNS) is -0.28 and total violations of 15. 
+All the set-up violations are found in reg2reg path. (reg-to-reg is a path where both startpoint and endpoint are sequential elements; i.e. either an edge-triggered element or a level sensitive element.)
+No Hold Violations are there in this designs.
+Command: ```report_timing -capacitance -transition_time -significant_digits 4 -delay_type <max_or_min>```
+
+```report_global_timing```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/3.png">
+
+```ruby
+icc2_shell> report_timing
+****************************************
+Report : timing
+        -path_type full
+        -delay_type max
+        -max_paths 1
+        -report_by design
+Design : vsdbabysoc
+Version: T-2022.03-SP3-VAL
+Date   : Wed Oct 25 12:44:49 2023
+****************************************
+
+  Startpoint: core/CPU_is_addi_a3_reg (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: core/CPU_Xreg_value_a4_reg[3][31] (rising edge-triggered flip-flop clocked by clk)
+  Mode: func1
+  Corner: func1
+  Scenario: func1
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.35      0.35
+
+  core/CPU_is_addi_a3_reg/CLK (sky130_fd_sc_hd__dfxtp_1)
+                                                   0.00      0.35 r
+  core/CPU_is_addi_a3_reg/Q (sky130_fd_sc_hd__dfxtp_1)
+                                                   0.46      0.82 r
+  core/U444/Y (sky130_fd_sc_hd__nor2_1)            0.08      0.89 f
+  core/U447/Y (sky130_fd_sc_hd__nand2_1)           0.10      0.99 r
+  core/U449/Y (sky130_fd_sc_hd__nand2_2)           0.15      1.15 f
+  core/U450/X (sky130_fd_sc_hd__a22o_1)            0.26      1.41 f
+  core/U540/X (sky130_fd_sc_hd__xor2_1)            0.17      1.58 f
+  core/ctmTdsLR_1_495/X (sky130_fd_sc_hd__o21a_1)
+                                                   0.20      1.78 f
+  core/U541/Y (sky130_fd_sc_hd__a21oi_2)           0.15      1.93 r
+  core/U543/Y (sky130_fd_sc_hd__o21ai_1)           0.12      2.05 f
+  core/ctmTdsLR_1_504/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.18      2.24 r
+  core/U548/Y (sky130_fd_sc_hd__o21ai_1)           0.12      2.36 f
+  core/ctmTdsLR_1_519/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.19      2.54 r
+  core/U554/Y (sky130_fd_sc_hd__o21ai_1)           0.13      2.67 f
+  core/ctmTdsLR_1_520/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.19      2.86 r
+  core/U560/Y (sky130_fd_sc_hd__o21ai_1)           0.13      2.99 f
+  core/ctmTdsLR_1_521/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.20      3.19 r
+  core/U566/Y (sky130_fd_sc_hd__o21ai_1)           0.18      3.37 f
+  core/ctmTdsLR_1_522/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.22      3.59 r
+  core/U572/Y (sky130_fd_sc_hd__o21ai_1)           0.12      3.72 f
+  core/ctmTdsLR_1_523/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.18      3.90 r
+  core/U578/Y (sky130_fd_sc_hd__o21ai_1)           0.13      4.02 f
+  core/ctmTdsLR_1_524/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.18      4.20 r
+  core/U584/Y (sky130_fd_sc_hd__o21ai_1)           0.14      4.34 f
+  core/ctmTdsLR_1_525/Y (sky130_fd_sc_hd__nand2_1)
+                                                   0.09      4.44 r
+  core/ctmTdsLR_2_526/Y (sky130_fd_sc_hd__nand2_1)
+                                                   0.06      4.50 f
+  core/U88/COUT (sky130_fd_sc_hd__fa_1)            0.38      4.88 f
+  core/U87/COUT (sky130_fd_sc_hd__fa_1)            0.39      5.27 f
+  core/U314/COUT (sky130_fd_sc_hd__fa_1)           0.40      5.66 f
+  core/U313/COUT (sky130_fd_sc_hd__fa_1)           0.42      6.08 f
+  core/U302/Y (sky130_fd_sc_hd__clkinv_1)          0.07      6.15 r
+  core/U589/Y (sky130_fd_sc_hd__o21ai_0)           0.09      6.24 f
+  core/U81/COUT (sky130_fd_sc_hd__fa_1)            0.42      6.65 f
+  core/U80/COUT (sky130_fd_sc_hd__fa_1)            0.41      7.06 f
+  core/U318/COUT (sky130_fd_sc_hd__fa_1)           0.39      7.45 f
+  core/U312/COUT (sky130_fd_sc_hd__fa_1)           0.40      7.85 f
+  core/U76/COUT (sky130_fd_sc_hd__fa_1)            0.42      8.27 f
+  core/U73/Y (sky130_fd_sc_hd__clkinv_1)           0.07      8.35 r
+  core/U591/Y (sky130_fd_sc_hd__o21ai_1)           0.10      8.45 f
+  core/U71/COUT (sky130_fd_sc_hd__fa_1)            0.40      8.85 f
+  core/U311/COUT (sky130_fd_sc_hd__fa_1)           0.39      9.24 f
+  core/U317/COUT (sky130_fd_sc_hd__fa_1)           0.39      9.63 f
+  core/U592/X (sky130_fd_sc_hd__xor2_1)            0.18      9.81 r
+  core/U68/Y (sky130_fd_sc_hd__nand2_1)            0.36     10.17 f
+  core/U609/Y (sky130_fd_sc_hd__o22ai_1)           0.33     10.51 r
+  core/CPU_Xreg_value_a4_reg[3][31]/D (sky130_fd_sc_hd__dfxtp_4)
+                                                   0.00     10.51 r
+  data arrival time                                         10.51
+
+  clock clk (rise edge)                           10.00     10.00
+  clock network delay (propagated)                 0.50     10.50
+  core/CPU_Xreg_value_a4_reg[3][31]/CLK (sky130_fd_sc_hd__dfxtp_4)
+                                                   0.00     10.50 r
+  library setup time                              -0.05     10.45
+  data required time                                        10.45
+  ------------------------------------------------------------------------
+  data required time                                        10.45
+  data arrival time                                        -10.51
+  ------------------------------------------------------------------------
+  slack (VIOLATED)                                          -0.06
+```
+In above report we can observe that set-up is violating with the slack of '-0.06' and hold is met with slack of '0.012'.
+We can observe that cells with lower drive strength are offering huge increment(delay).
+We can also observe that cells like core/U470 has huge capacitance which might be caused due to high fanout.
+Attribute 'r' means rising signal and 'f' means falling signal to that particular pin.
+Its possible to see this timing path in layout using gui of icc2_shell:
+In Layout:
+
+after sizing the cell ```size_cell core/U68 sky130_fd_sc_hd__nand2_2``` 
+
+report_global_timing
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/4.png">
+
+after resizing the cell the slack is reducing 
+
+```report_timing```
+```ruby
+icc2_shell> report_timing
+****************************************
+Report : timing
+        -path_type full
+        -delay_type max
+        -max_paths 1
+        -report_by design
+Design : vsdbabysoc
+Version: T-2022.03-SP3-VAL
+Date   : Wed Oct 25 12:45:49 2023
+****************************************
+
+  Startpoint: core/CPU_is_addi_a3_reg (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: core/CPU_Xreg_value_a4_reg[10][30] (rising edge-triggered flip-flop clocked by clk)
+  Mode: func1
+  Corner: func1
+  Scenario: func1
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.35      0.35
+
+  core/CPU_is_addi_a3_reg/CLK (sky130_fd_sc_hd__dfxtp_1)
+                                                   0.00      0.35 r
+  core/CPU_is_addi_a3_reg/Q (sky130_fd_sc_hd__dfxtp_1)
+                                                   0.46      0.82 r
+  core/U444/Y (sky130_fd_sc_hd__nor2_1)            0.08      0.89 f
+  core/U447/Y (sky130_fd_sc_hd__nand2_1)           0.10      0.99 r
+  core/U449/Y (sky130_fd_sc_hd__nand2_2)           0.15      1.15 f
+  core/U450/X (sky130_fd_sc_hd__a22o_1)            0.26      1.41 f
+  core/U540/X (sky130_fd_sc_hd__xor2_1)            0.17      1.58 f
+  core/ctmTdsLR_1_495/X (sky130_fd_sc_hd__o21a_1)
+                                                   0.20      1.78 f
+  core/U541/Y (sky130_fd_sc_hd__a21oi_2)           0.15      1.93 r
+  core/U543/Y (sky130_fd_sc_hd__o21ai_1)           0.12      2.05 f
+  core/ctmTdsLR_1_504/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.18      2.24 r
+  core/U548/Y (sky130_fd_sc_hd__o21ai_1)           0.12      2.36 f
+  core/ctmTdsLR_1_519/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.19      2.54 r
+  core/U554/Y (sky130_fd_sc_hd__o21ai_1)           0.13      2.67 f
+  core/ctmTdsLR_1_520/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.19      2.86 r
+  core/U560/Y (sky130_fd_sc_hd__o21ai_1)           0.13      2.99 f
+  core/ctmTdsLR_1_521/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.20      3.19 r
+  core/U566/Y (sky130_fd_sc_hd__o21ai_1)           0.18      3.37 f
+  core/ctmTdsLR_1_522/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.22      3.59 r
+  core/U572/Y (sky130_fd_sc_hd__o21ai_1)           0.12      3.72 f
+  core/ctmTdsLR_1_523/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.18      3.90 r
+  core/U578/Y (sky130_fd_sc_hd__o21ai_1)           0.13      4.02 f
+  core/ctmTdsLR_1_524/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.18      4.20 r
+  core/U584/Y (sky130_fd_sc_hd__o21ai_1)           0.14      4.34 f
+  core/ctmTdsLR_1_525/Y (sky130_fd_sc_hd__nand2_1)
+                                                   0.09      4.44 r
+  core/ctmTdsLR_2_526/Y (sky130_fd_sc_hd__nand2_1)
+                                                   0.06      4.50 f
+  core/U88/COUT (sky130_fd_sc_hd__fa_1)            0.38      4.88 f
+  core/U87/COUT (sky130_fd_sc_hd__fa_1)            0.39      5.27 f
+  core/U314/COUT (sky130_fd_sc_hd__fa_1)           0.40      5.66 f
+  core/U313/COUT (sky130_fd_sc_hd__fa_1)           0.42      6.08 f
+  core/U302/Y (sky130_fd_sc_hd__clkinv_1)          0.07      6.15 r
+  core/U589/Y (sky130_fd_sc_hd__o21ai_0)           0.09      6.24 f
+  core/U81/COUT (sky130_fd_sc_hd__fa_1)            0.42      6.65 f
+  core/U80/COUT (sky130_fd_sc_hd__fa_1)            0.41      7.06 f
+  core/U318/COUT (sky130_fd_sc_hd__fa_1)           0.39      7.45 f
+  core/U312/COUT (sky130_fd_sc_hd__fa_1)           0.40      7.85 f
+  core/U76/COUT (sky130_fd_sc_hd__fa_1)            0.42      8.27 f
+  core/U73/Y (sky130_fd_sc_hd__clkinv_1)           0.07      8.35 r
+  core/U591/Y (sky130_fd_sc_hd__o21ai_1)           0.10      8.45 f
+  core/U71/COUT (sky130_fd_sc_hd__fa_1)            0.40      8.85 f
+  core/U311/COUT (sky130_fd_sc_hd__fa_1)           0.39      9.24 f
+  core/U317/SUM (sky130_fd_sc_hd__fa_1)            0.52      9.76 r
+  core/U3/Y (sky130_fd_sc_hd__nand2_1)             0.34     10.11 f
+  core/U667/Y (sky130_fd_sc_hd__o22ai_1)           0.35     10.46 r
+  core/CPU_Xreg_value_a4_reg[10][30]/D (sky130_fd_sc_hd__dfxtp_4)
+                                                   0.00     10.46 r
+  data arrival time                                         10.46
+
+  clock clk (rise edge)                           10.00     10.00
+  clock network delay (propagated)                 0.49     10.49
+  core/CPU_Xreg_value_a4_reg[10][30]/CLK (sky130_fd_sc_hd__dfxtp_4)
+                                                   0.00     10.49 r
+  library setup time                              -0.05     10.45
+  data required time                                        10.45
+  ------------------------------------------------------------------------
+  data required time                                        10.45
+  data arrival time                                        -10.46
+  ------------------------------------------------------------------------
+  slack (VIOLATED)                                          -0.02
+
+1
+
+```
+* but the violation is steel there
+* so we again resizing the cell
+  ```size_cell core/U449 sky130_fd_sc_hd__nand2_4```
+ ```report_global_timing```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/5.png">
+
+and ```report_timing```
+```ruby
+icc2_shell> report_timing
+****************************************
+Report : timing
+        -path_type full
+        -delay_type max
+        -max_paths 1
+        -report_by design
+Design : vsdbabysoc
+Version: T-2022.03-SP3-VAL
+Date   : Wed Oct 25 12:47:53 2023
+****************************************
+
+  Startpoint: core/CPU_is_addi_a3_reg (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: core/CPU_Xreg_value_a4_reg[10][30] (rising edge-triggered flip-flop clocked by clk)
+  Mode: func1
+  Corner: func1
+  Scenario: func1
+  Path Group: clk
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk (rise edge)                            0.00      0.00
+  clock network delay (propagated)                 0.35      0.35
+
+  core/CPU_is_addi_a3_reg/CLK (sky130_fd_sc_hd__dfxtp_1)
+                                                   0.00      0.35 r
+  core/CPU_is_addi_a3_reg/Q (sky130_fd_sc_hd__dfxtp_1)
+                                                   0.46      0.82 r
+  core/U444/Y (sky130_fd_sc_hd__nor2_1)            0.08      0.89 f
+  core/U447/Y (sky130_fd_sc_hd__nand2_1)           0.13      1.02 r
+  core/U449/Y (sky130_fd_sc_hd__nand2_4)           0.12      1.14 f
+  core/U450/X (sky130_fd_sc_hd__a22o_1)            0.24      1.38 f
+  core/U540/X (sky130_fd_sc_hd__xor2_1)            0.17      1.55 f
+  core/ctmTdsLR_1_495/X (sky130_fd_sc_hd__o21a_1)
+                                                   0.20      1.75 f
+  core/U541/Y (sky130_fd_sc_hd__a21oi_2)           0.15      1.90 r
+  core/U543/Y (sky130_fd_sc_hd__o21ai_1)           0.12      2.02 f
+  core/ctmTdsLR_1_504/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.18      2.21 r
+  core/U548/Y (sky130_fd_sc_hd__o21ai_1)           0.12      2.33 f
+  core/ctmTdsLR_1_519/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.19      2.51 r
+  core/U554/Y (sky130_fd_sc_hd__o21ai_1)           0.13      2.64 f
+  core/ctmTdsLR_1_520/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.19      2.83 r
+  core/U560/Y (sky130_fd_sc_hd__o21ai_1)           0.13      2.96 f
+  core/ctmTdsLR_1_521/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.20      3.16 r
+  core/U566/Y (sky130_fd_sc_hd__o21ai_1)           0.18      3.34 f
+  core/ctmTdsLR_1_522/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.22      3.56 r
+  core/U572/Y (sky130_fd_sc_hd__o21ai_1)           0.12      3.69 f
+  core/ctmTdsLR_1_523/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.18      3.87 r
+  core/U578/Y (sky130_fd_sc_hd__o21ai_1)           0.13      3.99 f
+  core/ctmTdsLR_1_524/Y (sky130_fd_sc_hd__a21boi_2)
+                                                   0.18      4.17 r
+  core/U584/Y (sky130_fd_sc_hd__o21ai_1)           0.14      4.32 f
+  core/ctmTdsLR_1_525/Y (sky130_fd_sc_hd__nand2_1)
+                                                   0.09      4.41 r
+  core/ctmTdsLR_2_526/Y (sky130_fd_sc_hd__nand2_1)
+                                                   0.06      4.47 f
+  core/U88/COUT (sky130_fd_sc_hd__fa_1)            0.38      4.85 f
+  core/U87/COUT (sky130_fd_sc_hd__fa_1)            0.39      5.24 f
+  core/U314/COUT (sky130_fd_sc_hd__fa_1)           0.40      5.63 f
+  core/U313/COUT (sky130_fd_sc_hd__fa_1)           0.42      6.05 f
+  core/U302/Y (sky130_fd_sc_hd__clkinv_1)          0.07      6.12 r
+  core/U589/Y (sky130_fd_sc_hd__o21ai_0)           0.09      6.21 f
+  core/U81/COUT (sky130_fd_sc_hd__fa_1)            0.42      6.62 f
+  core/U80/COUT (sky130_fd_sc_hd__fa_1)            0.41      7.03 f
+  core/U318/COUT (sky130_fd_sc_hd__fa_1)           0.39      7.42 f
+  core/U312/COUT (sky130_fd_sc_hd__fa_1)           0.40      7.82 f
+  core/U76/COUT (sky130_fd_sc_hd__fa_1)            0.42      8.25 f
+  core/U73/Y (sky130_fd_sc_hd__clkinv_1)           0.07      8.32 r
+  core/U591/Y (sky130_fd_sc_hd__o21ai_1)           0.10      8.42 f
+  core/U71/COUT (sky130_fd_sc_hd__fa_1)            0.40      8.82 f
+  core/U311/COUT (sky130_fd_sc_hd__fa_1)           0.39      9.21 f
+  core/U317/SUM (sky130_fd_sc_hd__fa_1)            0.52      9.73 r
+  core/U3/Y (sky130_fd_sc_hd__nand2_1)             0.34     10.08 f
+  core/U667/Y (sky130_fd_sc_hd__o22ai_1)           0.35     10.43 r
+  core/CPU_Xreg_value_a4_reg[10][30]/D (sky130_fd_sc_hd__dfxtp_4)
+                                                   0.00     10.43 r
+  data arrival time                                         10.43
+
+  clock clk (rise edge)                           10.00     10.00
+  clock network delay (propagated)                 0.49     10.49
+  core/CPU_Xreg_value_a4_reg[10][30]/CLK (sky130_fd_sc_hd__dfxtp_4)
+                                                   0.00     10.49 r
+  library setup time                              -0.05     10.45
+  data required time                                        10.45
+  ------------------------------------------------------------------------
+  data required time                                        10.45
+  data arrival time                                        -10.43
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.01
+
+
+1
+```
+In Layout:
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/8.png">
+
+In Schematic:
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/7.png">
+
+To ease up the set-up analysis two cells core/U617(incr = 0.1822) and core/315(incr = 0.3852) are selected for resizing based in delay they are providing.
+Above names are instance name , to get refence name i.e library cell attached to it use below command:
+```ruby
+icc2_shell>>  get_lib_cells -of_objects [get_cells core/U617]
+{sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__xor2_1} 
+icc2_shell>> get_lib_cells -of_objects [get_cells core/U315]
+{sky130_fd_sc_hd__tt_025C_1v80/sky130_fd_sc_hd__nand2_1}
+```
+
+**Power analysis:**
+command:  ```report_power -significant_digits 4```
+before
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/report_pwer_before.png">
+
+After Fixing the violation the power is show below
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/report_power_aftr.png">
+
+Dynamic power(Total Power) consumption occurs when signals which go through the CMOS circuits change their logic state charging and discharging of output node capacitor.
+In our design, dynamic power = 4.1001 x 1006 nW.
+Leakage power consumption is the power consumed by the sub threshold currents and by reverse biased diodes in a CMOS transistor.
+Leakage power = 8.3700 x 1001 nW
+Internal power is the power consumed by the cell when an input changes, but output does not change.
+Internal power = 2.7300 x 1006 nW
+Switching power dissipation is due to the charging and discharging of total load, which includes the output capacitors and other parasitic capacitors.
+Net Switching Power = 1.3784 x 1006 nW
+To get power consumption the two cells selected for resizing use command ```report_power -cell_power core/U617 and report_power -cell_power core/U315 .```
+
+
+<img  width="1085" alt="" src="">
+
+
+    Cell U315 = 7.2945 x 1002 nW.
+    Cell U617 = 1.2846 x 1002 nW.
+
+**Area analysis:**
+
+Before
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/report_oqr_befr.png">
+
+after
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/report_qor_aftr.png">
+To get the area of two cells selected for resizing use command report_area But as that command is disabled to get the area of individual cell source below tcl script in icc2_shell and invoke function area_logic_hierarchy to some file and find the area of your cell.
+
+**Other violations in design:**
+
+Command: ```report_constraint .```
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/report_constraint_before.png">
+Here we can observe that max trans and max cap is violating with cost of 0.28 and 0.03 respectively.
+
+after fixing the violation the maxtrans and max cap is zero
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day24/report_constraint_clear.png">
 
 </details>
 
 
-<details>
+
