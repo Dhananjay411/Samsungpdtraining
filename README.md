@@ -7096,20 +7096,738 @@ Periodic and Non-Periodic Signals:
 Periodic signals repeat their patterns over time, while non-periodic signals do not.
 Examples of periodic signals include sine waves, square waves, and triangle waves. Non-periodic signals may include transient signals and random noise.
 These are just some of the many types of electronic signals, each with its unique characteristics and applications. Understanding these signal types is crucial for designing, analyzing, and troubleshooting electronic circuits and systems.
+
+**What kind of signal that is most available in the nature?**
+
+Analog signals since every process produced analog signals instead of digital signals. Digital signals are usually being converted from the analog signals.
+
+**Which signal does microcontrollers/microprocessors understand/speak?**
+
+Digital signals where those electronic devices only understand the signals digitally by using 1's and 0's
+
+**Since microprocessors/microcontrollers speak in digital form, but we need to get or take in analog signals, what to do?**
+
+Convert the digital signals to analog signals or vice versa using ADC/DAC
+
+Mixed-signal chips are those that at least partially deal with input signals whose precise values matter
+1.This broad class includes RF, Analog, Analog-to-Digital and Digital-to-Analog conversion
+2.More recently, a large number of Mixed-Signal chips where at least part of the chip design needs to measure signals with high precision
+3.These chips have very different Design and Process Technology demands than normal Digital circuits
+
+**AMS: Analog and Mixed Signal (digital and analog)**
+
+AMS flow
+
+Source: notes are taken from lecture slides
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day26/ae1.png">
+
+Block diagram representation for mixed signal design
+
+Source: figure was taken from lecture slides
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day26/ae2.png">
+
+**Exploring the example of VSDBabySoC**
+
+RVMYTH processor --> digital block
+PLL --> analog block
+DAC --> analog block (for digital to analog conversion)
+
+**Introduction to various files**
+
+**LEF (Library Exchange Format) file:** physical properties such as width, height etc regarding the standard cells
+tf (technology file) or tlef (technology lef) --> contains same information
+Cell tf
+
+LIBerty file --> contains timing information of the cells
+
+gdsII and OASIS file --> GDSII is a file format similar to JPEG, DOCX, XLSX etc to enable a layout design to be transferred from one place to another (IP owner handoff to PD team, PD team to foundry for fabrication), to be viewed/used for verifications like Physical verification checks by EDA tools.
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day26/ae3.png">
+
+**PnR tool**
+
+The tool tries to place the standard cell in such a way that the design should have minimal congestions and the best timing. Every PnR tool provides various commands/switches so that users can optimize the design in a better way in terms of timing, congestion, area, and power as per their requirements.
+
+**WHAT and WHY TO DO after getting the information?**
+
+This is why we need the following files:
+
+    LEF file
+    LIB file
+    Tf files (tlu+ file)
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day26/ae4.png">
+
+Sources of various files
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day26/ae5.png">
+
+**Discovering IP cores**
+
+**What are IP cores?**
+
+An IP core consists of a block of logic or data that is used in a semiconductor chip.
+
+It is usually the intellectual property of a particular person or company. IP cores are used when making a fieldprogrammable gate array (FPGA) or application-specific integrated circuit (ASIC).
+
+IP cores are created throughout the design process and can be turned into components for reuse.
+
+There are different categories for IP cores including hard IP cores and soft IP cores.
+
+The soft IP core , can be customized during the physical design phase and mapped to any process technology.
+
+A hard IP core is one that has the logic implementation and the physical implementation. In other words, the physicallayout of a hard macro-IP is finished and fixed in a particular process technology.
+
+How it works in semiconductor industry
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day26/ae6.png">
+
+
 </details>
 
-# Day 27 Introduction to mixed-signal flow
+# Day 27 Introduction to crosstalk - glitch and delta delay
 
 <details>
-<summary>Theory</summary>
+<summary>Introduction to Crosstalk</summary>
+
+**Introduction**
+**chip design cycle**
+ The process of designing an integrated circuit (IC) or chip involves several stages that make up a chip design cycle. The specific steps and details can vary depending on the complexity of the chip and the design objectives, but here is a general overview of what happens during a chip design cycle:
+
+**Specification and Requirements:**
+Define the purpose and functionality of the chip, including performance requirements, power constraints, and other specifications.
+Gather input from stakeholders and create a clear set of design requirements.
+
+**Conceptual Design:**
+Develop a high-level architectural concept for the chip, including the choice of components, their interconnections, and the overall system structure.
+Consider trade-offs between different design options and technologies.
+
+**RTL (Register-Transfer Level) Design:**
+Create a detailed design at the RTL level, specifying the logic and interconnections using a hardware description language like VHDL or Verilog.
+Designers work on the digital logic, control units, and memory components of the chip.
+
+**Synthesis:**
+Transform the RTL description into a gate-level representation that can be implemented on the target technology (e.g., ASIC or FPGA).
+Optimize the design for area, speed, and power using synthesis tools.
+
+**Physical Design:**
+Define the physical layout of the chip, including the placement and routing of components.
+Consider factors like signal integrity, power distribution, and thermal considerations.
+This stage involves floor planning, placement, and routing.
+
+**Verification:**
+Verify the design's correctness and compliance with the initial requirements.
+This includes functional verification (ensuring the chip performs its intended functions) and timing verification (ensuring the design meets timing requirements).
+
+**Simulation and Testing:**
+Simulate the chip's behavior under different conditions to identify and resolve any issues.
+Generate test patterns and test the chip to ensure it operates correctly.
+
+**Fabrication:**
+Submit the design for fabrication, where the chip is physically manufactured using semiconductor fabrication processes.
+This stage typically takes place in a semiconductor manufacturing facility (foundry).
+
+**Packaging and Testing:**
+After fabrication, the individual chips are packaged and undergo further testing to identify and isolate any defective units.
+Chips are assembled into packages suitable for integration into electronic devices.
+
+**Quality Assurance:**
+Conduct additional quality assurance and reliability testing to ensure the chips meet performance and reliability specifications.
+Address any identified issues and make necessary adjustments.
+
+**Documentation and Release:**
+Prepare documentation, including datasheets, user manuals, and application notes, for the chip's users.
+Release the chip for mass production and distribution.
+
+**Production and Deployment:**
+Begin mass production of the chip, which may involve producing large quantities of chips for use in various applications and devices.
+
+**Post-Production Support:**
+Provide ongoing support for the chip's users, including bug fixes, updates, and technical assistance.
+The chip design cycle is a highly iterative process, and it often involves multiple teams of engineers and extensive collaboration. Throughout the cycle, it's essential to balance trade-offs between performance, power, area, and cost to meet the design objectives and market requirements. Chip design can be a time-consuming and complex process, but it's crucial for creating the electronic components that power a wide range of devices and systems.
+
+**What happens when we go through a chip design cycle?**
+*When we go through a design, there are three things that we try to achieve on a chip.**
+*Power:** focusing on the lowest power consumption.
+*Performance:** focusing on the performance, process and speed of the device.
+*Area:* preferable a smaller device
+
+**1.Reasons for crosstalk**
+1. High Density of standard cells
+2. High Routing Density
+Crosstalk comes into picture due to coupling capacitance, below figure may help you to understand the coupling capacitance,
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/b1.png">
+
+so, we can deduce one direct reason of cross-talk is spacing
+for same area, if density of standard cells is high than more cross-talk
+if compare, 0.25um (older mobile chips) vs 0.1um below chips, have density difference due to functionality addition in latest chips, so, it has high density due to transistor size and more functionality which make transistor placement very near to other transistor
+
+3. Increase in number of metal layers, increase lateral capacitance
+In higher technology node like 0.25um and above,
+metal cross section area = w * t
+where, w = metal net width and t = metal net thickness
+so, At higher node technology, standard cells placed far apart form each other cells, and have enough space for routing, so, routing is possible on same metal area.
+here, due to higher width of metal, inter layer capacitance became more n more dominant factor
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/b2.png">
+
+while in lower node, for same area, number of standards cell increase, but routing method cant be same as higher node, due to higher complexity, routing cant be on same layer. and in other side, metal net width is also less, so, effective inter layer capacitance is not dominant
+but, lateral capacitance comes into picture, as net routes very near to each others, and complexity is also high so, number of net routing is also very high, due to that at lower node lateral capacitance is major parasitic s while designing chips
+
+
+**2.Introduction to noise margin**
+
+Noise margin is the amount of noise that a CMOS circuit could withstand without compromising the operation of circuit. Noise margin does makes sure that any signal which is logic ‘1’ with finite noise added to it, is still recognized as logic ‘1’ and not logic ‘0’. It is basically the difference between signal value and the noise value. Refer to the diagram below.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/b4.png">
+Consider the following output characteristics of a CMOS inverter. Ideally, When input voltage is logic ‘0’, output voltage is supposed to logic ‘1’. Hence Vil (V input low) is ‘0’V and Voh (V output high) is 
+*‘Vdd’V.*
+*Vil = 0*
+*Voh = Vdd *
+
+Ideally, when input voltage is logic ‘1’, output voltage is supposed to be at logic ‘0’. Hence, Vih (V input high) is ‘Vdd’, and Vol (V output low) is ‘0’V.
+*Vih = Vdd
+Vol = 0*
+
+Noise Margins could be defined as follows :
+*NMl (NOISE MARGIN low) = Vil – Vol = 0 – 0 = 0
+NMh (NOISE MARGIN high) = Voh – Vih = Vdd – Vdd = 0*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/b3.png">
+
+But due to voltage droop and ground bounce, Vih is usually slightly less than Vdd i.e. Vdd’, whereas Vil is slightly higher that Vss i.e. Vss’.
+
+Hence Noise margins for a practical circuit is defined as follows :
+*NMl (NOISE MARGIN low) = Vil – Vol = Vss’ – 0 = Vss’
+NMh (NOISE MARGIN high) = Voh – Vih = Vdd – Vdd’*
+Hence, if input voltage (Vin) lies somewhere between Vol and Vil, it would be detected as logic ‘0’, and would result in an output which is acceptable. Similarly, if input voltage (Vin) lies between Vih and Voh, it would be detected as logic ‘1’ and would result in an output which is acceptable.
+
+**3.Crosstalk glitch example**
+
+Crosstalk Glitch Analysis
+
+A steady signal net can have a glitch due to the charge transferred by the switching aggressors through coupling capacitances. The glitch magnitude may be large enough to be seen as a different logic value by the fan-out cells of the victim nets.
+
+For example, as shown in Figure 1, when the output of “UNAND0” is switching from 0->1, it can introduce a glitch in the victim net due to the cross-coupling capacitance. This glitch can change the input value of “UNAND1”, which results in undesired output values (Logic-0 may appear as Logic-1 and vice-versa). Here, victim net is connected from “INV2” to “UNAND1”.
+*Glitch due to an aggressor**
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/z4.PNG">
+
+Crosstalk glitch can be classified as below:
+
+**Rise and Fall Glitches**
+Rise glitch: Raising aggressor net induces a rise glitch on a steady low
+Fall glitch: Falling aggressor net induces a fall glitch on a steady high
+Overshoot and Undershoot Glitches
+Overshoot glitch: Raising aggressor net induces overshoot glitch on a steady high This takes the victim net voltage above its steady high value.
+Undershoot glitch: Falling aggressor net induces an undershoot glitch on a steady low This takes the victim net voltage below its steady low value.
+
+*Types of crosstalk glitches*
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/z3.PNG">
+
+**Crosstalk Delay Analysis:**
+
+Crosstalk delay is the same as crosstalk noise, however, the only difference is that the nets are not at steady state values and there are some switching activities happening on both victim and aggressor nets. Crosstalk delay depends on the propagating direction of aggressor and victim nets. This results in either slower transition or faster transition of victim nets.
+
+This can be classified as below:
+
+**Negative crosstalk delay**
+
+If the aggressor and victim nets are switching in the same direction, it results in a smaller delay for the victim net. The reduction in delay is known as a negative crosstalk delay. This is shown as below 
+*Negative crosstalk delay*
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/z2.PNG">
+
+**Positive crosstalk delay**
+If the aggressor net is switching in the opposite direction of the victim net, it results in a larger delay for the victim net. The increase in delay is known as a positive crosstalk delay. This is shown below 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/z1.PNG">
+
+**4.Factors affecting glitch height**
+
+Glitches in digital circuits are unwanted or unexpected voltage transitions that can cause problems such as improper operation, increased power consumption, and electromagnetic interference. The height of a glitch refers to the magnitude of the voltage transition, and it can be affected by various factors. Here are some of the factors that influence glitch height:
+
+Signal Transition Time (Slew Rate): The speed at which a signal transitions from one logic level to another can affect glitch height. Faster transition times can lead to larger glitches because the rate of change of the signal voltage is higher.
+
+Load Capacitance: The amount of capacitance connected to the node where the glitch occurs plays a significant role. A larger load capacitance tends to attenuate glitches because it requires more charge to change the voltage, thus reducing the glitch height.
+
+Propagation Delay Mismatch: In asynchronous circuits or multi-stage logic elements, if there is a mismatch in the propagation delay of signals, it can lead to glitches. The glitch height can be influenced by the relative delays between signals.
+
+Skew: Skew refers to the difference in arrival times of signals at the same logic gate or flip-flop. If there is skew, it can cause glitches as signals may arrive at different times. The magnitude of the glitch can be related to the skew.
+
+Fan-out and Fan-in: The number of gates that a signal drives (fan-out) and the number of inputs to a gate (fan-in) can impact glitch height. High fan-out and fan-in can lead to larger glitches, especially in complex combinational circuits.
+
+Transistor Sizing: In CMOS logic design, the sizing of transistors in a gate can affect the glitch height. Transistor sizing affects the strength of the pull-up and pull-down networks, and this, in turn, can influence the magnitude of glitches.
+
+Signal Content: The logic value of the signals involved in the glitch can also determine its height. For example, a glitch transitioning between high and low logic values might have a different height than one transitioning between low and an intermediate state.
+
+Power Supply Voltage (Vdd): The glitch height can be influenced by the supply voltage. Higher supply voltages generally lead to larger glitch heights because it takes more charge to change the voltage level.
+
+Noise and Crosstalk: External factors like noise and crosstalk from nearby signals can couple with the signal, leading to glitches. The amplitude of the noise or crosstalk can impact the glitch height.
+
+Signal Path Length: The physical length of the signal path can affect the glitch. Longer paths may introduce more opportunities for glitch-causing factors to come into play, leading to potentially larger glitches.
+
+Environmental Factors: Factors like temperature and radiation can also influence glitch height. For example, high-temperature conditions can lead to increased leakage currents, affecting glitch behavior.
+
+Designers aim to minimize glitches in digital circuits by carefully considering these factors during the design process. Techniques such as proper signal routing, balanced fan-in and fan-out, and synchronous design practices can help reduce glitch-related issues. Additionally, simulation and analysis tools can be used to predict and address glitch problems in the design phase.
+
+
+**5.AC noise margin**
+
+AC noise margin, also known as "AC NM," is a measure used in digital circuit design to assess the immunity of a digital circuit to noise or variations in the input signal. It is particularly relevant when evaluating the performance and reliability of digital logic gates. AC noise margin is used to ensure that a digital signal can be properly interpreted by the receiving logic gate, even in the presence of noise.
+
+AC noise margin is typically defined in terms of voltage levels and is expressed as a range of voltage values. The two primary metrics associated with AC noise margin are:
+
+Low-Level Noise Margin (NM_L): This is the range of input voltage values (typically measured from the low logic level, such as a logic "0") for which the output of the logic gate is guaranteed to remain at a logic "0" level, even in the presence of noise. In other words, it represents how much noise can be added to a logic "0" input before it gets misinterpreted as a logic "1."
+
+High-Level Noise Margin (NM_H): This is the range of input voltage values (typically measured from the high logic level, such as a logic "1") for which the output of the logic gate is guaranteed to remain at a logic "1" level, even in the presence of noise. It represents how much noise can be added to a logic "1" input before it gets misinterpreted as a logic "0."
+
+The AC noise margin is determined by the following relationships:
+
+Low-Level Noise Margin (NM_L) = V_IL(max) - V_L
+
+V_IL(max) is the maximum allowable input voltage for a logic "0."
+V_L is the low-level output voltage for the logic gate.
+High-Level Noise Margin (NM_H) = V_H - V_IH(min)
+
+V_H is the high-level output voltage for the logic gate.
+V_IH(min) is the minimum allowable input voltage for a logic "1."
+In ideal conditions, AC noise margin ensures that the logic gate can tolerate variations in the input signal due to noise without causing incorrect logic level interpretation. A larger AC noise margin indicates greater noise immunity and is a desirable characteristic for digital circuits.
+
+Designers typically use AC noise margin to evaluate the robustness of their digital circuits and ensure that they operate reliably under various conditions. It is essential for preventing errors in digital systems due to noise, voltage fluctuations, and other factors that can affect signal integrity.
+
+
+
+
+
+**6.Timing window concepts**
+The concept of a "timing window" is a fundamental concept in digital design and analysis, especially when dealing with synchronous digital systems. A timing window represents a specific time interval during which certain events or conditions must be met for the proper operation of a digital circuit or system. Understanding timing windows is essential for ensuring that signals and data are sampled correctly and that digital systems operate reliably. Here are some key aspects of timing windows:
+
+Clock Period (T): The clock period is the time it takes for a digital circuit to complete one clock cycle. It defines the fundamental time unit in digital systems. The clock period is often denoted as "T" and is measured in seconds or time units.
+
+Setup Time (t_setup): The setup time is the amount of time that a data signal (e.g., an input to a flip-flop or latch) must be stable and valid before the active clock edge (rising or falling edge) arrives. It ensures that the data is settled and sampled correctly. The setup time is typically specified in terms of a positive time duration relative to the clock edge.
+
+Hold Time (t_hold): The hold time is the amount of time that a data signal must remain stable and valid after the active clock edge arrives. It ensures that the data remains steady during the sampling process and is not changing when it is sampled. The hold time is specified in terms of a positive time duration relative to the clock edge.
+
+Clock-to-Q Delay (t_cq): The clock-to-Q delay is the time it takes for the output of a flip-flop or latch to respond to changes at its data input after the clock edge. It represents the internal delay of the flip-flop and is taken into account when calculating the setup and hold times.
+
+Clock Skew: Clock skew refers to the variation in the arrival times of the clock signal at different flip-flops or latches within a synchronous system. Minimizing clock skew is essential to ensure that all flip-flops sample data consistently within the specified timing window.
+
+Clock Jitter: Clock jitter represents the variation in the timing of consecutive clock edges. Excessive clock jitter can lead to uncertainty in the timing window and may require additional design considerations.
+
+Clock Edge (Rising or Falling): Timing windows are associated with specific clock edges. For example, if a rising edge-triggered flip-flop is used, the setup and hold times are referenced to the rising clock edge.
+
+Critical Path: The critical path in a digital circuit is the path with the longest delay. It determines the clock frequency at which the circuit can operate reliably. The setup and hold times must be satisfied along the critical path to ensure correct operation.
+
+Timing windows are crucial for ensuring that data is sampled correctly and that the digital circuit meets its performance and reliability requirements. Violating the setup or hold time requirements can lead to metastability, where a flip-flop enters an unpredictable state, resulting in incorrect logic levels. Designers use timing analysis tools and techniques to verify that timing requirements are met and to optimize the design for proper operation within the specified timing window.
+
+**7.Impact of crosstalk on setup and hold timing**
+
+Crosstalk in digital circuits can have a significant impact on setup and hold timing, potentially leading to timing violations and functional errors in the operation of digital systems. Crosstalk can disrupt the stable behavior of signals as they travel through adjacent conductors or traces, affecting the timing requirements for reliable data capture in flip-flops or latches. Here's how crosstalk can impact setup and hold timing:
+
+Setup Time Violations:
+
+Increased Setup Time: Crosstalk can delay the arrival of the data signal at the receiving flip-flop. If the crosstalk-induced delay is significant, it can extend the setup time requirement for that signal. This extended setup time may exceed the allowable setup time, leading to a setup time violation. In such cases, the data may not be stable and valid when the clock edge arrives for sampling.
+
+False Triggering: In some cases, crosstalk-induced voltage spikes can cause the receiving flip-flop to interpret the data signal as transitioning earlier than it should. This can result in false triggering, leading to incorrect data capture and, subsequently, logic errors.
+
+Hold Time Violations:
+
+Reduced Hold Time: Crosstalk can introduce noise or glitches on the data line that can affect the hold time requirement. The hold time violation occurs when crosstalk causes the data signal to change during the time period required to hold the signal steady after the clock edge. This can lead to incorrect data capture.
+Metastability: In severe cases, crosstalk can induce metastability in flip-flops. Metastability occurs when the flip-flop hovers between a logic "0" and a logic "1" state for an extended period. It results in uncertainty in the captured data and can propagate as an incorrect value throughout the system.
+
+To mitigate the impact of crosstalk on setup and hold timing, digital designers employ various techniques and best practices, including:
+
+Proper Signal Routing: Careful and controlled routing of signals can reduce the impact of crosstalk. Increasing the separation between critical signal traces and employing differential signaling (e.g., LVDS) can help minimize crosstalk effects.
+
+Shielding: Using shielding techniques, such as adding ground or power planes between signal layers, can reduce crosstalk.
+
+Clock Tree Design: Paying attention to the clock tree design and minimizing clock skew can help maintain consistent clock edges for all flip-flops and reduce setup and hold timing variations.
+
+Buffering and Synchronization: Introducing buffers or synchronization elements can help address crosstalk-induced issues. Synchronization techniques can be employed to mitigate the impact of metastability.
+
+Simulation and Analysis: Performing thorough signal integrity simulations, including crosstalk analysis, can help identify potential issues and inform design decisions.
+
+Redundancy and Error Detection: In some safety-critical applications, redundancy and error detection techniques may be used to detect and correct potential errors caused by crosstalk-induced timing violations.
+
+Crosstalk should be carefully considered during the design and validation phases of digital circuits to ensure reliable operation, and efforts should be made to design circuits that are robust against crosstalk effects on setup and hold timing.
+
+**8.Techniques to reduce crosstalk**
+
+Crosstalk in digital circuits is the unwanted coupling of signals between adjacent conductors, traces, or components. It can lead to signal integrity issues, timing violations, and data errors. To reduce crosstalk, designers employ various techniques and best practices. Here are some common approaches to mitigate crosstalk:
+
+Proper Signal Spacing:
+
+Increase the physical separation between adjacent signal traces or wires. A greater distance between traces reduces the capacitive and inductive coupling, which are primary causes of crosstalk.
+Differential Signaling:
+
+Use differential signaling, where the signal is transmitted as a pair of complementary signals with equal and opposite voltages. The receiver detects the voltage difference between the pair, which helps cancel out common-mode noise, including crosstalk.
+Twisted Pair Wiring:
+
+For applications like Ethernet or telephone cables, use twisted pair wiring. Twisting the wires reduces the area of loops through which crosstalk can occur.
+Shielding:
+
+Use shielding techniques to isolate signal traces from external interference. Shielded cables and grounded enclosures can help reduce electromagnetic crosstalk.
+Routing and Tracing Considerations:
+
+Pay attention to the routing and tracing of signal lines on printed circuit boards (PCBs). Employ controlled impedance routing and maintain consistent spacing between signal traces to minimize crosstalk.
+Ground Planes:
+
+Ensure a well-structured ground plane in multilayer PCBs. A solid ground plane can act as a shield, reducing electromagnetic crosstalk.
+Signal Termination:
+
+Properly terminate transmission lines using resistors or other termination techniques to match the characteristic impedance of the line. This can reduce reflections and minimize signal overshoot and undershoot, which contribute to crosstalk.
+Direction of Current Flow:
+
+Consider the direction of current flow in adjacent traces. Running currents in opposite directions can help mitigate mutual inductance, thereby reducing crosstalk.
+Orthogonal Routing:
+
+Route critical signal traces at right angles to one another (orthogonal routing). This minimizes the area of overlap between traces, reducing the capacitive coupling.
+Buffering and Isolation:
+
+Use buffers or isolating components to isolate sensitive signals from the source of crosstalk. This can be particularly useful in mixed-signal and RF (radio frequency) circuits.
+Use Low-Crosstalk Components:
+
+Choose components and ICs with lower crosstalk characteristics. Manufacturers often provide crosstalk specifications for their components.
+Simulations and Modeling:
+
+Perform electromagnetic simulations and crosstalk analysis using specialized software tools to identify and mitigate potential crosstalk issues during the design phase.
+Testing and Validation:
+
+Conduct thorough testing and validation of the circuit to ensure that crosstalk is within acceptable limits. This may involve measuring signals, signal integrity, and eye diagrams to identify issues.
+Noise Immunity: Design circuits with adequate noise immunity to tolerate small levels of crosstalk without causing functional errors. This can include using redundancy or error-checking mechanisms.
+
+Reducing crosstalk is crucial to ensure the reliable and accurate operation of digital circuits, especially in high-speed and mixed-signal designs. Effective crosstalk reduction strategies should be incorporated into the design process, and a combination of techniques may be necessary to achieve the desired level of crosstalk mitigation.
+
+**9.Power supply noise**
+
+
+Power supply noise, often referred to as voltage or power rail noise, is the presence of unwanted and undesirable variations in the voltage supplied to electronic components within a system. Power supply noise can adversely affect the performance and reliability of electronic circuits, leading to various problems, including incorrect operation, data errors, and electromagnetic interference. Power supply noise can originate from several sources and can manifest in different forms. Here are some key aspects of power supply noise:
+
+Sources of Power Supply Noise:
+
+Switching Components: Digital devices and integrated circuits (ICs), such as microcontrollers, FPGAs, and processors, often switch rapidly between different logic states. These rapid transitions can create voltage spikes and current surges, introducing noise into the power supply lines.
+
+Analog Circuits: Analog circuits, including operational amplifiers, analog-to-digital converters, and other analog components, can be sensitive to voltage fluctuations, and their operation can contribute to power supply noise.
+
+Regulators and DC-DC Converters: Voltage regulators and DC-DC converters may introduce noise due to their switching action or imperfections in their regulation.
+
+External Factors: External factors like power line disturbances, electromagnetic interference (EMI), and radio-frequency interference (RFI) from nearby equipment and environmental conditions can propagate noise into the power supply.
+
+Grounding Issues: Ground loops and improper grounding practices can cause ground-induced noise in the power supply system, which can affect voltage stability.
+
+Forms of Power Supply Noise:
+
+High-Frequency Noise: This noise appears as rapid voltage fluctuations with high-frequency components. It is common in digital circuits and can be caused by switching activity.
+
+Low-Frequency Noise: Low-frequency noise consists of slower voltage variations, often in the range of a few hertz to a few kilohertz. It can result from various sources, including power line fluctuations or imperfect regulation.
+
+Spikes and Transients: Spikes are sudden, brief voltage excursions that can damage or disrupt circuits. Transients are short-duration disturbances that can cause temporary malfunctions.
+
+Ripple: Ripple is periodic, usually sinusoidal voltage variation at the output of a power supply, typically at the power supply frequency (e.g., 50 Hz or 60 Hz for mains power) or its harmonics.
+
+Effects of Power Supply Noise:
+
+Timing and Signal Integrity: Power supply noise can affect the timing and signal integrity of digital circuits, leading to timing violations and data errors.
+
+Analog Performance: In analog circuits, power supply noise can result in distortion, increased noise, and reduced dynamic range.
+
+EMI/RFI Emission: High-frequency power supply noise can radiate electromagnetic interference, potentially interfering with other electronic devices and communication systems.
+
+Reduced Reliability: Over time, power supply noise can lead to the premature failure of components and decrease the overall reliability of electronic systems.
+
+Mitigation of Power Supply Noise:
+
+Decoupling Capacitors: Place decoupling capacitors near the power supply pins of integrated circuits to filter out high-frequency noise.
+
+Regulators: Use voltage regulators to provide stable, noise-free power to sensitive components.
+
+Grounding and Shielding: Proper grounding and shielding techniques can minimize ground-induced noise and external interference.
+
+Filtering: Employ passive filters, such as LC filters, to reduce noise on the power supply lines.
+
+Isolation: Isolate sensitive circuits from noisy sources to prevent the propagation of power supply noise.
+
+Layout and Routing: Careful PCB layout and routing practices can minimize the impact of noise, including keeping digital and analog components separated.
+
+Testing and Measurement: Regularly test and measure power supply noise to identify and address issues in real-world conditions.
+
+Power supply noise is a common concern in electronic systems, and addressing it is essential to maintain the performance, reliability, and safety of digital and analog circuits. Designers must consider the sources and effects of power supply noise and employ appropriate mitigation techniques as part of their design process.
+
+
+**High Routing Density**
+
+**Crosstalk Noise Reasons and Definition**
+
+High routing density and large number of standard cells
+
+0.25 um and 0.1 um are the channel/gate length.
+
+Looking through 0.25 um and above process, there are quite some spaces and routes between each other.
+
+Quick way to reduce the size of the MOSFET is to reduce the channel length. When we reduce the channel length, the overall size of the MOSFET shrinks the overall size of the combinational logic, resulting the cell inside shrinks too. That way, we achieved a smaller size of the MOSFET.
+
+If smaller size has been achieved, resulting the cells inside shrank, the complete circuit accomodates in a smaller area. Therefore, we can have multiple instances of the circuits or similar kind of circuits which are getting made to get back into the area.
+
+For example, the circuit is used for sending and receiving messages. The circuit could have just instantiated in nine times. Some section can be sending and receiving messages, another section can be sending and receiving calls, some can be processing, some can reading other applications and so on.
+
+As we can see, before reducing the MOSFET size, we only have one or two applications running in the same area, but after reducing the size, now we have nine applications running in the same area of the chip.
+
+However, there is issue in interference when we reduce the size. Basically, referring to 0.1 um and below process in the figure below, there is some amount of interference in their functioning that is happening between the two nets/wires that is being placed very close to each other when we reduce the size. This is the major reason in crosstalk.
+
+Initially, there are 20 number of standard cells. After reducing the size, the number of standard cell has increased 9 times where the standard cell has to be connected to each other and as a result of that, the number of routes has increased and the routing has becomes very close to each other.
+
+Hence, we will started to see some failures in the design, where there was some functionality failure is happening which we can called it as crosstalk.
+
+ 
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/zz1.png">
+
+**Dominant Lateral Capacitance**
+Crosstalk Noise Reasons and Definition
+Increase in number of metal layers resulting in increase in lateral capacitance
+
+Basically, there are 2 kinds of capacitance.
+Interlayer capacitance: capacitors that is placed between 2 consecutive different layers.
+Lateral capacitance: capacitors that is placed between 2 wires at the same level and metal layer.
+
+The second reason of increasing the crosstalk noise is increase in the lateral capacitance because it is increasing the metal layer.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/zzz4.png">
+
+Why increasing lateral capacitance making metal layer increasing too?
+
+Breaking into several metal layers helps in reducing the resistance where the higher the area, resulting in lower resistance. That's why we are having a wider metal layer.
+
+The overlap area between metal 1 and metal 2 as shown in the figure below, is pretty huge, that leads into an increase of lower capacitance. That's why 0.25 um and above process, we say that the interlayer capacitance was dominant.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/zzz3.png">
+
+As we reduced the size of the MOSFET, it will increase the number of standard cells, resulting in increasing the number of connections. So, each cell needs to be connected to its edges of the standard cells, making the connection increased. As a result, the number of routes also got increased.
+
+Since the routes are very close to each other and it is difficult to accommodate the area of the MOSFET, we reduce the widthe of the metal. However, even when we reduce the width of the metal, the demand of routes of the area is too huge. Therefore, reducing it only won't help.
+
+So, we need to do the connections in different way (i.e. referring to the figure below) which is making the signal travelling in a straight line (only travelling across metal 1) without transferring the signal to metal 3 first. This is happened because of the limited amount of resources/routing resources available in the area. In this case, the amount of area is very compact and we need to accommodate it where we have to connect signals at any cost.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/zzz2.png">
+
+Things that have been observed:
+The width of the metal has reduced
+The number of metal layers have increased
+
+Referring to the figure bwlow, now the issue regarding overlapping 2 consecutive area has been solved, but now we have issue in overlapping between 2 side walls of the metal layer at the RHS of the figure. So, there is a huge overlap area between these 2 side walls and that's the reason we see lateral capacitance dominant and the biggest disadvantage we find with the lateral capacitance is that they present all the same layer.
+
+Looking through the RHS of the image below, if they are present on the same layer and the signal which is passing through the left side net will immediately being coupled to the other right side net because they're very close to each other. So, any switching activity happening between the same layer will immediately affect the whole process.
+
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/zzz1.png">
+
+**Introduction to noise margin**
+*Crosstalk Noise Reasons and Definition*
+
+Lower supply voltage leading to lesser noise margin
+
+In a basic inverter functioning, if we provide low-level input into an inverter, we will get high-level output and vice versa.
+
+Converting the concept into a graphical method, when Vin = low, Vout = high. whereas, when Vin = high, Vout = low.
+
+The behaviour of an inverter happens when the half of the voltage (Vdd/2), we will see the behavior of switch is happening.
+
+When the input is zero, the output is VDD. Then, we move the input from zero and keep increasing the input towards VDD. As gradually we increase the input voltage, the output voltage will start to decrease. And finally, the output voltage will be completely zero.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/pp6.png">
+
+The area of the slope (the difference of the output the input) ideally should be infinite.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/pp5.png">
+
+Practically, the curve won't be as smooth as in ideally. It might have some slopes since it has some delays due to capacitances and resistances while travelling from VDD to zero voltage. However, it won't be exactly achieve zero voltage due to practical scenarios of nmos and pmos, but for sure it will be somewhere around zero.
+
+Input low voltage (VIL): the input voltage is from zero to some particular value (VIL), as well as maximum input voltage that will be recognised as a low input logic level.
+
+Output high voltage (VOH): the output voltage is from zero to some particular value (VOH), as well as nominal voltage corresponding to a high logic state.
+
+Input high voltage (VIH): any voltage at the input level which lies above VIH and VDD, the output is expected to be low/VOL.
+
+Output low voltage (VOL): the output at VIH.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/pp4.png">
+Noise Margin Summary
+Noise margin summary
+
+Anything that lies between VOL and VIL will be considered as logic 0.
+
+Any voltage that lies between VIL and VIH will be considered as undefined region.
+
+Undefined region -> the logic can either moved from logic 1 to logic 0 or from the interception point of (b) to logic 0. Undefined region is a danger case.
+
+Whenever the voltage lies between VIH and VOH, it will always being treated as 1V or logic 1.
+
+Therefore, we have to ensure that the voltage didn't enter in undefined region since it cannot be identified whether the voltage might be in logic 1 or not.
+
+That is the problem when we are having a large physical distance from the main power supply to the circuit.
+
+Noise margin defines the input voltage range and the output voltage. Basically it varies the input voltage. --> Noise margin: Any voltage in between the range of VOH and VIH will be detected as logic 1. It should be put under the inputs/outputs of the circuit.
+
+Any voltage level in NML range will be detected as logic 0.
+
+Noise could be easily eliminated or can be ignored at this margin.
+
+Source: Udemy learning website
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/pp3.png">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/pp2.png">
+
+Lower Supply Voltage leading to lesser noise margin.
+
+When the supply voltage is reduced, the noise margin will also be reduced.
+
+For example, referring to the figure below, anything below 200 mV on the LHS margin will be considered as low margin while on the RHS, the noise margin will be below 100 mV.
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/pp1.png">
+
+
 
 </details>
 <details>
-<summary>Theory</summary>
+<summary>Introduction to Signal Integrity and Glitch</summary>
+
+Signal Integrity and Glitch
+Signal Integrity and Crosstalk
+
+Signal Integrity and Crosstalk are the Quality checks of the clock routes.
+
+Signal integrity: the ability of an electrical signal to carry information reliably and resist the effects of high-frequency electromagnetic interference from nearby signals.
+
+Crosstalk: the undesirable electrical interaction between two or more physically adjacent nets due to capacitive cross-coupling. It is a type of noise signal that corrupts the actual signal while transmission through the communication medium.
+
+**Aggressor and Victim Nets**
+
+A net that receives undesirable cross-coupling effects from a nearby net is called a victim net.
+
+A net that causes these effects in a victim net is called an aggressor net.
+
+***Crosstalk-Glitch**
+
+When one net is switching, and another net is constant then switching signal may cause spikes on other net because of which coupling capacitance (Cc) occurs between two nets, this is called as crosstalk noise.
+
+Types of Glitches --> Rise, Fall, Overshoot, Undershoot
+
+<img  width="1085" alt="" src="">
+Performing analysis and report commands
+Performing Crosstalk Delay Analysis
+
+```Enable PrimeTime SI --> set_app_varsi_enable_analysistrue```
+
+Back-annotate the design with cross-coupling capacitance information in a SPEF or GPD file --> ```read_parasitics-keep_capacitive_couplingfile_name.spf```
+
+Using check_timing
+
+Types to check specific to crosstalk analysis
+```ruby
+no_driving_cell
+ideal_clocks
+partial_input_delay
+unexpandable_clocks
+```
+**Timing reports**
+```ruby
+report_timing
+-crosstalk_delta
+report_si_bottleneck
+report_delay_calculation –crosstalk
+report_si_double_switching
+report_noise
+report_timing -transition_time-crosstalk_delta \ -input_pins-significant_digits 4   (Viewing the Crosstalk Analysis Report)
+```
+
+**Bottleneck Reports**
+```ruby
+report_si_bottleneck
+report_bottleneck
+delta_delay
+delta_delay_ratio
+total_victim_delay_bump
+delay_bump_per_aggressor
+  
+report_si_bottleneck-cost_typedelta_delay\-slack_lesser_than 2.0    (To get a list of all the victim nets with a delay violation or within 2.0 time units of a violation, listed in order of delta delay)
+
+report_delay_calculation –crosstalk
+size_cell
+set_coupling_separation
+-include_clock_nets
+minimum_active_aggressor
+
+report_si_bottleneck-cost_type delta_delay \ -minimum_active_aggressors 3   (bottleneck command reports nets where three or more active aggressors are affecting the net)
+```
+**Crosstalk Net Delay Calculation**
+
+```report_delay_calculation-crosstalk \ -from [get_pinsg1/Z] -to [get_pins g2/A]```
+
+**Reporting Crosstalk Settings**
+
+To check crosstalk settings
+
+```ruby
+report_si_delay_analysis
+report_si_noise_analysis
+report_si_aggressor_exclusion
+```
+</details>
+
 
 </details>
 <details>
-<summary>Theory</summary>
+<summary>Labs</summary>
+	
+```report_qor``
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/report_qor.png">
+
+*In icc2_shell*
+```ruby
+source /home/pavday.s/physical_design/day_20/icc2_workshop_collaterals/standaloneFlow/top.tcl
+update_timing
+write_parasitics -format spef -output vsdbabysoc_spef
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/update_timing_icc2.png">
+
+```ruby
+gzip -d /home/pavday.s/physical_design/day_20/icc2_workshop_collaterals/standaloneFlow/write_data_dir/vsdbabysoc/vsdbabysoc.sdc
+cp /home/pavday.s/day_20/icc2_workshop_collaterals/standaloneFlow/write_data_dir/vsdbabysoc/vsdbabysoc.pt.v /home/pavday.s/physical_design/day_20/files_27
+```
+
+
+
+*In pt_shell*
+
+```ruby
+source /home/pavday.s/physical_design/day_20/cross1.tcl
+read_sdc ./physical_design/day_20/report/vsdbabysoc.sdc
+set_app_var si_enable_analysis true
+read_parasitics -keep_capacitive_coupling icc2_workshop_collaterals/standaloneFlow/vsdbabysoc_spef.temp1_25.spef
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/in%20pt%20_set_target_lib.png">
+
+
+```ruby
+check_timing
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/check_timing.png">
+
+```ruby
+report_si_bottleneck
+report_bottleneck
+report_si_delay_analysis
+report_si_aggressor_exclusion
+report_si_noise_analysis
+```
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/report_bottleneck_1.png">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/samsungpd_day27/report_si_noise.png">
+
+<img  width="1085" alt="" src="">
+
 
 </details>
 
