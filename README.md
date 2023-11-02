@@ -6995,4 +6995,121 @@ after fixing the violation the maxtrans and max cap is zero
 </details>
 
 
+</details>
+
+
+
+
+</details>
+
+# Day 25 RISC-V core RTL2GDS flow
+
+<details>
+<summary>Theory</summary>
+
+</details>
+
+</details>
+
+# Day 26 Introduction to mixed-signal flow
+
+<details>
+<summary>Theory</summary>
+
+**Understanding mixed signal design**
+
+**What is mixed signal design?**
+
+Mixed-signal design refers to the process of integrating both analog and digital electronic components and functions within a single integrated circuit (IC) or system. In this context, "analog" typically refers to continuous signals, which can have an infinite number of values within a given range, while "digital" refers to discrete signals that have a limited number of defined values, often represented as binary data (0s and 1s).
+
+**Here are some key aspects of mixed-signal design:**
+
+***1. Analog and Digital Integration:** Mixed-signal design involves combining analog components (such as amplifiers, sensors, and analog-to-digital converters) with digital components (like microcontrollers, digital signal processors, and memory) on the same chip or within the same system. This integration allows for efficient processing and control of both continuous and discrete data.
+
+**2. Signal Conversion:** One common aspect of mixed-signal design is the conversion of analog signals to digital and vice versa. Analog-to-digital converters (ADCs) convert continuous analog signals into digital form, while digital-to-analog converters (DACs) convert digital data back into analog signals.
+
+**3. Applications:** Mixed-signal design is used in a wide range of applications, including data acquisition systems, audio processing, wireless communication devices, and many more. For example, in a smartphone, mixed-signal components handle tasks like converting voice to digital signals for transmission, processing touch screen input, and managing power supply voltages.
+
+**4. Challenges:** Designing mixed-signal systems can be complex because it requires consideration of both analog and digital characteristics, which can have different operating requirements and sensitivities. Managing noise, power consumption, and signal integrity are important challenges in mixed-signal design.
+
+**5. Testing and Verification:** Testing mixed-signal circuits can be more challenging than testing purely digital or analog systems due to the interaction between analog and digital components. Specialized test equipment and methodologies are often used to verify the performance of mixed-signal designs.
+
+**7. Optimization:** Designers often aim to optimize mixed-signal systems for factors like performance, power efficiency, and cost. Balancing the trade-offs between analog and digital components is essential to achieving the desired outcome.
+
+Mixed-signal design is essential for many modern electronic devices and systems that require the processing of both analog and digital information. It plays a crucial role in enabling capabilities like wireless communication, multimedia processing, and efficient control of physical systems.
+
+**What is electronic signals?**
+
+Electronic signal is a message/information encoded by changing the voltage of an electric current and it is used to communicate within several devices
+
+**Types of electronic signals**
+
+Electronic signals can be categorized into different types based on various characteristics, including their waveform, frequency, and purpose. Here are some common types of electronic signals:
+
+Analog Signals:
+
+Continuous waveform: Analog signals are continuous and can have an infinite number of values within a given range.
+Examples: Audio signals, voltage levels from sensors, analog video signals.
+Digital Signals:
+
+Discrete waveform: Digital signals have a limited number of defined values, typically represented as binary data (0s and 1s).
+Examples: Binary data in computers, digital communication signals, digital control signals.
+Sine Wave:
+
+A pure, periodic, and continuous analog signal with a sinusoidal waveform.
+Used in various applications, including AC power, audio signals, and RF communication.
+Square Wave:
+
+A digital signal with a square waveform, oscillating between two discrete voltage levels (high and low).
+Commonly used for clock signals and digital data transmission.
+Pulse Wave:
+
+A digital signal that consists of a series of rectangular pulses of varying widths.
+Used in digital communication and pulse-width modulation (PWM).
+Sawtooth Wave:
+
+An analog or digital signal with a sawtooth-shaped waveform, where voltage rises linearly and then rapidly drops.
+Used in applications like waveform generation and music synthesis.
+Triangle Wave:
+
+A signal with a triangular waveform, where the voltage rises linearly and then reverses direction.
+Used in audio synthesis and signal testing.
+Exponential Wave:
+
+An analog signal with an exponential growth or decay waveform.
+Used in applications like charging and discharging circuits and exponential functions.
+Periodic and Aperiodic Signals:
+
+Periodic signals repeat at regular intervals, while aperiodic signals do not have a regular repetition pattern.
+Examples of periodic signals include sine waves, square waves, and triangle waves. Aperiodic signals may include noise or random data.
+Impulse Signal:
+
+A signal that is very short in duration and carries a large amplitude.
+Used in applications like system analysis, such as in the impulse response of a system.
+Continuous and Discrete Signals:
+Continuous signals exist over a continuous range of time or amplitude. Discrete signals only exist at specific points in time or amplitude.
+Audio signals are often continuous, while digital data is discrete.
+Modulated Signals:
+Signals that carry information by modulating one or more of their characteristics, such as amplitude, frequency, or phase.
+Examples include Amplitude Modulation (AM), Frequency Modulation (FM), and Phase Modulation (PM) in radio communication.
+Periodic and Non-Periodic Signals:
+Periodic signals repeat their patterns over time, while non-periodic signals do not.
+Examples of periodic signals include sine waves, square waves, and triangle waves. Non-periodic signals may include transient signals and random noise.
+These are just some of the many types of electronic signals, each with its unique characteristics and applications. Understanding these signal types is crucial for designing, analyzing, and troubleshooting electronic circuits and systems.
+</details>
+
+# Day 27 Introduction to mixed-signal flow
+
+<details>
+<summary>Theory</summary>
+
+</details>
+<details>
+<summary>Theory</summary>
+
+</details>
+<details>
+<summary>Theory</summary>
+
+</details>
 
