@@ -1,0 +1,16 @@
+1. source /home/pavday.s/physical_design/day_20/icc2_workshop_collaterals/standaloneFlow/top.tcl
+2. update_timing
+write_parasitics -format spef -output vsdbabysoc_spef
+gzip -d /home/pavday.s/physical_design/day_20/icc2_workshop_collaterals/standaloneFlow/write_data_dir/vsdbabysoc/vsdbabysoc.sdc
+cp /home/pavday.s/day_20/icc2_workshop_collaterals/standaloneFlow/write_data_dir/vsdbabysoc/vsdbabysoc.pt.v /home/pavday.s/physical_design/day_20/files_27
+in pt_shell
+source /home/pavday.s/physical_design/day_20/cross1.tcl
+read_sdc ./physical_design/day_20/report/vsdbabysoc.sdc
+set_app_var si_enable_analysis true
+read_parasitics -keep_capacitive_coupling icc2_workshop_collaterals/standaloneFlow/vsdbabysoc_spef.temp1_25.spef
+check_timing
+report_si_bottleneck
+report_bottleneck
+report_si_delay_analysis
+report_si_aggressor_exclusion
+report_si_noise_analysis
