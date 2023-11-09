@@ -8178,7 +8178,7 @@ netgen -batch lvs "../mag/inverter.spice inverter" "../xschem/inverter.spice inv
 
 -As we can see from the result below, there was an issue in the wiring and the netlists do not match. This is due to wiring errors in the layout.
 
-<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day28/x1.PNG">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day28/drc0.PNG">
 
 *Debugging errors in netlist, rerun and save layout*
 ```ruby
