@@ -8178,7 +8178,7 @@ netgen -batch lvs "../mag/inverter.spice inverter" "../xschem/inverter.spice inv
 
 -As we can see from the result below, there was an issue in the wiring and the netlists do not match. This is due to wiring errors in the layout.
 
-<img  width="1085" alt="" src="">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day28/x1.PNG">
 
 *Debugging errors in netlist, rerun and save layout*
 ```ruby
@@ -8193,7 +8193,10 @@ ext2spice
 ```ruby
 vim inverter.spice 
 ```
-<img  width="1085" alt="" src="">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day28/x2.PNG">
+
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day28/x3.PNG">
 
 ```ruby
 cp ../xschem/inverter_tb.spice .
@@ -8201,7 +8204,7 @@ vim inverter_tb.spice
 ```
 -Modify the test bench netlist file.
 
-<img  width="1085" alt="" src="">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day28/x4.PNG">
 
 ```ruby
 /usr/share/pdk/bin/cleanup_unref.py -remove .
@@ -8211,6 +8214,6 @@ ngspice inverter_tb.spice
 
 -The result is almost the same as in previous simulation in xschem.
 
-<img  width="1085" alt="" src="">
+<img  width="1085" alt="" src="https://github.com/Dhananjay411/Samsungpdtraining/blob/master/day28/13.PNG">
 
-DRC/LVS Theory and labs
+</details>
