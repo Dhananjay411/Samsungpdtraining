@@ -8243,7 +8243,7 @@ ngspice inverter_tb.spice
 
  Synth code
  
- ![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/c0748f0a-135e-4c21-a470-497304ddbe32)
+ ![image](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/30/1.png)
 
 
  The basic structure of the code is as follows
@@ -8301,19 +8301,19 @@ Cases for bash scripts
 
  1. No input file provided
 
- ![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/20b128da-8500-431f-b449-23acc99eb120)
+ ![image](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/30/2.png)
  
 2. File provided is of wrong format (not csv)
 
- ![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/231c92f1-e064-45c2-b1c2-92c666503776)
+ ![image](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/30/3.png)
 
 3. Provide a .csv that does not exist
 
- ![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/7fd4aa09-1192-43ab-9cc3-329d33390e18)
+ ![image](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/30/4.png)
 
 4. Type -help
 
- ![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/293707e9-5c3f-4da4-90af-c4ea506a5dd1)
+ ![image](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/30/5.png)
 
 
 
@@ -8333,7 +8333,7 @@ Implementation
 
 Glimpse of the synth.tcl
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/ae321732-f0d6-4205-bd25-db489d0b2d99)
+![image](https://user-images.githubusercontent.com/149615846/281139281-0af273e8-67ae-41ca-be68-68e134c5c8aa.png)
 
 
 
@@ -8380,7 +8380,7 @@ while {$i < $n_rows} {
 ```
 
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/49a69c2d-1f6a-40c1-8deb-2efba90623a6)
+![image](https://github.com/Dhananjay411/Samsungpdtraining/blob/master/30/IMG_20231121_104322.jpg)
 
 
 File/Directory Checking 
@@ -8467,7 +8467,7 @@ puts "OUTPUTS starting row in CSV file = $outputs_start "
 ```
 
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/1b33f4de-353a-434d-a572-086c5fd5b08a)
+![image](https://user-images.githubusercontent.com/149615846/281143240-b2dc950e-8ea7-40ab-b448-cf62ab7ae13a.png)
 
 
 **Processing Clock and input constraints from CSV and dumping into sdc**
@@ -8476,7 +8476,7 @@ The Day 3 task involves the analysis of clock and input constraints from a CSV f
 
 Review of input file openMSP430_design_constraints.csv
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/5365faf8-8dd4-49a0-95cc-3bf0229ea371)
+![image](https://user-images.githubusercontent.com/149615846/281143881-d74d6bbd-20a8-4521-a1d6-38d08c61b8ec.png)
 
 Day 3 tasks are succesfully complete i.e. To process constraints in a csv file for clocks and inputs and dump SDC commands into a .sdc file with actual processed data.
 
@@ -8484,6 +8484,16 @@ Processing of the constraints .csv file for CLOCKS and dumping SDC commands to .
 The csv file containing the CLOCKS data has been successfully processed, and clock-based SDC commands (with distinct clock names by appending "_synyui" to the SDC create_clock command) have been dumped into the.sdc file. Below are screenshots of the terminal with many "puts" spitting out the variables, user debug information, and output.sdc, along with the basic code for the same.
 
 ```ruby
+##############################################################################################
+
+
+
+
+
+
+
+
+
 ##############################################################################################
 ################### Day 3 ###################################################################
 # Conversion of constraints csv file to SDC
@@ -8554,23 +8564,11 @@ puts "\n Clock duty cycle start column in constraint file = $clk_dc_st_col"
 puts "\n Clock actual starting row = $clocks_start_row_actual"
 puts "\n Clock actual ending row = $end_of_clocks"
 ```
+The following image shows the constraints defined for SDC in the design
+![3](https://github.com/Usha-Mounika/Samsung_PD/assets/142480150/511fe6b0-7f14-40bd-908d-529e779591d7)
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/43323872-5bd7-4a75-9a72-c12a23017927)
-
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/8aeb8b54-b1f2-4a0b-a1ee-cc5b934480c3)
-
-openMSP430.sdc
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/7b75876b-ae46-40a3-9fb1-75024cd83bf8)
-
-*Processing constraints .csv and dumping SDC commands to .sdc*
-
-I've successfully processed the input data from the CSV file, distinguishing between bit and bus inputs. The corresponding SDC commands based on the inputs have been accurately written to an .sdc file. Enclosed are terminal screenshots featuring numerous "puts" displaying variables, user debug information, and the generated output.sdc file. Additionally, the basic code for this process is provided below.
-
-```ruby
-######################## DAY3 Part 2 ######################################
-
+The csv file contains the CLOCKS data and clock-based SDC commands have been generated into the.sdc file. The file was written out in .sdc format with all constraints needed for the design, the following snippet of code shows this as follows:
+```tclsh
 # Finding the starting column number for input clock latency in INPUTS section
 set ip_erd_st_col [lindex [lindex [m1 search rect $clocks_start_column $inputs_start [expr {$n_columns_concsv-1}] [expr {$outputs_start-1}] early_rise_delay] 0 ] 0 ]
 set ip_efd_st_col [lindex [lindex [m1 search rect $clocks_start_column $inputs_start [expr {$n_columns_concsv-1}] [expr {$outputs_start-1}] early_fall_delay] 0 ] 0 ]
@@ -8641,27 +8639,13 @@ while { $i < $end_of_inputs } {
 
 }
 ```
+</details>
+<details>
+<summary>Scripting and yosys synthesis</summary>
+<br>
+Below code will process the csv file for the outputs data and then generate the output-based SDC instructions into SDC file.
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/624256ed-0c2f-490a-b9f7-377e93cc2768)
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/3757e701-c689-4220-b081-8283ddc0a0b6)
-
-
-**Day 4 Cmpleting script and yosys synthesis introduction**
-
-I have completed the Day 4 tasks, which involved implementing error-handling code for hierarchy checks. Additionally, I gained proficiency in sample memory synthesis, comprehending its memory write and read processes. I successfully processed constraints from CSV files related to outputs and generated SDC commands, saving them in .sdc files with the accurately processed data.
-
-I've processed the csv file for the outputs data, separated the bit and bus outputs, then dumped the output-based SDC instructions into a.sdc file successfully. Below are images of the terminal with many "puts" spitting out the variables, user debug information, and output.sdc, along with the basic code for the same.
-
-Code 
-```ruby
-#################################################################################################
-######################################## Day 4 ##################################################
-#################################################################################################
-#
-#Output constraint
-#
-
+```
 # Finding column number starting for output clock latency in OUTPUTS section only
 set op_erd_st_col [lindex [lindex [m1 search rect $clocks_start_column $outputs_start [expr {$n_columns_concsv-1}] [expr {$n_rows_concsv-1}] early_rise_delay] 0 ] 0 ]
 set op_efd_st_col [lindex [lindex [m1 search rect $clocks_start_column $outputs_start [expr {$n_columns_concsv-1}] [expr {$n_rows_concsv-1}] early_fall_delay] 0 ] 0 ]
@@ -8726,84 +8710,14 @@ while { $i < $end_of_outputs } {
 
 	set i [expr {$i+1}]
 }
-
 close $sdc_file
 puts "\nInfo-SDC: SDC created. Please use constraints in path $Output_Directory/$Design_Name.sdc"
 ```
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/8b22a611-22ff-462a-bcb8-867c546719da)
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/ef336097-c263-4404-80d6-e5224c59389c)
+The following code involves implementation of error-handling for hierarchy checks.
 
-
-**Memory Module Yosys Synthesis Explaination**
-
-memory.v
-
-```ruby
-module memory (CLK, ADDR, DIN, DOUT);
-
-parameter wordSize = 1;
-parameter addressSize = 1;
-
-input ADDR, CLK;
-input [wordSize-1:0] DIN;
-output reg [wordSize-1:0] DOUT;
-reg [wordSize:0] mem [0:(1<<addressSize)-1];
-
-always @(posedge CLK) begin
-	mem[ADDR] <= DIN;
-	DOUT <= mem[ADDR];
-	end
-
-endmodule
 ```
-The basic Yosys script memory.ys to run this and obtain a gate-level netlist and 2D representation of the memory module in gate components is provided below.
-
-Code
-
-```ruby
-# Reading the library
-read_liberty -lib -ignore_miss_dir -setattr blackbox /home/kunalg/Desktop/work/openmsp430/openmsp430/osu018_stdcells.lib
-# Reading the verilog
-read_verilog verilog/memory.v
-synth top memory
-splitnets -ports -format ___
-dfflibmap -liberty /home/kunalg/Desktop/work/openmsp430/openmsp430/osu018_stdcells.lib
-opt
-abc -liberty /home/kunalg/Desktop/work/openmsp430/openmsp430/osu018_stdcells.lib
-flatten
-clean -purge
-opt
-clean
-# Writing the netlist
-write_verilog memory_synth.v
-# Representation of netlist with it's components
-show
-~
-```
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/db14149b-bf90-4d9f-9d27-74e735fa670d)
-
-The write process is as follows
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/e6149902-1249-4b8f-948a-a0628fbb54b2)
-
-Before the first rising  edge
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/156eeef8-386f-4cd9-a98d-8d0d54f405a7)
-
-After first rise edge
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/0a663f19-0fb0-41a5-befd-d9e8bd3cb19c)
-
-**Hierarachy Check redumpying**
-
-I have successfully written the code for dumping the hierarchy check script. The basic code of the same and screenshots of the terminal with several "puts" printing out the variables and user debug information as well as output .hier.ys are shown below.
-
-```ruby
-######################################## Day 4 part 2 #######################################
 # Hierarchy Check
-#############################################################################################
 puts "\nInfo: Creating hierarchy check script to be used by Yosys"
 set data "read_liberty -lib -ignore_miss_dir -setattr blackbox ${Late_Library_Path}"
 set filename "$Design_Name.hier.ys"
@@ -8815,22 +8729,10 @@ foreach f $netlist {
 	puts -nonewline $fileId "\nread_verilog $f"
 	puts "\nInfo: Netlist being read for user debug: $f" 
 }
-
 puts -nonewline $fileId "\nhierarchy -check"
 close $fileId
 ```
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/5ac6c6ea-31d2-4789-9eec-ff394168aea7)
-
-hier.ys
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/a16645ff-5c4e-4f55-bd4b-52e9e8f399d1)
-
-Hierarchy check run and error handling
-
-I have successfully written the code for hierarchy check error handling in case any error pops up during hierarchy check run in Yosys and exits if hierarchy check fails. The basic code of the same and screenshots of the terminal with several "puts" printing out the variables and user debug information are shown below.
-
-```ruby
+```
 # Hierarchy check error handling
 # Hierarchy check error handling done to see any errors popping up in above script.
 # Running hierarchy check in yosys by dumping log to log file and catching execution message
@@ -8857,23 +8759,78 @@ if { $error_flag } {
 	puts "\nInfo: Please find hierarchy check details in '[file normalize $Output_Directory/$Design_Name.hierarchy_check.log]' for more info"
 }
 ```
-Snips
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/36fe963d-740c-4a41-9c95-23cc39c1acdc)
+Now, the synthesis of memory module is to be done. The verilog code is as follows:
+```
+verilog
+module memory (CLK, ADDR, DIN, DOUT);
 
-checkimg the hier.log
+parameter wordSize = 1;
+parameter addressSize = 1;
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/8d876156-15d3-4a9b-85a7-e75a07977941)
+input ADDR, CLK;
+input [wordSize-1:0] DIN;
+output reg [wordSize-1:0] DOUT;
+reg [wordSize:0] mem [0:(1<<addressSize)-1];
 
-**Day 5 Advanced Scripting Techniques and QOR**
+always @(posedge CLK) begin
+	mem[ADDR] <= DIN;
+	DOUT <= mem[ADDR];
+	end
 
-The activities for day five include running Yosys' main synthesis, learning about and using procedures at the application level, creating commands, and writing the files needed for the OpenTimer tool, like .conf,.spef, and timing Create an OpenTimer script, launch an OpenTimer STA, and gather the information needed to create a QoR.final step is to print the gathered data in a tool-standard QoR output format using the results file that was created during the OpenTimer STA run.
+endmodule
+```
+The basic Yosys script memory.ys to run this and obtain a gate-level netlist and 2D representation of the memory module in gate components is provided below.
 
-Main yosys synthesis script:
+```
+# Reading the library
+read_liberty -lib -ignore_miss_dir -setattr blackbox /home/vsduser/Desktop/work/openmsp430/openmsp430/osu018_stdcells.lib
+# Reading the verilog
+read_verilog verilog/memory.v
+synth top memory
+splitnets -ports -format ___
+dfflibmap -liberty /home/vsduser/Desktop/work/openmsp430/openmsp430/osu018_stdcells.lib
+opt
+abc -liberty /home/vsduser/Desktop/work/openmsp430/openmsp430/osu018_stdcells.lib
+flatten
+clean -purge
+opt
+clean
+# Writing the netlist
+write_verilog memory_synth.v
+# Representation of netlist with it's components
+show
+~
+```
+![image](https://github.com/Usha-Mounika/Samsung_PD/assets/142480150/08a49fd9-820e-427f-b020-729990ce62da)
 
-Code 
+The write process is as follws:
+![image](https://github.com/Usha-Mounika/Samsung_PD/assets/142480150/5119a7eb-7790-41b9-b561-356576addc45)
 
-```ruby
+The following code is written for hierarchy check redumping as follows:
+```
+puts "\nInfo: Creating hierarchy check script to be used by Yosys"
+set data "read_liberty -lib -ignore_miss_dir -setattr blackbox ${Late_Library_Path}"
+set filename "$Design_Name.hier.ys"
+set fileId [open $Output_Directory/$filename "w"]
+puts -nonewline $fileId $data
+set netlist [glob -dir $Netlist_Directory *.v]
+foreach f $netlist {
+	set data $f
+	puts -nonewline $fileId "\nread_verilog $f"
+	puts "\nInfo: Netlist being read for user debug: $f" 
+}
+
+puts -nonewline $fileId "\nhierarchy -check"
+close $fileId
+```
+</details>
+<details>
+<summary>Advanced scripting and QoR generation</summary>
+<br>
+	
+The following code is written for checking any errors in the above script.
+```
 # Main Synthesis Script for yosys
 # ---------------------
 puts "\nInfo: Creating main synthesis script to be used by Yosys"
@@ -8895,21 +8852,9 @@ puts -nonewline $fileId "\nwrite_verilog $Output_Directory/$Design_Name.synth.v"
 close $fileId
 puts "\nInfo: Synthesis script created and can be accessed from path $Output_Directory/$Design_Name.ys"
 ```
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/9afcac49-25f4-4487-a497-210b99675c65)
-
-OpenMSP430.ys
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/fe95dae8-e9f9-4930-8c7c-b68b78b046d3)
-
-Running main synthesis script and error handling
-
-code 
-
-```ruby
+The following code is used for running synthesis and handling errors.
+```
 puts "\nInfo: Running synthesis......."
-# Main synthesis error handling
-# Running main synthesis in yosys by dumping logs to the log directory and catching execution message
 if { [catch {exec yosys -s $Output_Directory/$Design_Name.ys >& $Output_Directory/$Design_Name.synthesis.log} msg] } {
 	puts "\nError: Synthesis failed due to errors. Please refer to log $Output_Directory/$Design_Name.synthesis.log for errors. Exiting...."
 	exit
@@ -8918,357 +8863,267 @@ if { [catch {exec yosys -s $Output_Directory/$Design_Name.ys >& $Output_Director
 }
 puts "\nInfo: Please refer to log $Output_Directory/$Design_Name.synthesis.log"
 ```
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/6d662ad8-5833-47dd-a835-7a13ae0f6971)
-
-OpenMSP430.synthesis.log
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/5025021e-661a-42bb-a70a-ced4b5c31bb0)
-
-openMSP430.synth.v
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/b399f38c-c214-4698-bee2-9eb47fa3bae6)
-
-Editing .synth for being run by opentimer
-
-Code
-
-```ruby
-############################################## Editing .synth.v to be usable by Opentimer #######################################################
-
-puts "\nInfo: Removing '*' and '\\' from netlist"
-set fileId [open /tmp/1 "w"]
-puts -nonewline $fileId [exec grep -v -w "*" $Output_Directory/$Design_Name.synth.v]
-close $fileId
-set output [open $Output_Directory/$Design_Name.final.synth.v "w"]
-set filename "/tmp/1"
-set fid [open $filename r]
-while { [gets $fid line] != -1 } {
-	puts -nonewline $output [string map {"\\" ""} $line]
-	puts -nonewline $output "\n"
-}
-close $fid
-close $output
-puts "\nInfo: Please find the synthesized netlist for $Design_Name at below path. You can use this netlist for STA or PNR"
-puts "\nPath: $Output_Directory/$Design_Name.final.synth.v"
-```
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/ef13f945-1f22-4f7c-a636-89ba91b16460)
-
-openMSP430.synth.v
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/c6d23bb6-6750-4fb1-8734-695c00c2068d)
-
-openMSP430.final.synth.v
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/cba3902a-0a58-4d6b-af59-3dc5b25f8bc4)
-
-
-**Procs**
-
-Procs can be used to create user-defined commands. The procs used in the training are as shown below
-
-1. Proc which redirects the 'stdout' screen log to the file in the proc's argument.
-
-```ruby
+Procs can be used to create user-defined commands.Different procs used throught the training is given below:
+- reopenStdout.proc
+```tclsh
 #!/bin/tclsh
-# proc to redirect screen log to file
+#proc to redirect screen log to file
 proc reopenStdout {file} {
     close stdout
     open $file w       
 }
 ```
-
-2. set_multi_cpu_usage.proc
-
-This proc outputs multiple threads of the CPU usage command required for the OpenTimer tool.
-
-```ruby
+- set_multi_cpu_usage.proc
+```
 #!/bin/tclsh
-
 proc set_multi_cpu_usage {args} {
-        array set options {-localCpu <num_of_threads> -help "" }
-        foreach {switch value} [array get options] {
-       # puts "Option $switch is $value"
-        }
-        while {[llength $args]} {
-       # puts "llength is [llength $args]"
-       # puts "lindex 0 of \"$args\" is [lindex $args 0]"
-                switch -glob -- [lindex $args 0] {
-                -localCpu {
-                           #puts "old args is $args"
-                           set args [lassign $args - options(-localCpu)]
-                           #puts "new args is \"$args\""
-                           puts "set_num_threads $options(-localCpu)"
-                          }
-                -help {
-                           #puts "old args is $args"
-                           set args [lassign $args - options(-help) ]
-                           #puts "new args is \"$args\""
-                           puts "Usage: set_multi_cpu_usage -localCpu <num_of_threads> -help"
-                           puts "\t-localCpu - To limit number of threads used"
-                           puts "\t-help - To print details of proc"
-                      }
-                }
-        }
+        array set options {-localCpu <num_of_threads> -help "" }
+        foreach {switch value} [array get options] {
+        puts "Option $switch is $value"
+        }
+        while {[llength $args]} {
+        puts "llength is [llength $args]"
+        puts "lindex 0 of \"$args\" is [lindex $args 0]"
+                switch -glob -- [lindex $args 0] {
+                -localCpu {
+                           puts "old args is $args"
+                           set args [lassign $args - options(-localCpu)]
+                           puts "new args is \"$args\""
+                           puts "set_num_threads $options(-localCpu)"
+                          }
+                -help {
+                           puts "old args is $args"
+                           set args [lassign $args - options(-help) ]
+                           puts "new args is \"$args\""
+                           puts "Usage: set_multi_cpu_usage -localCpu <num_of_threads> -help"
+                           puts "\t-localCpu - To limit number of threads used"
+                           puts "\t-help - To print details of proc"
+                      }
+                }
+        }
 }
-
 #set_multi_cpu_usage -localCpu 5 -help
 ```
-
-3. read_lib.proc
-
-   ```ruby
-   #!/bin/tclsh
-	proc read_lib args {
-		# Setting command parameter options and its values
-		array set options {-late <late_lib_path> -early <early_lib_path> -help ""}
-		while {[llength $args]} {
-			switch -glob -- [lindex $args 0] {
-			-late {
-				set args [lassign $args - options(-late) ]
-				puts "set_late_celllib_fpath $options(-late)"
-			      }
-			-early {
-				set args [lassign $args - options(-early) ]
-				puts "set_early_celllib_fpath $options(-early)"
-			       }
-			-help {
-				set args [lassign $args - options(-help) ]
-				puts "Usage: read_lib -late <late_lib_path> -early <early_lib_path>"
-				puts "-late <provide late library path>"
-				puts "-early <provide early library path>"
-				puts "-help - Provides user deatails on how to use the command"
-			      }	
-			default break
-			}
+- read_lib
+```
+#!/bin/tclsh
+proc read_lib args {
+	# Setting command parameter options and its values
+	array set options {-late <late_lib_path> -early <early_lib_path> -help ""}
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		-late {
+			set args [lassign $args - options(-late) ]
+			puts "set_late_celllib_fpath $options(-late)"
+		      }
+		-early {
+			set args [lassign $args - options(-early) ]
+			puts "set_early_celllib_fpath $options(-early)"
+		       }
+		-help {
+			set args [lassign $args - options(-help) ]
+			puts "Usage: read_lib -late <late_lib_path> -early <early_lib_path>"
+			puts "-late <provide late library path>"
+			puts "-early <provide early library path>"
+			puts "-help - Provides user deatails on how to use the command"
+		      }	
+		default break
 		}
 	}
-	```
-
-   4. read_verilog.proc
-
-   ```ruby
-   proc read_verilog {arg1} {
-   puts "set_verilog_fpath $arg1"
-   }
-   ```
-
-  5. read_sdc.proc
-
-  ```ruby
-  proc read_sdc {arg1} {
+}
+```
+- read_verilog
+```
+proc read_verilog {arg1} {
+puts "set_verilog_fpath $arg1"
+}
+```
+- read_sdc
+```proc read_sdc {arg1} {
 set sdc_dirname [file dirname $arg1]
 set sdc_filename [lindex [split [file tail $arg1] .] 0 ]
 set sdc [open $arg1 r]
 set tmp_file [open /tmp/1 w]
-
 puts -nonewline $tmp_file [string map {"\[" "" "\]" " "} [read $sdc]]     
 close $tmp_file
-
 #-----------------------------------------------------------------------------#
 #----------------converting create_clock constraints--------------------------#
 #-----------------------------------------------------------------------------#
-
 set tmp_file [open /tmp/1 r]
 set timing_file [open /tmp/3 w]
 set lines [split [read $tmp_file] "\n"]
 set find_clocks [lsearch -all -inline $lines "create_clock*"]
 foreach elem $find_clocks {
-  set clock_port_name [lindex $elem [expr {[lsearch $elem "get_ports"]+1}]]
-  set clock_period [lindex $elem [expr {[lsearch $elem "-period"]+1}]]
-  set duty_cycle [expr {100 - [expr {[lindex [lindex $elem [expr {[lsearch $elem "-waveform"]+1}]] 1]*100/$clock_period}]}]
-  puts $timing_file "clock $clock_port_name $clock_period $duty_cycle"
-  }
+	set clock_port_name [lindex $elem [expr {[lsearch $elem "get_ports"]+1}]]
+	set clock_period [lindex $elem [expr {[lsearch $elem "-period"]+1}]]
+	set duty_cycle [expr {100 - [expr {[lindex [lindex $elem [expr {[lsearch $elem "-waveform"]+1}]] 1]*100/$clock_period}]}]
+	puts $timing_file "clock $clock_port_name $clock_period $duty_cycle"
+	}
 close $tmp_file
-
 #-----------------------------------------------------------------------------#
 #----------------converting set_clock_latency constraints---------------------#
 #-----------------------------------------------------------------------------#
-
 set find_keyword [lsearch -all -inline $lines "set_clock_latency*"]
 set tmp2_file [open /tmp/2 w]
 set new_port_name ""
 foreach elem $find_keyword {
-      set port_name [lindex $elem [expr {[lsearch $elem "get_clocks"]+1}]]
-  if {![string match $new_port_name $port_name]} {
-      	set new_port_name $port_name
-      	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*"] ""]]
-      	set delay_value ""
-      	foreach new_elem $delays_list {
-      		set port_index [lsearch $new_elem "get_clocks"]
-      		lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
-      	}
-  	puts -nonewline $tmp2_file "\nat $port_name $delay_value"
-  }
+        set port_name [lindex $elem [expr {[lsearch $elem "get_clocks"]+1}]]
+	if {![string match $new_port_name $port_name]} {
+        	set new_port_name $port_name
+        	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*"] ""]]
+        	set delay_value ""
+        	foreach new_elem $delays_list {
+        		set port_index [lsearch $new_elem "get_clocks"]
+        		lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
+        	}
+		puts -nonewline $tmp2_file "\nat $port_name $delay_value"
+	}
 }
-
 close $tmp2_file
 set tmp2_file [open /tmp/2 r]
 puts -nonewline $timing_file [read $tmp2_file]
 close $tmp2_file
-
 #-----------------------------------------------------------------------------#
 #----------------converting set_clock_transition constraints------------------#
 #-----------------------------------------------------------------------------#
-
 set find_keyword [lsearch -all -inline $lines "set_clock_transition*"]
 set tmp2_file [open /tmp/2 w]
 set new_port_name ""
 foreach elem $find_keyword {
-      set port_name [lindex $elem [expr {[lsearch $elem "get_clocks"]+1}]]
-      if {![string match $new_port_name $port_name]} {
-  	set new_port_name $port_name
-  	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*"] ""]]
-      	set delay_value ""
-      	foreach new_elem $delays_list {
-      		set port_index [lsearch $new_elem "get_clocks"]
-      		lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
-      	}
-      	puts -nonewline $tmp2_file "\nslew $port_name $delay_value"
-  }
+        set port_name [lindex $elem [expr {[lsearch $elem "get_clocks"]+1}]]
+        if {![string match $new_port_name $port_name]} {
+		set new_port_name $port_name
+		set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*"] ""]]
+        	set delay_value ""
+        	foreach new_elem $delays_list {
+        		set port_index [lsearch $new_elem "get_clocks"]
+        		lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
+        	}
+        	puts -nonewline $tmp2_file "\nslew $port_name $delay_value"
+	}
 }
-
 close $tmp2_file
 set tmp2_file [open /tmp/2 r]
 puts -nonewline $timing_file [read $tmp2_file]
 close $tmp2_file
-
 #-----------------------------------------------------------------------------#
 #----------------converting set_input_delay constraints-----------------------#
 #-----------------------------------------------------------------------------#
-
 set find_keyword [lsearch -all -inline $lines "set_input_delay*"]
 set tmp2_file [open /tmp/2 w]
 set new_port_name ""
 foreach elem $find_keyword {
-      set port_name [lindex $elem [expr {[lsearch $elem "get_ports"]+1}]]
-      if {![string match $new_port_name $port_name]} {
-              set new_port_name $port_name
-      	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*"] ""]]
-  	set delay_value ""
-      	foreach new_elem $delays_list {
-      		set port_index [lsearch $new_elem "get_ports"]
-      		lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
-      	}
-      	puts -nonewline $tmp2_file "\nat $port_name $delay_value"
-  }
+        set port_name [lindex $elem [expr {[lsearch $elem "get_ports"]+1}]]
+        if {![string match $new_port_name $port_name]} {
+                set new_port_name $port_name
+        	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*"] ""]]
+		set delay_value ""
+        	foreach new_elem $delays_list {
+        		set port_index [lsearch $new_elem "get_ports"]
+        		lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
+        	}
+        	puts -nonewline $tmp2_file "\nat $port_name $delay_value"
+	}
 }
 close $tmp2_file
 set tmp2_file [open /tmp/2 r]
 puts -nonewline $timing_file [read $tmp2_file]
 close $tmp2_file
-
 #-----------------------------------------------------------------------------#
 #----------------converting set_input_transition constraints------------------#
 #-----------------------------------------------------------------------------#
-
 set find_keyword [lsearch -all -inline $lines "set_input_transition*"]
 set tmp2_file [open /tmp/2 w]
 set new_port_name ""
 foreach elem $find_keyword {
-      set port_name [lindex $elem [expr {[lsearch $elem "get_ports"]+1}]]
-      if {![string match $new_port_name $port_name]} {
-              set new_port_name $port_name
-      	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*"] ""]]
-      	set delay_value ""
-      	foreach new_elem $delays_list {
-      		set port_index [lsearch $new_elem "get_ports"]
-      		lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
-      	}
-      	puts -nonewline $tmp2_file "\nslew $port_name $delay_value"
-  }
+        set port_name [lindex $elem [expr {[lsearch $elem "get_ports"]+1}]]
+        if {![string match $new_port_name $port_name]} {
+                set new_port_name $port_name
+        	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*"] ""]]
+        	set delay_value ""
+        	foreach new_elem $delays_list {
+        		set port_index [lsearch $new_elem "get_ports"]
+        		lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
+        	}
+        	puts -nonewline $tmp2_file "\nslew $port_name $delay_value"
+	}
 }
-
 close $tmp2_file
 set tmp2_file [open /tmp/2 r]
 puts -nonewline $timing_file [read $tmp2_file]
 close $tmp2_file
-
 #-----------------------------------------------------------------------------#
 #---------------converting set_output_delay constraints-----------------------#
 #-----------------------------------------------------------------------------#
-
 set find_keyword [lsearch -all -inline $lines "set_output_delay*"]
 set tmp2_file [open /tmp/2 w]
 set new_port_name ""
 foreach elem $find_keyword {
-      set port_name [lindex $elem [expr {[lsearch $elem "get_ports"]+1}]]
-      if {![string match $new_port_name $port_name]} {
-              set new_port_name $port_name
-      	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*"] ""]]
-      	set delay_value ""
-      	foreach new_elem $delays_list {
-      		set port_index [lsearch $new_elem "get_ports"]
-      		lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
-      	}
-      	puts -nonewline $tmp2_file "\nrat $port_name $delay_value"
-  }
+        set port_name [lindex $elem [expr {[lsearch $elem "get_ports"]+1}]]
+        if {![string match $new_port_name $port_name]} {
+                set new_port_name $port_name
+        	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*"] ""]]
+        	set delay_value ""
+        	foreach new_elem $delays_list {
+        		set port_index [lsearch $new_elem "get_ports"]
+        		lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
+        	}
+        	puts -nonewline $tmp2_file "\nrat $port_name $delay_value"
+	}
 }
 
 close $tmp2_file
 set tmp2_file [open /tmp/2 r]
 puts -nonewline $timing_file [read $tmp2_file]
 close $tmp2_file
-
 #-----------------------------------------------------------------------------#
 #-------------------converting set_load constraints---------------------------#
 #-----------------------------------------------------------------------------#
-
 set find_keyword [lsearch -all -inline $lines "set_load*"]
 set tmp2_file [open /tmp/2 w]
 set new_port_name ""
 foreach elem $find_keyword {
-      set port_name [lindex $elem [expr {[lsearch $elem "get_ports"]+1}]]
-      if {![string match $new_port_name $port_name]} {
-              set new_port_name $port_name
-      	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*" ] ""]]
-      	set delay_value ""
-      	foreach new_elem $delays_list {
-      	set port_index [lsearch $new_elem "get_ports"]
-      	lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
-      	}
-      	puts -nonewline $timing_file "\nload $port_name $delay_value"
-  }
+        set port_name [lindex $elem [expr {[lsearch $elem "get_ports"]+1}]]
+        if {![string match $new_port_name $port_name]} {
+                set new_port_name $port_name
+        	set delays_list [lsearch -all -inline $find_keyword [join [list "*" " " $port_name " " "*" ] ""]]
+        	set delay_value ""
+        	foreach new_elem $delays_list {
+        	set port_index [lsearch $new_elem "get_ports"]
+        	lappend delay_value [lindex $new_elem [expr {$port_index-1}]]
+        	}
+        	puts -nonewline $timing_file "\nload $port_name $delay_value"
+	}
 }
 close $tmp2_file
 set tmp2_file [open /tmp/2 r]
 puts -nonewline $timing_file  [read $tmp2_file]
 close $tmp2_file
-
 #-----------------------------------------------------------------------------#
 close $timing_file
-
 set ot_timing_file [open $sdc_dirname/$sdc_filename.timing w]
 set timing_file [open /tmp/3 r]
 while {[gets $timing_file line] != -1} {
-      if {[regexp -all -- {\*} $line]} {
-              set bussed [lindex [lindex [split $line "*"] 0] 1]
-              set final_synth_netlist [open $sdc_dirname/$sdc_filename.final.synth.v r]
-              while {[gets $final_synth_netlist line2] != -1 } {
-                      if {[regexp -all -- $bussed $line2] && [regexp -all -- {input} $line2] && ![string match "" $line]} {
-                      puts -nonewline $ot_timing_file "\n[lindex [lindex [split $line "*"] 0 ] 0 ] [lindex [lindex [split $line2 ";"] 0 ] 1 ] [lindex [split $line "*"] 1 ]"
-                      } elseif {[regexp -all -- $bussed $line2] && [regexp -all -- {output} $line2] && ![string match "" $line]} {
-                      puts -nonewline $ot_timing_file "\n[lindex [lindex [split $line "*"] 0 ] 0 ] [lindex [lindex [split $line2 ";"] 0 ] 1 ] [lindex [split $line "*"] 1 ]"
-                      }
-              }
-      } else {
-      puts -nonewline $ot_timing_file  "\n$line"
-      }
+        if {[regexp -all -- {\*} $line]} {
+                set bussed [lindex [lindex [split $line "*"] 0] 1]
+                set final_synth_netlist [open $sdc_dirname/$sdc_filename.final.synth.v r]
+                while {[gets $final_synth_netlist line2] != -1 } {
+                        if {[regexp -all -- $bussed $line2] && [regexp -all -- {input} $line2] && ![string match "" $line]} {
+                        puts -nonewline $ot_timing_file "\n[lindex [lindex [split $line "*"] 0 ] 0 ] [lindex [lindex [split $line2 ";"] 0 ] 1 ] [lindex [split $line "*"] 1 ]"
+                        } elseif {[regexp -all -- $bussed $line2] && [regexp -all -- {output} $line2] && ![string match "" $line]} {
+                        puts -nonewline $ot_timing_file "\n[lindex [lindex [split $line "*"] 0 ] 0 ] [lindex [lindex [split $line2 ";"] 0 ] 1 ] [lindex [split $line "*"] 1 ]"
+                        }
+                }
+        } else {
+        puts -nonewline $ot_timing_file  "\n$line"
+        }
 }
-
 close $timing_file
 puts "set_timing_fpath $sdc_dirname/$sdc_filename.timing"
 }
 ```
-
-Using procs to write the tming files
-
-In below code procs are used to create timing configuration files required for the OpenTimer tool.
-
-```ruby
-############################################# Calling procs needed to generate .timing file ###################################################
-# Procs are used below 
+These procs are used to create timing configuration files required for the OpenTimer tool.
+```tclsh
 puts "\nInfo: Timing Analysis Started...."
 puts "\nInfo: Initializing number of threads, libraries, sdc, verilog netlist path..."
 puts " Invoking required procs"
@@ -9278,28 +9133,18 @@ source /home/vsduser/vsdsynth/procs/set_multi_cpu_usage.proc
 source /home/vsduser/vsdsynth/procs/read_lib.proc
 source /home/vsduser/vsdsynth/procs/read_verilog.proc
 source /home/vsduser/vsdsynth/procs/read_sdc.proc
-# Writing command required for OpenTimer tool to .conf file by closing and redirecting 'stdout' to a file
 reopenStdout $Output_Directory/$Design_Name.conf
-#set_multi_cpu_usage -localCpu 4
 read_lib -early $Early_Library_Path
 read_lib -late $Late_Library_Path
 read_verilog $Output_Directory/$Design_Name.final.synth.v
 read_sdc $Output_Directory/$Design_Name.sdc
-# Reopening 'stdout' to bring back screen log
-reopenStdout /dev/tty
-# Closing .conf file opened by 'reopenStdout' proc
-#close $Output_Directory/$Design_Name.conf
-#puts "closed .conf and redirected to stdout"
 ```
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/70de246c-0022-423a-bae6-fc7c5c7a334f)
+***Preparation of .CONF and SPEF file for OpenTimer STA***
 
-Preparation of .CONF and SPEF file for OpenTimer STA
+Procs are used to generate the .conf and .SPEF file required for the OpenTimer tool for timing analysis.
 
-In below code procs are used to generate the .conf and .SPEF file required for the OpenTimer tool for timing analysis.
-
-```ruby
-################################################ SPEF and CONF creation #########################################################################
+```
 set enable_prelayout_timing 1
 if {$enable_prelayout_timing == 1} {
 	puts "\nInfo: enable_prelayout_timing is $enable_prelayout_timing. Enabling zero-wire load parasitics"
@@ -9329,29 +9174,16 @@ puts $conf_file "report_wns "
 puts $conf_file "report_worst_paths -numPaths 10000 "
 close $conf_file
 ```
-
-Output
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/41262402-e626-44cd-8d20-e42519c3f342)
-
-**Running Static timining analysis and generating QOR**
-
-```ruby
-################################# Starting Timing Analysis ##########################################################
-# Running STA on OpenTimer and dumping log to .results and capturing runtime
+- Running STA and generating the QOR
+```
 set tcl_precision 3
 set time_elapsed_in_us [time {exec /home/vsduser/OpenTimer-1.0.5/bin/OpenTimer < $Output_Directory/$Design_Name.conf >& $Output_Directory/$Design_Name.results}]
 set time_elapsed_in_sec "[expr {[lindex $time_elapsed_in_us 0]/1000000}]sec"
 puts "\nInfo: STA finished in $time_elapsed_in_sec seconds"
 puts "\nInfo: Refer to $Output_Directory/$Design_Name.results for warnings and errors"
 ```
-Output
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/829df52a-4b1d-4999-9dd6-d755e3114532)
-
-Data extraction from results
-
-```ruby
+- Data extraction from .results file for QOR
+```
 # Find worst output violation
 set worst_RAT_slack "-"
 set report_file [open $Output_Directory/$Design_Name.results r]
@@ -9441,16 +9273,8 @@ puts "\nInfo: Number of Hold Violations = $Number_of_hold_violations"
 puts "\nInfo: Number of Instances = $Instance_count"
 puts "\nInfo: Time elapsed = $time_elapsed_in_sec"
 ```
-Output
-
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/7a490753-5d7c-4663-9443-f35d461ff7b3)
-
-**QOR**
-
-
-
-```ruby
-# Quality of Results (QoR) generation
+- Final QOR Report generation
+```
 puts "\n"
 puts "                                                           ****PRELAYOUT TIMING RESULTS_TCLBOX****\n"
 set formatStr {%15s%14s%21s%16s%16s%15s%15s%15s%15s}
@@ -9463,16 +9287,396 @@ foreach design_name $Design_Name runtime $time_elapsed_in_sec instance_count $In
 puts [format $formatStr "-----------" "-------" "--------------" "---------" "---------" "--------" "--------" "-------" "-------"]
 puts "\n"
 ```
+</details>
 
-Output
+## Day31 : Low power design using skywater130
+<details>
+<summary>Why low power design?</summary>
+ <br>
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/f7703563-215e-44b7-97db-5f4ab208e602)
+#### Differentiating "power" and "energy" and it's impact on performance:
+- Power:
+  - Definition: Power is the rate at which energy is transferred or converted. It is the amount of energy transferred or converted per unit of time.
+  - Formula: In electrical terms, power (P) is calculated as the product of voltage (V) and current (I) : P=V×I.
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/6e3eb45a-fd2f-42ea-b8a4-b29cffb37b62)
+    As power increase following observations can be made
+  - Heat dissipation increases.
+  - Cooling cost increases.
+  - Frequency get limited.
+  - Overall material degrades faster.
+- Energy:
+   - Definition: Energy is the capacity to do work or produce heat. It exists in various forms such as electrical, mechanical, thermal, etc.
+   - Formula: In electrical terms, energy (E) can be calculated by multiplying power (P) by time (t): E=Pxt or E=VxIxt
 
-![image](https://github.com/AbhishekChinchani/Samsung_pd/assets/142480501/1c6a9916-497e-4897-9d3c-587bb7837342)
+#### Economics of power/energy:
+- Performance.
+- Cost.
+  - Packaging
+  - Battery capacity
+  - Shipping
+- Weight.
+- Form factor
+- Functionality.
+- Context of use.
+- Comfort/Safety.
+#### Low power designs are essential for various electronic devices and systems for several reasons:
+- Battery Life: Many devices, especially portable ones like smartphones, wearables, and IoT devices, rely on batteries. Low power designs help extend the battery life, allowing devices to operate longer without needing a recharge.
+- Heat Dissipation: High power consumption generates heat, which can degrade the performance and lifespan of electronic components. Low power designs reduce heat dissipation, leading to more reliable and durable devices.
+- Environmental Impact: Energy efficiency is crucial for reducing the environmental impact of electronic devices. Lower power consumption means less energy usage, which translates to reduced greenhouse gas emissions.
+- Cost Reduction: With less power consumption, devices may use smaller batteries or require less frequent charging. This can lower production costs and increase the overall affordability of the device.
+- Portability and Mobility: Low power designs enable smaller form factors and lighter devices, which is crucial for portable electronics. For example, in the case of wearables or medical devices, minimizing power consumption is vital for user comfort and convenience.
+- Reliability: Lower power consumption often leads to improved device reliability. Components operating at lower temperatures tend to have longer lifespans and reduced failure rates.
+- Regulatory Compliance: Many regions have regulations and standards regarding energy consumption for electronic devices. Low power designs help manufacturers comply with these regulations.
+#### Portable vs Mobile vs Mobility
+In the realm of low-power IC design, the terms "portable," "mobile," and "mobility" are often used to describe different categories or aspects related to devices and their usage.
+- Portable:
+  - Portable refer to gadgets or tools that can be easily carried or moved from one place to another.
+  - Low-power IC design is crucial for portable devices as they often rely on batteries.
+  - Minimizing power consumption ensures longer battery life, making these devices more practical and convenient for users. Examples include laptops, tablets, portable gaming consoles, etc.
+- Mobile:
+  - Mobile devices are specifically designed for use while being in motion or while on the go. They provide communication, entertainment, or productivity capabilities and often rely on wireless connectivity.
+  - Mobile devices, such as smartphones, smartwatches, and GPS units, heavily benefit from low-power IC design. These devices require energy-efficient components to support functionalities like constant connectivity, GPS tracking, sensors, and multimedia capabilities while ensuring prolonged battery life.
+- Mobility:
+ - Mobility in IC design refers to the ability to create integrated circuits that cater to the dynamic and changing requirements of portable and mobile devices.
+ - Design is focused on creating ICs that not only consume minimal power but also offer the necessary performance and functionality demanded by portable and mobile devices. This involves designing chips that optimize power consumption during various operating modes, including active use, standby, and sleep modes, to support the mobility and versatility required by modern devices.
+#### Power Management Techniques:
+- Basic Techniques: Clock gating and Multi-Threshold.
+- Advanced Techniques: MTCMOS power gating, Power gating with state retention, DVFS and Low VDD StandBy.
+</details>
+<details>
+<summary>Low power fundamentals</summary>
+<br>
+
+ 
+Creating low-power designs involves a combination of strategies, methodologies, and techniques across various levels of IC and system design. Here are the essential aspects and practices in low-power design:
+- Design Goals and Requirements Analysis:
+ - Power Budgeting: Determine acceptable power consumption limits for different parts of the system.
+ - Use Case Analysis: Understand different usage scenarios to optimize power usage during various modes of operation.
+- Architecture-Level Strategies:
+ - Power-Aware Architectures: Design with power efficiency in mind, utilizing techniques like clock gating, power gating, and voltage/frequency scaling.
+ - Partitioning and Power Domains: Divide the system into power domains, enabling selective activation/deactivation of parts to conserve power.
+- Circuit-Level Techniques:
+ - Transistor Level Optimization: Use low-leakage transistors, sub-threshold operation, and other techniques to minimize leakage currents.
+ - Clock and Data Management: Implement clock gating, data encoding, and other logic techniques to reduce dynamic power consumption.
+- System-Level Strategies:
+ - Dynamic Power Management: Employ techniques like DVFS (Dynamic Voltage and Frequency Scaling) and AVS (Adaptive Voltage Scaling) to adjust power according to workload.
+ - Low-Power Modes: Utilize sleep, idle, or power-down modes during periods of inactivity.
+- Verification and Validation:
+ - Power-Aware Simulation and Verification: Use specialized tools and methodologies to validate power consumption estimations and optimize power-critical paths.
+ - Hardware/Software Co-Design: Collaborate on power optimization between hardware and software to maximize efficiency.
+- Technological Innovations:
+ - Advanced Process Nodes: Benefit from newer process technologies that inherently offer better power efficiency.
+ - Emerging Design Methodologies: Explore novel design methodologies like approximate computing, probabilistic computing, or energy harvesting for specific applications.
+- Tools and Methodologies:
+ - Power Analysis Tools: Utilize simulation tools that provide accurate power estimates at different design stages.
+ - Power-Aware Synthesis Tools: Employ tools that optimize circuits and architectures for reduced power consumption.
+- Standard Compliance and Optimization:
+ - Compliance with Power Standards: Ensure designs meet regulatory standards for power consumption.
+ - Trade-off Analysis: Balance performance, area, and power to achieve optimal design results.
+- Documentation and Knowledge Sharing:
+ - Document Power Considerations: Maintain comprehensive documentation detailing power design decisions, methodologies, and trade-offs.
+ - Knowledge Sharing: Encourage knowledge sharing among design teams to propagate best practices and lessons learned.
+
+#### Voltage Control Techniques:
+- Power gating
+
+**How Power Gating Works:**
+ - Isolation Transistors: Power gating involves the use of isolation transistors to disconnect the power supply from inactive blocks or sections of the chip. These transistors act as switches, completely cutting off power when the block is powered down.
+ - Control Logic: Control logic determines when to enable or disable the power gates based on activity or inactivity of the specific block. It ensures that power is gated off when the block is idle and restores power when it needs to become operational.
+ - Retention Elements:To preserve critical data or state information when the block is powered down, retention elements (such as flip-flops with isolated power supplies) are often used to maintain the data during power-off periods.
+
+**Benefits of Power Gating:**
+
+1. Reduction in Leakage Power: By disconnecting power to inactive blocks, leakage current flowing through transistors in those sections is significantly reduced, minimizing static power consumption.
+
+2. Improved Energy Efficiency: Power gating contributes to overall energy efficiency in the system, especially in battery-powered devices, by conserving power when not actively in use.
+
+3. Enhanced Battery Life: Extending the battery life of portable devices by minimizing power consumption during idle or standby modes through efficient power gating techniques.
+
+4. Heat Reduction: Shutting off power to inactive blocks reduces heat dissipation, contributing to a cooler operating temperature for the IC.
+
+**Challenges and Considerations:**
+
+1. Design Complexity: Implementing power gating adds complexity to the design, requiring additional control logic and ensuring proper synchronization to avoid issues such as glitches or improper power-up sequences.
+
+2. Switching Overhead: Switching power gates on and off introduces some overhead in terms of delay and power consumption associated with the control logic.
+
+3. Design Verification: Proper verification and testing are crucial to ensure correct functionality of power gating to prevent issues like data loss or corruption during power transitions.
+
+Dynamic Voltage Scaling (DVS) is a power management technique employed in microprocessors, allowing them to operate at different voltage and frequency levels based on the current workload.
+
+Mechanism:
+
+- Voltage-Frequency Scaling: DVS involves adjusting the voltage and frequency supplied to the processor. Lowering voltage reduces power consumption, while altering frequency impacts performance.
+- Real-time Adaptation: DVS algorithms continuously monitor the workload and dynamically adjust voltage and frequency levels to meet performance requirements while minimizing power usage.
+- Dynamic Optimization: It optimizes power consumption by scaling voltage and frequency to match the current processing demands. This extends battery life in mobile devices and reduces heat dissipation in computing systems.
+
+Benefits:
+
+- Energy Efficiency: By adapting power supply to match processing needs, DVS significantly reduces power consumption during idle or low-demand periods.
+- Heat Reduction: Lower voltage operation leads to less heat generation, improving thermal management and extending device lifespan.
+- Battery Life Extension: Particularly beneficial for portable devices, DVS extends battery life by intelligently managing power consumption.
+
+Challenges:
+
+- Performance vs. Power Tradeoff: Lowering voltage for power savings can impact performance, requiring a careful balance between energy efficiency and computing speed.
+- Complex Algorithms: Implementing efficient DVS algorithms that accurately predict workload and adjust voltages/frequencies in real-time is challenging.
+- Voltage/Frequency Scaling Limits: Hardware limitations and operational constraints may restrict the extent to which voltage and frequency can be scaled without compromising stability and functionality.
+
+Applications:
+
+- Mobile Devices: Smartphones, tablets, and laptops use DVS to optimize battery life without sacrificing performance.
+- Server Farms: Data centers leverage DVS to manage power consumption in large-scale computing environments, reducing operational costs.
+- Embedded Systems: DVS is crucial in embedded systems, where power efficiency is paramount (e.g., IoT devices, automotive electronics).
+
+ Low VDD Standby is a power optimization method employed in semiconductor devices to minimize power consumption during inactive periods without compromising the ability to quickly resume normal operation.
+
+Mechanism:
+- Voltage Reduction: During standby or idle states, the voltage supplied to the circuitry is significantly lowered, reducing power consumption.
+- Maintaining Functionality: Despite the reduced voltage, the circuit is designed to retain the necessary functionalities required for quick resumption of normal operation when activated.
+- Retentive States: Certain parts of the circuit might enter a low-power, retentive state, preserving critical data or configurations while operating at minimal power levels.
+
+Benefits:
+- Power Savings: Low VDD Standby significantly reduces power consumption during idle periods, extending battery life in portable devices and reducing energy costs in large-scale systems.
+- Quick Resumption: The circuit remains in a state where it can quickly return to active operation without a significant delay when required.
+- Environmental Impact: Lower power consumption contributes to reduced carbon footprint and energy conservation.
+
+Challenges:
+- Maintaining Stability: Ensuring that the circuit operates reliably and maintains data integrity while at reduced voltage levels.
+- Compatibility: Designing circuits and systems that can effectively enter and exit low VDD standby without compatibility issues or data loss.
+- Performance Impact: The standby mode might affect certain performance aspects, and balancing this with power savings is crucial.
+
+Applications:
+- Embedded Systems: Used in microcontrollers, IoT devices, and various embedded applications to conserve power during periods of inactivity.
+- Portable Devices: Implemented in smartphones, tablets, and wearable tech to extend battery life when the device is in sleep or idle modes.
+- Consumer Electronics: Integrated into consumer electronics to reduce standby power consumption, meeting energy efficiency standards.
+
+Unified Power Format (UPF):
+
+- Unified Power Format (UPF) is a standardized format or language used to specify low-power design intent and methodologies in electronic designs, especially for describing power intent in digital designs and ICs. UPF provides a standardized way to define power management techniques, power domains, power modes, and power control strategies within a design.
+- UPF facilitates the description of power intent at various levels of abstraction, allowing designers to specify power domains, isolation strategies, retention strategies, power states, power switches, and more. It enables the representation of the design's power architecture and how the different elements of the chip interact during different power modes.
+- UPF is utilized to describe and specify state retention requirements within a low-power design. Designers use UPF constructs to define the retention policies and strategies for preserving critical data during power-down or low-power modes. UPF allows the specification of retention registers, control signals, and power modes necessary to ensure that essential state information is retained while consuming minimal power.
+</details>
+<details>
+<summary>Low Powe design - 3 </summary>
+<br>
+	
+#### Power state space
+
+In low-power design, the "power state space" refers to the various states or modes in which a semiconductor device can operate concerning power consumption. Managing power consumption is critical in modern electronics, especially in portable devices, IoT (Internet of Things) devices, and other battery-powered systems.
+
+The power state space typically includes different operational modes or states that an IC can transition between to optimize power usage. Some common power states in low-power design include:
+
+Active Mode: This is the typical operating state where the IC is actively performing its functions, and all circuits are functioning at full capacity. It consumes the most power.
+Sleep or Standby Mode: In this state, parts of the IC are powered down or put into a low-power mode while retaining some functionality. It reduces power consumption compared to active mode but allows the device to quickly return to an active state.
+Idle Mode: Similar to sleep mode but with a slightly higher power consumption level. In this state, the IC reduces its power consumption while remaining ready to resume full operation quickly.
+Power-Off Mode: This is the state where the IC is completely powered down, often used when the device is turned off or in hibernation. It consumes minimal power but requires a longer time to resume normal operation.
+Low-power IC design involves optimizing the transitions between these power states to minimize power consumption without compromising the device's functionality or responsiveness.
+
+Techniques such as power gating (isolating parts of the chip when not in use), voltage scaling (adjusting voltage levels for lower power), clock gating (stopping clock signals to inactive parts), and various design methodologies help manage the power state space effectively.
+
+Designers use power management units (PMUs) or power management integrated circuits (PMICs) to control and regulate the power delivery to different sections of the chip, enabling efficient utilization of power states based on the device's requirements at any given time. Balancing performance with power consumption is crucial in low-power IC design to prolong battery life, reduce heat dissipation, and enhance overall energy efficiency.
+
+#### Low power VMM testbench
+A low power VMM testbench is designed specifically for verifying and validating the functionality, performance, and power management features of low-power IC designs. It encompasses several strategies and methodologies to ensure that the design functions correctly while consuming minimal power.
+
+Power-Aware Testbench Architecture: The testbench architecture is modified or extended to include components that model power management units (PMUs), power domains, power modes, and transitions between different power states of the DUT.
+Power-Aware Stimulus Generation: The testbench generates stimuli that cover various power modes and transitions, ensuring the DUT behaves correctly when switching between different power states. This includes test scenarios that verify functionality during power-up, power-down, sleep modes, and transitions between active and low-power states.
+Checkers for Power Consumption: Integrating checkers or monitors within the testbench to verify power consumption levels against specified criteria. These checkers analyze power-related signals and ensure the DUT operates within acceptable power limits in different operational modes.
+Power-Aware Coverage Metrics: Defining and tracking coverage metrics that specifically target power-related scenarios and transitions. This includes coverage for different power modes exercised during testing to ensure comprehensive verification.
+Simulation and Emulation Environments: Leveraging simulation and emulation environments to validate low-power features. Emulation platforms allow for more extensive testing of power states, transitions, and interactions with software running on the DUT.
+Advanced Verification Techniques: Employing advanced techniques like assertion-based verification, formal verification, and power-aware simulation to comprehensively validate low-power features.
+Scenario-Based Testing: Creating test scenarios that stress the DUT under different power conditions to ensure proper functionality and performance across various power modes.
+Island ordering
+
+The concept of "island ordering" is an integral part of the power optimization strategy in low-power design. It involves the organization and prioritization of power domains or islands within a chip to optimize power management and reduce overall power consumption.
+
+In low-power design, complex chips are often divided into multiple functional blocks or domains that can be independently controlled for power management purposes. These power domains, often referred to as islands, can be powered on or off autonomously, allowing parts of the chip to operate in different power modes.
+
+Island ordering specifically refers to the sequence or hierarchy in which these power domains are powered up or down during different operational phases of the chip. The goal is to manage the power-up and power-down sequences in a way that ensures correct functionality, avoids glitches or issues, and minimizes power consumption.
+
+Dependency and Hierarchical Structure: Determining the dependencies and relationships between different functional blocks or islands within the chip. Some blocks may need to be powered up before others to maintain proper functionality or to avoid issues such as data corruption or signal integrity problems.
+Power-Up Sequence: Establishing the order in which the power domains or islands are powered up to ensure that essential blocks required for the chip's initial operation are activated first. This helps in initializing the chip correctly without causing functional or timing issues.
+Power-Down Sequence: Defining the sequence for powering down the islands in a way that avoids potential hazards like data loss, signal glitches, or unintended interactions between different parts of the chip.
+Power Management Control: Implementing control mechanisms and protocols to manage power state transitions efficiently. This might involve using power management units (PMUs) or dedicated hardware/software mechanisms to coordinate the sequencing of power states.
+Verification and Testing: Performing rigorous verification and testing to validate the correctness of the power sequencing and to ensure that the power domains operate as intended under different scenarios and use cases.
+
+#### Basic Multivoltage terminology
+
+In most ICs, various parts of the chip require different voltage levels for their proper operation. These voltage supply lines are commonly referred to as "rails." They provide the necessary voltages to specific sections of the chip, such as the core logic, input/output (I/O) interfaces, memory blocks, or other functional units.
+
+Some common types of rails in IC design include:
+
+Core Voltage Rail: This supplies power to the core logic of the chip, which includes the computational units and processing elements. It is crucial for the fundamental operation of the IC.
+I/O Voltage Rail: Provides power to the input/output interfaces of the chip, enabling communication with external devices or other integrated circuits.
+Memory Voltage Rail: Supplies power to the memory components (e.g., SRAM, DRAM) within the chip.
+Analog/Digital Voltage Rails: Some ICs might have separate voltage rails for analog and digital circuits to ensure proper operation and avoid interference between these components.
+"Multi Vdd" is a design technique used in low power design where different sections or blocks of a chip are powered by independent and separate voltage supplies. Each voltage domain, or Vdd, operates at its designated voltage level, which may differ from other parts of the chip.
+
+The rationale behind employing multiple voltage domains in IC design is to optimize power consumption, improve performance, and address specific design requirements for different sections of the chip. By utilizing varying voltage levels tailored to the needs of different functional blocks, designers can achieve several advantages:
+
+Power Efficiency: Various sections of the chip might have different power requirements. Using multiple voltage domains allows each section to operate at its optimal voltage level, minimizing power consumption. Low-power blocks can run at lower voltages, while high-performance sections can operate at higher voltages for increased speed.
+Performance Optimization: Critical sections or high-speed interfaces within the chip can benefit from higher voltage levels, improving performance without affecting other parts of the chip that do not require such high speeds.
+Noise Isolation: Voltage domains can provide isolation from noise or interference generated by other parts of the chip. This separation helps maintain signal integrity and reduces the impact of noise on sensitive circuits.
+Reduced Leakage: Lowering the voltage in certain sections can help decrease leakage currents, especially in idle or standby modes, contributing to overall power savings.
+Implementing multiple voltage domains requires careful design and management:
+
+Power Management Units (PMUs): These units are responsible for regulating and managing the various voltage levels, ensuring that each section receives the appropriate voltage while coordinating power state transitions between domains.
+Isolation and Level Shifting: To prevent interference between voltage domains, isolation techniques, and level shifters are often employed to enable communication between different sections operating at distinct voltage levels.
+Design Verification: Rigorous verification and testing are essential to ensure proper functionality, timing, and correct interaction between the different voltage domains, as errors or issues in voltage transitions could lead to functional failures or performance degradation.
+MTCMOS (Multi-Threshold CMOS) power gating is a power-saving technique commonly used in low power design to reduce static power consumption in modern semiconductor devices. Static power, also known as leakage power, refers to the power dissipation that occurs even when the chip is in a standby or idle state.
+
+MTCMOS power gating involves selectively shutting down power to specific sections or blocks of a chip when they are not in use, thereby reducing leakage current and overall power consumption. This technique is particularly effective in scenarios where certain parts of the chip are inactive for extended periods.
+
+Here's how MTCMOS power gating typically works:
+
+Isolation of Power Domains: The chip is divided into multiple power domains. Each domain represents a specific section or block of the chip that can be independently powered on or off.
+Controlled Power Switches: Within each power domain, there are dedicated power switches or transistors (often high threshold voltage transistors) known as power gates or isolation cells. These gates act as switches to control the flow of power to the domain.
+Power State Transition: When a specific section of the chip is not actively in use (during idle periods or when certain functionalities are not required), the associated power gate is activated to cut off power supply to that domain. This action effectively isolates the inactive section from the rest of the chip, minimizing leakage current and reducing power consumption.
+Power-Up and Power-Down Sequencing: Before activating or deactivating a power domain, careful sequencing of power-up and power-down operations is essential to prevent glitches, maintain data integrity, and ensure proper functionality when transitioning between power states.
+Control and Management Logic: A power management unit (PMU) or control logic oversees the activation and deactivation of power gates based on the chip's operational requirements. It coordinates the transitions between different power states to manage power consumption effectively.
+Level shifting is a process used in integrated circuit (IC) design to convert signals from one voltage level to another. This technique is essential when interfacing different parts of a circuit or connecting components operating at different voltage levels, ensuring proper communication and functionality between them.
+
+There are various scenarios where level shifting is required:
+
+Between Different Voltage Domains: In a multi-voltage domain IC, different sections of the chip might operate at distinct voltage levels. Level shifting is necessary when signals need to pass between these domains to ensure compatibility and prevent damage to components due to voltage mismatches.
+Interfacing with External Components: When an IC needs to communicate with external devices or components operating at different voltage levels (e.g., sensors, memory devices, communication interfaces), level shifting facilitates proper signal transfer.
+Mixed-Signal Circuits: In mixed-signal designs where analog and digital circuits coexist, level shifting ensures seamless communication between the analog and digital domains, preserving signal integrity.
+Level shifting techniques can involve various methods depending on the specific requirements and constraints of the design:
+
+Voltage-Level Translation Gates: Dedicated circuits or voltage-level translation gates using specialized transistors or circuitry to convert signal levels between different voltage domains.
+Voltage-Level Translation Buffers: Dedicated buffer circuits designed to accept input signals at one voltage level and produce corresponding output signals at a different voltage level.
+Bi-directional Level Shifters: Circuits capable of shifting signals bidirectionally, enabling communication between voltage domains in both directions.
+Diode-Clamped or Voltage-Divider Techniques: Simple and often used for lower-speed or less critical applications, employing diodes or resistive networks to shift signal levels.
+Specialized Level-Shifting ICs: Dedicated integrated circuits specifically designed for level shifting applications, offering multiple channels and optimized performance for voltage translation.
+ 
+</details>
+<details>
+<summary>Low power design - 4</summary>	
+<br>
+
+ARM-based System-on-Chips (SoCs) are widely used in various devices, including smartphones, tablets, IoT devices, embedded systems, and more. Power management is crucial in these systems to optimize performance, extend battery life, and manage thermal constraints. Several common power management schemes are implemented in ARM-based SoCs:
+
+Dynamic Voltage and Frequency Scaling (DVFS): DVFS is a technique that adjusts the voltage and frequency of the CPU based on the workload. It dynamically scales the CPU frequency and voltage to match the processing demands. When the workload is low, the frequency and voltage are decreased to save power, while they are increased during higher workload periods to enhance performance.
+CPU Power Modes (Idle States): ARM-based SoCs often implement multiple power states for CPUs. These power modes, such as idle or sleep states (e.g., C-states in ARM's terminology), allow parts of the CPU to enter low-power states when not actively processing tasks. During idle times, certain parts of the CPU are powered down or operate at reduced frequencies to conserve power.
+Heterogeneous Multi-Processing (HMP): HMP architectures in ARM SoCs enable the use of multiple types of CPU cores with varying performance and power characteristics. This scheme dynamically assigns tasks to different cores based on their power-performance trade-offs. Lower-power cores handle less demanding tasks while higher-performance cores manage more intensive tasks, optimizing power usage.
+Peripheral Power Management: ARM-based SoCs include various peripherals, such as GPUs, DSPs, and I/O controllers. Power management techniques like clock gating, power gating, and dynamic power scaling are applied to these peripherals. By selectively enabling or disabling peripherals and adjusting their operating voltages or frequencies, power consumption can be reduced.
+Adaptive Voltage Scaling (AVS): AVS adjusts the voltage levels supplied to different components based on the required performance. It dynamically scales the voltage to the lowest level that still maintains stable operation, reducing power consumption without sacrificing performance.
+Temperature and Thermal Management: ARM SoCs often incorporate thermal management schemes to monitor and regulate temperature. Dynamic thermal management techniques, such as throttling or reducing processor speed in response to elevated temperatures, help prevent overheating while maintaining operational stability.
+Software-Based Power Governors: Power governors within the operating system or firmware of ARM-based devices manage and control power states, determining when to transition between different power modes based on system demands and user settings.
+These power management schemes, often implemented in combination, aim to balance performance and power consumption in ARM-based SoCs, providing efficient and responsive devices while optimizing energy usage and extending battery life.
+
+Power Management Brings New Bug Types!
+
+Isolation/Level Shifting Bugs
+Control Sequencing bugs
+Retention scheme/control errors
+Retention selection errors
+Electrical Problems like memory corruption
+Power Sequencing/Voltage Scheduling errors
+Hardware-Software deadlock
+Power Gating collapse/dysfunction
+Power On Reset/bring up problems
+Thermal runaway/ Overheating
+Conflicting Events:
+
+Conflicting events in low-power design power management refer to scenarios or situations where different power-saving mechanisms or requirements clash, causing conflicts or challenges in managing power efficiently. These conflicts can arise due to conflicting requirements between various power-saving techniques or constraints within the design.
+
+Voltage-Frequency Conflicts: While dynamic voltage and frequency scaling (DVFS) aim to reduce power consumption by lowering voltage and frequency during low activity, high-performance demands may conflict with this strategy. For instance, an application requiring high performance might clash with the goal of reducing voltage and frequency to save power, creating a conflict between performance and power efficiency.
+Clock Gating vs. Timing Requirements: Clock gating is a technique used to stop clock signals to inactive blocks to save power. However, certain blocks may have strict timing requirements or dependencies that conflict with the idea of gating their clocks. Balancing power savings with meeting timing requirements can create conflicts.
+Power Gating and Wake-up Time: Power gating involves shutting down power to inactive blocks. However, the time it takes to power up these blocks and return to full operation (wake-up time) might conflict with the need for instant responsiveness in some applications. This conflict arises between power savings and responsiveness.
+Multiple Power Domains Coordination: Managing multiple voltage or power domains within a chip can create conflicts when transitioning between power states. Timing and sequencing requirements for turning on or off different domains may conflict with overall system operation, leading to potential glitches or errors during transitions.
+Trade-offs between Power and Functionality: Certain power-saving techniques might compromise the functionality or performance of the system. For instance, overly aggressive power-saving methods might result in degraded system performance, creating a conflict between power efficiency and functional requirements.
+Resolving conflicting events in low-power design power management involves careful trade-offs, optimizations, and compromises. Designers need to consider the specific requirements of the system, application use cases, and the balance between power-saving strategies and the overall functionality or performance goals to mitigate these conflicts and achieve an optimal balance between power efficiency and system operation.
+
+Combining Multiple CPUs
+
+Must take a hierarchical sub-system view
+Must be conscious of s/w threads and h/w events in each sub-system
+An "FSM" view of power states must be commonly known across the sub-system boundary
+E.g ACPI
+Best to enforce a consistent protocol across all sub-systems
+
+Industry standards are only emerging here
+
+Homogeneous subsystems make code-reuse possible
+
+A draw back of heterogeneous subsystems, but this is common
+
+Power Management verification:
 
 
+Power management verification in a design involves validating and ensuring that the implemented power-saving features and techniques operate correctly and efficiently within an IC. This verification process ensures that the power management strategies effectively reduce power consumption without compromising the functionality, performance, or reliability of the IC.
 
+Functional Verification: This involves verifying that the power management features function as intended. It includes validating power state transitions, power-on and power-off sequences, handling of different power modes, and ensuring proper functioning of power control logic.
+Simulation and Emulation: Employing simulation tools and emulation platforms to model and simulate power states and transitions within the IC. Simulations validate the behavior of the power management circuits under various conditions and use cases.
+Coverage Analysis: Defining and measuring coverage metrics specific to power management scenarios. Coverage analysis ensures that the verification tests cover a comprehensive range of power states, transitions, and functional behaviors related to power management.
+Assertion-Based Verification: Writing assertions to check and validate specific power-related conditions or behaviors within the design. Assertions act as checks to ensure that power management protocols are followed correctly during simulation or emulation.
+Formal Verification: Using formal methods to mathematically verify the correctness of power management implementations against specified requirements or properties. Formal verification can help detect potential power-related issues or design flaws.
+Low-Power Design Verification Tools: Leveraging specialized verification tools tailored for low-power designs. These tools assist in verifying complex power management architectures, identifying power-related issues, and optimizing power-saving strategies.
+Hardware Emulation and Prototyping: Building hardware prototypes or using emulation platforms to validate power management strategies in real-world scenarios. Hardware emulation provides a more accurate representation of power behavior and allows for extensive testing of power-related features.
+Dynamic Power Analysis: Performing power analysis during simulation or post-silicon testing to measure actual power consumption and validate against expected power budgets or specifications.
+Power management verification is crucial in ensuring the reliability, efficiency, and correctness of power-saving features within IC designs. It helps prevent issues related to power states, transitions, and overall power control, ensuring that the IC operates optimally in terms of power consumption while meeting functional and performance requirements.
 
 </details>
+<details>
+<summary>Low power design - 5</summary>	
+<br>
+#### Island Ordering:
+- Island ordering is a technique used in low-power design to reduce power consumption by optimizing the placement of different voltage islands on the chip.
+- Voltage islands are groups of logic blocks that operate at different supply voltages. By placing voltage islands with similar voltage levels closer together, the designer can minimize the length of the power supply wires, which reduces the voltage drop across the wires and thus the power consumption.
+- There are two main approaches to island ordering:
+   - Top-down
+	
+	Top-down island ordering involves partitioning the chip into voltage islands based on a high-level power analysis. This approach is relatively simple to implement, but it may not be as effective as bottom-up island ordering, which involves using a more detailed power analysis to optimize the placement of individual logic blocks.
+   - Bottom-up.
+       
+	Bottom-up island ordering is a more complex approach, but it can potentially achieve greater power savings. This approach involves using a power grid analysis tool to identify the optimal placement of individual logic blocks. The power grid analysis tool takes into account the power consumption of each logic block, as well as the resistance and capacitance of the power supply wires.
+
+Once the power grid analysis tool has identified the optimal placement of the logic blocks, the designer can then place the voltage islands on the chip. The designer should try to place voltage islands with similar voltage levels closer together, and should also try to minimize the length of the power supply wires.
+
+Island ordering is a valuable technique for reducing power consumption in low-power design. By optimizing the placement of different voltage islands on the chip, the designer can minimize the length of the power supply wires and thus the power consumption.
+
+#### Power Formats
+In low-power design, power formats play a crucial role in effectively managing and optimizing power consumption. These formats provide a standardized way to represent and analyze power intent, enabling designers to make informed decisions about power gating, voltage scaling, and other power-saving techniques.
+- Common Power Formats: There are several widely used power formats in low-power IC design, each with its own strengths and limitations:
+  - Unified Power Format (UPF): UPF is the industry-standard power format, defined by the IEEE 1801 standard. It provides a comprehensive framework for describing power intent, including supply voltages, power domains, leakage models, and power-aware design constraints. UPF supports hierarchical power management, enabling designers to specify power intent at different levels of abstraction.
+  - Power Analysis Markup Language (PAM-XML): PAM-XML is an XML-based power format developed by Mentor Graphics. It is a lightweight and easy-to-use format, specifically designed for early-stage power analysis and estimation. PAM-XML is less comprehensive than UPF but offers a simpler and more intuitive syntax.
+  - Common Power Format (CPF): CPF is a power format developed by Synopsys. It is similar to UPF but provides additional features for power-aware synthesis and optimization. CPF supports power-aware clock tree synthesis, power-aware scan insertion, and other power-saving techniques.
+  - PowerIntent (PI): PowerIntent is a power format developed by Cadence Design Systems. It is a newer format, gaining popularity due to its support for power-aware design in advanced process technologies. PowerIntent provides enhanced features for power modeling of leakage currents, crosstalk effects, and power grid analysis.
+  - Choosing the Right Power Format: The choice of power format depends on several factors, including the design methodology, tools used, and level of power analysis detail required. UPF is the industry standard and is widely supported by EDA tools. It is well-suited for complex power management scenarios and detailed power analysis. PAM-XML is a good choice for early-stage power estimation and for designers who prefer a simpler format. CPF is specifically designed for power-aware synthesis and optimization. PowerIntent is a newer format gaining traction due to its advanced features for power modeling in advanced process technologies.
+#### Benefits of Using Power Formats:
+- Standardized Representation: Power formats provide a standardized way to represent power intent, enabling designers to communicate power requirements clearly and consistently across different design teams and EDA tools.
+- Early Power Analysis: Power formats support early-stage power analysis, allowing designers to identify and address power issues early in the design cycle.
+- Power-Aware Optimization: Power formats enable power-aware optimization techniques, such as power gating, voltage scaling, and clock gating.
+- Design for Manufacturability (DFM): Power formats can be used to perform power grid analysis and ensure that the design meets power delivery requirements.
+- Design Reuse: Power formats facilitate the reuse of power intent across different designs, reducing design time and improving consistency.
+#### UPF
+- Unified Power Format (UPF) is an industry-standard specification for describing power intent in integrated circuits (ICs). It provides a structured and consistent way to convey power management information, enabling designers to effectively manage and optimize power consumption in low-power designs. UPF plays a crucial role in various phases of the design process, from early-stage power estimation to physical implementation and signoff.
+- UPF offers a comprehensive set of features for describing power intent in ICs:
+  - Supply Voltages: UPF defines supply voltages for different power domains, enabling efficient power distribution and minimizing power drops.
+  - Power Domains: UPF allows designers to group logic blocks into power domains, enabling granular control over power management.
+  - Leakage Models: UPF supports leakage models for different types of transistors, enabling accurate power estimation and optimization.
+  - Power-Aware Constraints: UPF provides a mechanism to specify power-aware constraints, such as power gating and voltage scaling thresholds.
+  - Hierarchical Power Management: UPF supports hierarchical power management, enabling designers to specify power intent at different levels of abstraction.
+  - Tool Control Language (TCL): UPF utilizes TCL for scripting and automation, facilitating integration with various EDA tools.
+#### Applications of UPF
+- Power Estimation: UPF information is used for early-stage power estimation, enabling designers to identify and address power issues early on.
+- Power Optimization: UPF guides the application of power-saving techniques, such as power gating, voltage scaling, and clock gating.
+- Physical Design: UPF is used to generate power delivery networks and ensure that the design meets power delivery requirements.
+- Design Verification: UPF-based simulations are used to verify the functionality and power behavior of the design under various operating conditions.
+- Signoff: UPF information is incorporated into signoff tools to ensure that the design meets power requirements and complies with manufacturing specifications.
+
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
